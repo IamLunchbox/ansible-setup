@@ -1,0 +1,9 @@
+---
+
+- name: Cloning dotfiles
+  ansible.builtin.git:
+    repo: https://github.com/IamLunchbox/dotfiles
+    dest: "{{ ansible_user_dir }}/.dotfiles"
+  become: false
+  notify: install dotfiles
+

@@ -1,0 +1,29 @@
+---
+
+- name: Remove possibly dangerous packages
+  ansible.builtin.package:
+    name:
+      - cups
+      - g++
+      - gcc
+      - hplip
+      - javascript-common
+      - snapd
+      - snap
+      - flatpak
+      state: absent
+      autoremove: true
+      autoclean: true
+
+- name: Install security packages
+  ansible.builtin.package:
+    name:
+      - ufw
+      - gufw
+      - unattended-upgrades
+      - libpam-pwquality
+      - timeshift
+      - hardening-runtime
+      - apt-transport-https
+    state: present
+

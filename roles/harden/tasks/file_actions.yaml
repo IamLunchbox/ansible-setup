@@ -1,0 +1,60 @@
+---
+
+- name: Hardening the mountpoints tmp and proc
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    create: false
+    insertafter: EOF
+    line: "{{ item }}"
+  with_items:
+    - 'tmpfs  /tmp    tmpfs   rw,nodev,nosuid 0   0'
+
+- name: Restricting access to important file and directories
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: "{{ item.mode }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+  with_items:
+    - path: "{{ ansible_factsi['user_dir'] }}"
+      mode: '0750'
+      owner: "{{ ansible_facts['user_id'] }}"
+      group: "{{ ansible_facts['user_id'] }}"
+    - path: /usr/bin/as
+      mode: '0770'
+      owner: root
+      group: root
+    - path: /boot
+      mode: '0700'
+      owner: root
+      group: root
+
+- name: Restricting access to iptables and arptables, if present
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: "{{ item.mode }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+  ignore_errors: true
+  with_items:
+    - path: /etc/iptables
+      mode: '0700'
+      owner: root
+      group: root
+    - path: /etc/arptables
+      mode: '0700'
+      owner: root
+      group: root
+
+- name: Enabling the firefox-apparmor profile
+  ansible.builtin.file:
+    path: /etc/apparmor.d/disable/usr.bin.firefox
+    state: absent
+  notify: parse firefox apparmor profile
+
+- name: Disabling the snap apparmor profile
+  ansible.builtin.file:
+    src: /etc/apparmor.d/usr.lib.snapd.snap-confine.real
+    dest: /etc/apparmor.d/disable/usr.lib.snapd.snap-confine.real
+    state: link
+

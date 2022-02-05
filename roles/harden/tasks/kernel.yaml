@@ -1,0 +1,33 @@
+---
+
+- name: Disabling coredumps
+  ansible.builtin.lineinfile:
+    path: "{{ item.path }}"
+    line: "{{ item.line }}"
+    owner: root
+    group: root
+    mode: 0644
+    create: true
+    insertafter: EOF
+  with_items:
+    - path: /etc/sysctl.d/local.conf
+      line: 's.suid_dumpable = 0'
+    - path: /etc/security/limits.conf
+      line: '*     hard   core    0'
+
+- name: Hardening kernel parameters
+  ansible.builtin.copy:
+    src: "99-lockdown.conf"
+    dest: /etc/sysctl.d/99-lockdown.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Implanting custom filesystem and protocol blacklist
+  ansible.builtin.copy:
+    src: "blacklist-custom.conf"
+    dest: /etc/modprobe.d/blacklist-custom.conf
+    owner: root
+    group: root
+    mode: '0644'
+

@@ -1,0 +1,61 @@
+---
+- name: Adding Keys
+  ansible.builtin.apt_key:
+    url: "{{ item }}"
+    state: present
+  with_items:
+   - "https://packagecloud.io/AtomEditor/atom/gpgkey"
+
+- name: Adding Repos
+  ansible.builtin.apt_repository:
+    repo: "{{ item }}"
+    state: present
+    update_cache: true
+  with_items:
+    - "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main"
+
+- name: Adding base packages
+  apt:
+    name:
+      - zsh
+      - zsh-autosuggestions
+      - zsh-syntax-highlighting
+      - compton
+      - yubioath-desktop
+      - vim
+      - xsettingsd
+      - git
+      - thunar
+      - tmux
+      - python3-pip
+      - mousepad
+      - i3-wm
+      - i3
+      - i3status
+      - i3lock
+      - curl
+      - git
+      - gdm3
+      - apt-transport-https
+      - feh
+      - unattended-upgrades
+      - gnome-terminal
+      - pavucontrol
+      - openvpn
+      - network-manager-openvpn
+      - qpdfview
+    state: present
+
+- name: Removing packages
+  apt:                                                                                    
+    name:
+      - cups
+      - bluez
+      - hplip
+      - snap
+      - snapd
+      - flatpak
+    state: absent
+    autoremove: true
+    autoclean: true
+

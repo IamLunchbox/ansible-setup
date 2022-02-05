@@ -1,0 +1,45 @@
+---
+
+- name: Creating the pwquality directory
+  ansible.builtin.file:
+    path: "/etc/security/pwquality.conf.d"
+    owner: root
+    group: root
+    mode: '0644'
+    state: directory
+
+- name: Defining password-restrictions
+  ansible.builtin.copy:
+    src: "difficult-passwords.conf"
+    dest: /etc/security/pwquality.conf.d/difficult-passwords.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Applying password-restrictions in pam
+  community.general.pamd:
+    name: common-password
+    type: password
+    control: required
+    module_path: pam_pwquality.so
+
+- name: Applying login delay
+  community.general.pamd:
+    name: common-auth
+    type: auth
+    control: '[success=1 default=ignore]'
+    module_path: pam_unix.so
+    new_type: auth
+    new_control: optional
+    new_module_path: pam_faildelay.so
+    state: before
+
+- name: Setting login delay of 5 seconds
+  community.general.pamd:
+    name: common-auth
+    type: auth
+    control: optional
+    module_path: pam_faildelay.so
+    module_arguments: delay=5000000
+    state: updated
+

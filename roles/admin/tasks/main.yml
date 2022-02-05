@@ -1,0 +1,6 @@
+---
+
+- include_tasks: install.yaml
+
+- include_tasks: podman.yaml
+

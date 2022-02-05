@@ -1,0 +1,14 @@
+---
+- include_tasks: "{{ item }}"
+  with_items:
+    - packages.yaml
+    - pam.yaml
+    - file_actions.yaml
+    - kernel.yaml
+
+- name: Setting up firewall rules to default deny all incoming traffic
+  community.general.ufw:
+    state: enabled
+    default: "{{ item.default }}"
+    direction: "{{ item.direction }}"
+

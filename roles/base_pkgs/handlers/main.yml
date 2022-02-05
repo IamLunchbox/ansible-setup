@@ -1,0 +1,7 @@
+---
+
+- name: install dotfiles
+  command:
+    chdir: "{{ ansible_user_dir }}/.dotfiles"
+    cmd: "./install"
+  become: false

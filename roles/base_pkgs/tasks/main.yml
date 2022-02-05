@@ -1,0 +1,6 @@
+---
+
+# update and autoremove
+- include_tasks: install.yaml
+
+- include_tasks: dotfiles.yaml
