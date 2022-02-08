@@ -2,10 +2,11 @@
 
 - name: Deploying netplan
   ansible.builtin.copy:
-    src: 01-netcfg.yml
+    content: 01-netcfg.yml
     dest: /etc/netplan/01-netcfg.yml
     owner: root
     group: root
+    force: false
   notify:
     - install network manager
     - enable network manager
