@@ -14,3 +14,14 @@
 - name: enable graphical target
   command:
     cmd: "systemctl set-default graphical.target"
+
+- name: cleanup netplan_1
+  ansible.builtin.find:
+    paths: /etc/netplan
+  register: netplan_files
+
+- name: cleanup netplan_2
+  ansible.builtin.file:
+    path:  "{{ item.path }}"
+  loop:
+    -  "{{ netplan_files['files'] }}"

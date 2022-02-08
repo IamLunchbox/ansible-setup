@@ -60,7 +60,7 @@
       - virtualbox-guest-x11
       - virtualbox-guest-utils
     state: present
-  when: ansible_facts['ansible_virtualization_type'] == "virtualbox"
+  when: ansible_facts['virtualization_type'] == "virtualbox"
 
 - name: Removing packages
   ansible.builtin.apt:

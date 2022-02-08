@@ -1,0 +1,17 @@
+---
+
+- name: Deploying netplan-config
+  ansible.builtin.copy:
+    src: 01-netcfg.yml
+    dest: /etc/netplan/01-netcfg.yml
+    owner: root
+    group: root
+  notify:
+    - cleanup netplan_1
+    - cleanup netplan_2
+
+- name: Enabling NetworkManager
+  ansible.builtin.systemd:
+    name: NetworkManager.service
+    enabled: true
+    state: restarted
