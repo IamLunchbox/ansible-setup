@@ -22,11 +22,3 @@
   with_items:
     - "{{ netplan_files.files }}"
   when: netplan_files.matched > 0
-
-- name: install network manager
-  ansible.builtin.apt:
-    name: network-manager
-    state: "{{ item }}"
-  loop:
-    - absent
-    - present
