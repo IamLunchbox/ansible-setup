@@ -14,10 +14,3 @@
 - name: enable graphical target
   command:
     cmd: "systemctl set-default graphical.target"
-
-- name: deploy netplan
-  ansible.builtin.copy:
-    src: 01-netcfg.yml
-    dest: /etc/netplan/01-netcfg.yml
-    owner: root
-    group: root
