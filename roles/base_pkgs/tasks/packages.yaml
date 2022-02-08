@@ -50,6 +50,7 @@
       - pavucontrol
       - openvpn
       - network-manager
+      - network-manager-gnome
       - network-manager-openvpn
       - qpdfview
     state: present
