@@ -14,7 +14,7 @@
 
 - name: Deleting superfluous netplan files
   ansible.builtin.file:
-    paths: "{{ item.path }}"
+    path: "{{ item.path }}"
     state: absent
   with_items:
     - "{{ netplan_files.files }}"
