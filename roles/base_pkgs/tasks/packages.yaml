@@ -43,13 +43,13 @@
       - firefox
       - mousepad
       - curl
-      - git
       - apt-transport-https
       - feh
       - unattended-upgrades
       - gnome-terminal
       - pavucontrol
       - openvpn
+      - network-manager
       - network-manager-openvpn
       - qpdfview
     state: present

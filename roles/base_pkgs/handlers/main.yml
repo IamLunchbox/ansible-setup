@@ -15,16 +15,8 @@
   command:
     cmd: "systemctl set-default graphical.target"
 
-- name: install network manager
-  ansible.builtin.apt:
-    name: network-manager
-    state: "{{ item }}"
-  loop:
-    - absent
-    - present
-
 - name: enable network manager
   ansible.builtin.systemd:
-    name: NetworkManager
-    state: started
+    name: NetworkManager.service
+    state: restarted
     enabled: true
