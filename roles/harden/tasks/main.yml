@@ -1,6 +1,6 @@
 ---
 - include_tasks: "{{ item }}"
-  with_items:
+  loop:
     - packages.yaml
     - pam.yaml
     - file_actions.yaml
@@ -11,4 +11,10 @@
     state: enabled
     default: "{{ item.default }}"
     direction: "{{ item.direction }}"
-
+  loop:
+    - default: deny
+      direction: incoming
+    - default: deny
+      direction: routed
+    - default: allow
+      direction: outgoing

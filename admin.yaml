@@ -2,7 +2,7 @@
 - hosts: localhost
   connection: local
   become: true
-  
+
   roles:
     - prep
     - base_pkgs

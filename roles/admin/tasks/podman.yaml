@@ -2,20 +2,13 @@
 
 - name: Adding Podman Key
   ansible.builtin.apt_key:
-    url: >
-      "https://download.opensuse.org/repositories/devel:
-      /kubic:/libcontainers:/stable/
-      xUbuntu_{{ ansible_facts['distribution_version'] }}
-      /Release.key"
+    url: "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_{{ ansible_facts['distribution_version'] }}/Release.key"
     state: present
   when: ansible_facts['distribution_version'] == "20.04"
 
 - name: Adding Podman Repo
   ansible.builtin.apt_repository:
-    repo: >
-      "deb https://download.opensuse.org/repositories/devel:
-      /kubic:/libcontainers:/stable/
-      xUbuntu_{{ ansible_facts['distribution_version'] }}/ /"
+    repo: "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_{{ ansible_facts['distribution_version'] }}/ /"
     update_cache: true
     state: present
   when: ansible_facts['distribution_version'] == "20.04"

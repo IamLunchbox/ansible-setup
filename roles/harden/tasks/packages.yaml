@@ -11,9 +11,9 @@
       - snapd
       - snap
       - flatpak
-      state: absent
-      autoremove: true
-      autoclean: true
+    state: absent
+    autoremove: true
+    autoclean: true
 
 - name: Install security packages
   ansible.builtin.package:
@@ -26,4 +26,3 @@
       - hardening-runtime
       - apt-transport-https
     state: present
-

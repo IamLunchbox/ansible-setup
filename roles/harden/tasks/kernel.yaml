@@ -9,7 +9,7 @@
     mode: 0644
     create: true
     insertafter: EOF
-  with_items:
+  loop:
     - path: /etc/sysctl.d/local.conf
       line: 's.suid_dumpable = 0'
     - path: /etc/security/limits.conf
@@ -30,4 +30,3 @@
     owner: root
     group: root
     mode: '0644'
-

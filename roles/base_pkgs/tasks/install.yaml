@@ -3,7 +3,7 @@
   ansible.builtin.apt_key:
     url: "{{ item }}"
     state: present
-  with_items:
+  loop:
    - "https://packagecloud.io/AtomEditor/atom/gpgkey"
 
 - name: Adding Repos
@@ -11,11 +11,23 @@
     repo: "{{ item }}"
     state: present
     update_cache: true
-  with_items:
+  loop:
     - "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main"
 
+- name: Adding desktop-environment
+  ansible.builtin.apt:
+    name:
+      - i3-wm
+      - i3
+      - rofi
+      - i3status
+      - i3lock
+      - gdm3
+    state: present
+  notify: enable graphical target
+
 - name: Adding base packages
-  apt:
+  ansible.builtin.apt:
     name:
       - zsh
       - zsh-autosuggestions
@@ -28,14 +40,10 @@
       - thunar
       - tmux
       - python3-pip
+      - firefox
       - mousepad
-      - i3-wm
-      - i3
-      - i3status
-      - i3lock
       - curl
       - git
-      - gdm3
       - apt-transport-https
       - feh
       - unattended-upgrades
@@ -46,8 +54,16 @@
       - qpdfview
     state: present
 
+- name: Installing Virtualbox-Packages, if appropriate
+  ansible.builtin.apt:
+    name:
+      - virtualbox-guest-x11
+      - virtualbox-guest-utils
+    state: present
+  when: ansible_facts['ansible_virtualization_type'] == "virtualbox"
+
 - name: Removing packages
-  apt:                                                                                    
+  ansible.builtin.apt:
     name:
       - cups
       - bluez
@@ -58,4 +74,3 @@
     state: absent
     autoremove: true
     autoclean: true
-
