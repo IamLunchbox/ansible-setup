@@ -15,13 +15,9 @@
   command:
     cmd: "systemctl set-default graphical.target"
 
-- name: cleanup netplan_1
-  ansible.builtin.find:
-    paths: /etc/netplan
-  register: netplan_files
-
-- name: cleanup netplan_2
-  ansible.builtin.file:
-    path:  "{{ item.path }}"
-  loop:
-    -  "{{ netplan_files['files'] }}"
+- name: deploy netplan
+  ansible.builtin.copy:
+    src: 01-netcfg.yml
+    dest: /etc/netplan/01-netcfg.yml
+    owner: root
+    group: root

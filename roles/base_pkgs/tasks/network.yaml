@@ -1,14 +1,24 @@
 ---
 
-- name: Deploying netplan-config
+- name: Deploying netplan
   ansible.builtin.copy:
     src: 01-netcfg.yml
     dest: /etc/netplan/01-netcfg.yml
     owner: root
     group: root
-  notify:
-    - cleanup netplan_1
-    - cleanup netplan_2
+
+- ansible.builtin.find:
+    paths: /etc/netplan
+    excludes: "01-netcfg.yml"
+  register: netplan_files
+
+- name: Deleting superfluous netplan files
+  ansible.builtin.file:
+    paths: item.path
+    state: absent
+  with_items:
+    - "{{ netplan_files.files }}"
+  when: netplan_files.matched > 0
 
 - name: Enabling NetworkManager
   ansible.builtin.systemd:
