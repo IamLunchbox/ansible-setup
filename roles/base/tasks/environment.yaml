@@ -7,8 +7,8 @@
 - name: Generating locales
   community.general.locale_gen:
     name:
-      - en_US.UTF8
-      - de_DE.UTF8
+      - en_US.UTF-8
+      - de_DE.UTF-8
     state: present
 
 - name: Set keymap
