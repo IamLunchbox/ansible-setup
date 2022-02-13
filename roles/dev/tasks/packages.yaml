@@ -1,0 +1,38 @@
+---
+
+- name: Adding admin repo keys
+  ansible.builtin.apt_key:
+    url: "{{ item }}"
+    state: present
+  loop:
+    - "https://deb.releases.teleport.dev/teleport-pubkey.asc"
+    - "https://linux-clients.seafile.com/seafile.asc"
+    - "https://apt.releases.hashicorp.com/gpg"
+
+- name: Adding Repos
+  ansible.builtin.apt_repository:
+    repo: "{{ item }}"
+    state: present
+  loop:
+    - 'deb https://deb.releases.teleport.dev/ stable main'
+    - 'deb [arch=amd64] https://linux-clients.seafile.com/seafile-deb/{{ ansible_facts["distribution_release"] }}/ stable main'
+    - 'deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_facts["distribution_release"] }} main'
+
+- name: Adding packages
+  ansible.builtin.apt:
+    update_cache:
+    cache_valid_time: 0
+    name:
+      - teleport
+      - terraform
+      - seafile-gui
+      - knockd
+      - keepassxc
+    state: present
+
+- name: Installing pip-packages
+  pip:
+    name:
+      - yamllint
+      - molecule
+    state: present

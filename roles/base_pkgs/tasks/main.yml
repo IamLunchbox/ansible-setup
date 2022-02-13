@@ -2,6 +2,5 @@
 
 # update and autoremove
 - include_tasks: packages.yaml
-- include_tasks: dotfiles.yaml
 - include_tasks: network.yaml
   when: ansible_facts['distribution'] == "Ubuntu"

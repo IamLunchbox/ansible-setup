@@ -13,15 +13,15 @@
   ansible.builtin.apt_repository:
     repo: "{{ item }}"
     state: present
-    update_cache: true
   loop:
     - 'deb https://deb.releases.teleport.dev/ stable main'
     - 'deb [arch=amd64] https://linux-clients.seafile.com/seafile-deb/{{ ansible_facts["distribution_release"] }}/ stable main'
     - 'deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_facts["distribution_release"] }} main'
 
 - name: Adding packages
-  apt:
-    update_cache: true
+  ansible.builtin.apt:
+    update_cache:
+    cache_valid_time: 0
     name:
       - teleport
       - terraform

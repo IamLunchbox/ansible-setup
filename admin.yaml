@@ -1,10 +1,11 @@
 ---
-- hosts: localhost
+- name: Setting up an administrative system
+  hosts: localhost
   connection: local
   become: true
 
   roles:
     - prep
     - base_pkgs
-    - harden
     - admin
+    - harden

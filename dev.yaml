@@ -1,11 +1,11 @@
 ---
-- name: Setup for a development system
+- name: Setting up a development system
   hosts: localhost
   connection: local
+  become: true
 
   roles:
     - prep
     - base-pkgs
     - dev
     - harden
-
