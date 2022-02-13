@@ -4,16 +4,23 @@
   register: setup_user
   become: false
 
+- name: Registering variables for correct dotfiles version
+  set_fact:
+    dotfiles-repo: https://github.com/IamLunchbox/dotfiles-legacy
+  when: >
+    ansible_facts['distribution'] == 'Ubuntu' and
+    ansible_facts['distribution_version'] == '20.04'
+
 - name: Cloning dotfiles user
   ansible.builtin.git:
-    repo: https://github.com/IamLunchbox/dotfiles
+    repo: "{{ dotfiles-repo }}"
     dest: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.dotfiles"
   notify: install dotfiles
   become: false
 
 - name: Cloning dotfiles root
   ansible.builtin.git:
-    repo: https://github.com/IamLunchbox/dotfiles
+    repo: "{{ dotfiles-repo }}"
     dest: "/root/.dotfiles"
   notify: install dotfiles root
 
@@ -24,6 +31,8 @@
   ansible.builtin.user:
     name: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
     shell: /bin/zsh
+    groups:
+      - vboxsf
 
 - name: Setting shell for root
   ansible.builtin.user:

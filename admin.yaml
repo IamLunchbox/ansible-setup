@@ -4,8 +4,11 @@
   connection: local
   become: true
 
+  vars_files:
+    - vars/default.config.yaml
+
   roles:
     - prep
-    - base_pkgs
+    - base
     - admin
     - harden

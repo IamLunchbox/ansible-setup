@@ -19,7 +19,6 @@
     name:
       - i3-wm
       - i3
-      - rofi
       - i3status
       - i3lock
       - gdm3
@@ -33,13 +32,15 @@
       - zsh-autosuggestions
       - zsh-syntax-highlighting
       - compton
+      - rofi
       - yubioath-desktop
       - vim
       - xsettingsd
       - git
       - thunar
-      - tmux
       - python3-pip
+      - ffmpeg
+      - whois
       - firefox
       - mousepad
       - curl
@@ -53,6 +54,7 @@
       - network-manager-gnome
       - network-manager-openvpn
       - qpdfview
+      - atom
     state: present
 
 - name: Installing Virtualbox-Packages, if appropriate
@@ -62,6 +64,7 @@
       - virtualbox-guest-utils
     state: present
   when: ansible_facts['virtualization_type'] == "virtualbox"
+  notify: add user to vbox group
 
 - name: Removing packages
   ansible.builtin.apt:

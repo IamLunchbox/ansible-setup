@@ -9,3 +9,9 @@
     name: NetworkManager.service
     state: restarted
     enabled: true
+
+- name: add user to vbox group
+  ansible.builtin.user:
+    name: "{{ setup_user['ansible_facts']['ansible_user'] }}"
+    groups:
+      - vboxsf
