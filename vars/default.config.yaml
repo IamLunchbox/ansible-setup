@@ -1,3 +1,5 @@
 ---
 
 dotfiles-repo: https://github.com/IamLunchbox/dotfiles
+config_system_locale: 'de_DE.UTF-8'
+config_system_language: 'en_US.UTF-8'
