@@ -4,12 +4,28 @@
   community.general.timezone:
     name: Europe/Berlin
 
+- name: Enabling locales
+  ansible.builtin.lineinfile:
+    create: true
+    owner: root
+    group: root
+    mode: 0644
+    path: /etc/locale.gen
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  loop:
+    - regexp: "^#de_DE.UTF-8"
+      line: "de_DE.UTF-8"
+    - regexp: "^#en_US.UTF-8"
+      line: "en_US.UTF-8"
+
 - name: Generating locales
   community.general.locale_gen:
     name:
       - en_US.UTF-8
       - de_DE.UTF-8
     state: present
+
 
 - name: Set keymap
   ansible.builtin.lineinfile:

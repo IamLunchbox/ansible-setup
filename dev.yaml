@@ -4,6 +4,9 @@
   connection: local
   become: true
 
+  vars:
+    - system_purpose: dev
+
   vars_files:
     - vars/default.config.yaml
 
