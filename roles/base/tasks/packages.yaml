@@ -34,7 +34,8 @@
       - zsh
       - zsh-autosuggestions
       - zsh-syntax-highlighting
-      - compton
+      - notification-daemon
+      - picom
       - rofi
       - yubioath-desktop
       - vim
