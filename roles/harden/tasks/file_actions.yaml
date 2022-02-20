@@ -44,8 +44,14 @@
     state: absent
   notify: parse firefox apparmor profile
 
+- name: Check if snap apparmor profile exists
+  ansible.builtin.stat:
+    path: /etc/apparmor.d/usr.lib.snapd.snap-confine.real
+  register: snap_apparmor_profile
+
 - name: Disabling the snap apparmor profile
   ansible.builtin.file:
     src: /etc/apparmor.d/usr.lib.snapd.snap-confine.real
     dest: /etc/apparmor.d/disable/usr.lib.snapd.snap-confine.real
     state: link
+  when: snap_apparmor_profile.stat.exists

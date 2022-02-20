@@ -3,8 +3,8 @@
   loop:
     - packages.yaml
     - pam.yaml
-    - file_actions.yaml
     - kernel.yaml
+    - file_actions.yaml
 
 - name: Setting up firewall rules to default deny all incoming traffic
   community.general.ufw:
