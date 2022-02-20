@@ -2,7 +2,7 @@
 
 - name: Deploying netplan
   ansible.builtin.copy:
-    content: 01-netcfg.yml
+    src: 01-netcfg.yml
     dest: /etc/netplan/01-netcfg.yml
     owner: root
     group: root
