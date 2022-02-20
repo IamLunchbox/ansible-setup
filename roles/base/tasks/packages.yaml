@@ -14,6 +14,24 @@
   loop:
     - "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main"
 
+- name: Removing packages
+  ansible.builtin.apt:
+    name:
+      - cups
+      - bluez
+      - hplip
+      - snap
+      - snapd
+      - flatpak
+      - gdm3
+      - gnome-shell
+
+    state: absent
+    autoremove: true
+    autoclean: true
+    purge: true
+
+
 - name: Adding desktop-environment
   ansible.builtin.apt:
     name:
@@ -22,12 +40,13 @@
       - fonts-dejavu-core
       - i3status
       - i3lock
-      - gdm3
+      - slick-greeter
+      - lightdm-settings
     state: present
     install_recommends: false
   notify:
     - enable graphical target
-    - enable gdm
+    - enable lightdm
 
 - name: Adding base packages
   ansible.builtin.apt:
@@ -77,17 +96,3 @@
     state: present
   when: ansible_facts['virtualization_type'] == "virtualbox"
   notify: add user to vbox group
-
-- name: Removing packages
-  ansible.builtin.apt:
-    name:
-      - cups
-      - bluez
-      - hplip
-      - snap
-      - snapd
-      - flatpak
-    state: absent
-    autoremove: true
-    autoclean: true
-    purge: true
