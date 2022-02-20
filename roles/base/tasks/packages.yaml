@@ -22,11 +22,12 @@
       - fonts-dejavu-core
       - i3status
       - i3lock
-      - slick-greeter
-      - lightdm-settings
+      - gdm3
     state: present
     install_recommends: false
-  notify: enable graphical target
+  notify:
+    - enable graphical target
+    - enable gdm
 
 - name: Adding base packages
   ansible.builtin.apt:

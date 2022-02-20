@@ -4,9 +4,9 @@
   command:
     cmd: "systemctl set-default graphical.target"
 
-- name: enable lightdm
+- name: enable gdm
   ansible.builtin.systemd:
-    name: lightdm.service
+    name: gdm.service
     enabled: true
 
 
