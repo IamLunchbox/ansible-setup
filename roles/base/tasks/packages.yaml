@@ -18,11 +18,14 @@
   ansible.builtin.apt:
     name:
       - i3-wm
-      - i3
+      - xfonts-base
+      - fonts-dejavu-core
       - i3status
       - i3lock
-      - gdm3
+      - slick-greeter
+      - lightdm-settings
     state: present
+    install_recommends: false
   notify: enable graphical target
 
 - name: Adding base packages
@@ -40,6 +43,8 @@
       - thunar
       - python3-pip
       - ffmpeg
+      - openssh-client
+      - seahorse
       - whois
       - firefox
       - mousepad
@@ -78,3 +83,4 @@
     state: absent
     autoremove: true
     autoclean: true
+    purge: true

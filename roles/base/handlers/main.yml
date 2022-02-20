@@ -4,6 +4,12 @@
   command:
     cmd: "systemctl set-default graphical.target"
 
+- name: enable lightdm
+  ansible.builtin.systemd:
+    name: lightdm.service
+    enabled: true
+
+
 - name: enable network manager
   ansible.builtin.systemd:
     name: NetworkManager.service
