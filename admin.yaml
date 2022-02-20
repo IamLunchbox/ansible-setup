@@ -5,7 +5,7 @@
   become: true
 
   vars:
-    - system_purpose: admin
+    - system_purpose: "admin"
 
 
   vars_files:
