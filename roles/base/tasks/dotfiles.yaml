@@ -33,6 +33,7 @@
     shell: /bin/zsh
     groups:
       - vboxsf
+    append: true
 
 - name: Setting shell for root
   ansible.builtin.user:
