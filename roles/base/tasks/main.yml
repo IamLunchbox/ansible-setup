@@ -11,3 +11,5 @@
 # but you never know
 - include_tasks: network.yaml
   when: ansible_facts['distribution'] == "Ubuntu"
+
+- include_tasks: dotfiles.yaml

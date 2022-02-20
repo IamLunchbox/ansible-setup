@@ -12,4 +12,4 @@
 - name: Setting up jupyter notebook
   ansible.builtin.command:
     cmd: /usr/bin/python3 -m ipykernel install --user
-    become: false
+  become: false
