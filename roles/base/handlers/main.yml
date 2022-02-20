@@ -18,7 +18,7 @@
 
 - name: add user to vbox group
   ansible.builtin.user:
-    name: "{{ setup_user['ansible_facts']['ansible_user'] }}"
+    name: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
     groups:
       - vboxsf
 
