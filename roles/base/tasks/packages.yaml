@@ -35,7 +35,6 @@
       - zsh-autosuggestions
       - zsh-syntax-highlighting
       - notification-daemon
-      - picom
       - rofi
       - yubioath-desktop
       - vim
@@ -62,6 +61,12 @@
       - qpdfview
       - atom
     state: present
+
+- name: Installing picom for ubuntu 22.04
+  ansible.builtin.apt:
+    name:
+      - picom
+  when: ansible_facts['distribution_version']
 
 - name: Installing Virtualbox-Packages, if appropriate
   ansible.builtin.apt:
