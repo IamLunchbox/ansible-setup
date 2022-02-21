@@ -1,19 +1,8 @@
 ---
 restricted_directories:
-- path: /boot
-  mode: '0700'
-  owner: root
-  group: root
-- path: /etc/iptables
-  mode: '0700'
-  owner: root
-  group: root
-- path: /etc/arptables
-  mode: '0700'
-  owner: root
-  group: root
+- /boot
+- /etc/iptables
+- /etc/arptables
+
 restricted_files:
-- path: /usr/bin/as
-  mode: '0770'
-  owner: root
-  group: root
+- /usr/bin/as

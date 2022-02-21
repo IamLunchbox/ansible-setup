@@ -9,7 +9,7 @@
 
 - name: Checking for directories to restrict
   ansible.builtin.stat:
-    path: "{{ restrict_dir_check.path }}"
+    path: "{{ restrict_dir_check }}"
   loop:
     - "{{ restricted_directories }}"
   loop_control:
