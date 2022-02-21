@@ -5,38 +5,35 @@
     path: /etc/fstab
     create: false
     insertafter: EOF
-    line: "{{ item }}"
-  loop:
-    - 'tmpfs  /tmp    tmpfs   rw,nodev,nosuid 0   0'
+    line: "proc    /proc    proc    defaults,nosuid,nodev,noexec,relatime,hidepid=2     0     0"
 
-- name: Restricting access to important file and directories
-  ansible.builtin.file:
-    path: "{{ item.path }}"
-    mode: "{{ item.mode }}"
-    owner: "{{ item.owner }}"
-    group: "{{ item.group }}"
+- name: Checking for directories to restrict
+  ansible.builtin.stat:
+    path: "{{ restrict_dir_check.path }}"
   loop:
-    - path: "{{ ansible_facts['user_dir'] }}"
-      mode: '0750'
-      owner: "{{ ansible_facts['user_id'] }}"
-      group: "{{ ansible_facts['user_id'] }}"
-    - path: /usr/bin/as
-      mode: '0770'
-      owner: root
-      group: root
-    - path: /boot
-      mode: '0700'
-      owner: root
-      group: root
-    - path: /etc/iptables
-      mode: '0700'
-      owner: root
-      group: root
-    - path: /etc/arptables
-      mode: '0700'
-      owner: root
-      group: root
-  ignore_errors: true
+    - "{{ restricted_directories }}"
+  loop_control:
+    loop_var: restrict_dir_check
+  register: existing_restrict_dirs
+
+- name: Restricting access to important directories
+  ansible.builtin.file:
+    path: "{{ to_restrict.stat.path }}"
+    mode: "0700"
+    owner: "root"
+    group: "root"
+  loop:
+    - "{{ existing_restrict_dirs.results }}"
+  loop_control:
+    loop_var: to_restrict
+  when: to_restrict.stat.exists
+
+- name: Restricting access to home directory
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}"
+    mode: '0750'
+    owner: "{{ ansible_facts['user_id'] }}"
+    group: "{{ ansible_facts['user_id'] }}"
 
 - name: Enabling the firefox-apparmor profile
   ansible.builtin.file:

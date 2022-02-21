@@ -2,8 +2,8 @@
 
 - name: Disabling coredumps
   ansible.builtin.lineinfile:
-    path: "{{ item.path }}"
-    line: "{{ item.line }}"
+    path: "{{ disable_coredumps.path }}"
+    line: "{{ disable_coredumps.line }}"
     owner: root
     group: root
     mode: 0644
@@ -14,6 +14,8 @@
       line: 's.suid_dumpable = 0'
     - path: /etc/security/limits.conf
       line: '*     hard   core    0'
+  loop_control:
+    loop_var: disable_coredumps
 
 - name: Hardening kernel parameters
   ansible.builtin.copy:

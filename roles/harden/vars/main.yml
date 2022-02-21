@@ -1,2 +1,19 @@
 ---
-# vars file for harden
+restricted_directories:
+- path: /boot
+  mode: '0700'
+  owner: root
+  group: root
+- path: /etc/iptables
+  mode: '0700'
+  owner: root
+  group: root
+- path: /etc/arptables
+  mode: '0700'
+  owner: root
+  group: root
+restricted_files:
+- path: /usr/bin/as
+  mode: '0770'
+  owner: root
+  group: root
