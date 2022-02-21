@@ -11,12 +11,12 @@
   ansible.builtin.stat:
     path: "{{ restrict_dir_check }}"
   loop:
-    - "{{ restricted_directories }}"
+    - "{{ restricted_directories | flatten }}"
   loop_control:
     loop_var: restrict_dir_check
   register: existing_restrict_dirs
 
-- name: Restricting access to important directories
+- name: Restricting access to dirs
   ansible.builtin.file:
     path: "{{ to_restrict.stat.path }}"
     mode: "0700"
