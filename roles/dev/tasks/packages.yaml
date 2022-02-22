@@ -1,15 +1,22 @@
 ---
 
-- name: Installing pip-packages
+- name: Adding base packages
+  ansible.builtin.apt:
+    update_cache:
+    cache_valid_time: 3600
+    name:
+      - python3-pip
+    state: present
+
+- name: Install jedi
   ansible.builtin.pip:
     name:
-      - yamllint
-      - molecule
       - jedi
-      - ipykernel
     state: latest
 
-- name: Setting up jupyter notebook
-  ansible.builtin.command:
-    cmd: /usr/bin/python3 -m ipykernel install --user
-  become: false
+- name: Update ipykernel
+  ansible.builtin.pip:
+    name:
+      - ipykernel
+    state: latest
+  notify: install ipykernel

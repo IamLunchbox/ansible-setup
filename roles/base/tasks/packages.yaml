@@ -61,7 +61,6 @@
       - xsettingsd
       - git
       - thunar
-      - python3-pip
       - ffmpeg
       - openssh-client
       - seahorse

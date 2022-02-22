@@ -1,11 +1,11 @@
 ---
-- name: Setting up an administrative system
+- name: Setting up a development system
   hosts: localhost
   connection: local
   become: true
 
   vars:
-    - system_purpose: "admin"
+    - system_purpose: "ansible_dev"
 
   vars_files:
     - vars/default.config.yaml
@@ -13,5 +13,5 @@
   roles:
     - prep
     - base
-    - admin
+    - ansible_dev
     - harden
