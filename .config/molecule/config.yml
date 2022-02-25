@@ -1,0 +1,32 @@
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+  provision: true
+
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+
+platforms:
+  - name: instance
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: dhcp
+    box: generic/ubuntu2004
+    memory: 4096
+    cpus: 4
+
+provisioner:
+  name: ansible
+  env:
+    NO_UPGRADE: true
+
+verifier:
+  name: ansible

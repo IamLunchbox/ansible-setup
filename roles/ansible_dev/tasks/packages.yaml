@@ -22,6 +22,8 @@
       - teleport
       - keepassxc
       - python3-pip
+      - vagrant
+      - qemu-kvm
     state: present
 
 - name: Installing pip-packages
@@ -29,4 +31,9 @@
     name:
       - yamllint
       - molecule
+      - molecule-vagrant
+      - molecule-podman
+      - mkdocs
+      - ansible-lint
     state: present
+  become: false
