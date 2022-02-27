@@ -5,7 +5,8 @@
     path: /etc/fstab
     create: false
     insertafter: EOF
-    line: "proc    /proc    proc    defaults,nosuid,nodev,noexec,relatime,hidepid=2     0     0"
+    line: "proc    /proc    proc    defaults,nosuid,nodev,\
+      noexec,relatime,hidepid=2     0     0"
 
 - name: Checking for directories to restrict
   ansible.builtin.stat:
@@ -18,15 +19,13 @@
 
 - name: Restricting access to dirs
   ansible.builtin.file:
-    path: "{{ to_restrict.stat.path }}"
+    path: "{{item.stat.path }}"
     mode: "0700"
     owner: "root"
     group: "root"
-  loop:
+  with_items:
     - "{{ existing_restrict_dirs.results }}"
-  loop_control:
-    loop_var: to_restrict
-  when: to_restrict.stat.exists
+  when: item.stat.exists
 
 - name: Restricting access to home directory
   ansible.builtin.file:

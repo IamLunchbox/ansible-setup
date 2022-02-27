@@ -21,7 +21,7 @@
     name: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
     groups:
       - vboxsf
-
+    append: true
 
 - name: install dotfiles
   command:

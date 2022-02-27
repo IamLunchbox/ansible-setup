@@ -4,15 +4,18 @@
     msg: "This system is not compatible with this playbook."
   when: >
     not (ansible_facts['distribution'] == 'Ubuntu' and
-    (ansible_facts['distribution_version'] == '20.04' or 
+    (ansible_facts['distribution_version'] == '20.04' or
     ansible_facts['distribution_version'] == '22.04'))
 
-- name: Updating and upgrading
+- name: Updating
   apt:
     update_cache: true
+    cache_valid_time: 3600
+
+- name: Upgrading and autoremoving
+  apt:
     name: "*"
     state: latest
-    cache_valid_time: 3600
     autoremove: true
     autoclean: true
-
+  when: lookup('env', 'NO_UPGRADE') is undefined

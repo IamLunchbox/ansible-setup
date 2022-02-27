@@ -25,7 +25,6 @@
       - flatpak
       - gdm3
       - gnome-shell
-
     state: absent
     autoremove: true
     autoclean: true
