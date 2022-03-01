@@ -1,19 +1,27 @@
 ---
 
-- name: enable graphical target
-  command:
-    cmd: "systemctl set-default graphical.target"
+- name: enable desktop
+  block:
+    - name: Setting graphical target
+      command:
+        cmd: "systemctl set-default graphical.target"
 
-- name: enable lightdm
-  ansible.builtin.systemd:
-    name: lightdm.service
-    enabled: true
+    - name: enable lightdm
+      ansible.builtin.systemd:
+        name: lightdm.service
+        enabled: true
 
-- name: enable network manager
-  ansible.builtin.systemd:
-    name: NetworkManager.service
-    state: restarted
-    enabled: true
+- name: change to network manager
+  block:
+    - name: Generating and applying netplan
+      command:
+        cmd: netplan generate && netplan apply
+
+    - name: Enabling and restarting Network Manager
+      ansible.builtin.systemd:
+        name: NetworkManager.service
+        state: restarted
+        enabled: true
 
 - name: add user to vbox group
   ansible.builtin.user:
