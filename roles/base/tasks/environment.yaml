@@ -38,6 +38,8 @@
   changed_when: >
     locale_lang != config_system_locale or
     locale_language != config_system_language
+  notify:
+    - set the rest of the environment
 
 - name: Set keymap
   ansible.builtin.lineinfile:

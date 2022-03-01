@@ -4,22 +4,20 @@
   command:
     cmd: "systemctl set-default graphical.target"
 
-- name: enable lightdm
+# - name: enable lightdm
+#   ansible.builtin.systemd:
+#     name: lightdm.service
+#     enabled: true
+
+- name: generate and apply netplan
+  command:
+    cmd: netplan generate && netplan apply
+
+- name: enable network manager
   ansible.builtin.systemd:
-    name: lightdm.service
+    name: NetworkManager.service
+    state: restarted
     enabled: true
-
-- name: change to network manager
-  block:
-    - name: Generating and applying netplan
-      command:
-        cmd: netplan generate && netplan apply
-
-    - name: Enabling and restarting Network Manager
-      ansible.builtin.systemd:
-        name: NetworkManager.service
-        state: restarted
-        enabled: true
 
 - name: add user to vbox group
   ansible.builtin.user:
@@ -38,3 +36,22 @@
   command:
     chdir: "/root/.dotfiles"
     cmd: "./install"
+
+- name: set the rest of the environment
+  command:
+    cmd: "localectl set-locale {{ locale_type }}={{ config_system_locale }}"
+  loop:
+    - LC_CTYPE
+    - LC_NUMERIC
+    - LC_TIME
+    - LC_COLLATE
+    - LC_MONETARY
+    - LC_MESSAGES
+    - LC_PAPER
+    - LC_NAME
+    - LC_ADDRESS
+    - LC_TELEPHONE
+    - LC_MEASUREMENT
+    - LC_IDENTIFICATION
+  loop_control:
+    loop_var: locale_type
