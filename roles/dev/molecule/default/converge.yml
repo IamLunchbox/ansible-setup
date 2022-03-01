@@ -4,9 +4,18 @@
   become: true
 
   tasks:
-    - name: Include role
+
+    - name: Include base roles
       ansible.builtin.include_role:
-        name: hardening
-    - name: Reboot a slow machine that might have lots of updates to apply
-      ansible.builtin.reboot:
-        reboot_timeout: 300
+        name: "{{ item }}"
+      loop:
+        - ../../../prep
+        - ../../../base
+
+    - name: Include user roles
+      ansible.builtin.include_role:
+        name: dev
+
+    - name: Include hardening role
+      ansible.builtin.include_role:
+        name: ../../../harden

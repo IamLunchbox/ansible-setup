@@ -46,8 +46,10 @@
     group: root
     mode: 0644
     path: /etc/vconsole.conf
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
+    regexp: "{{ keymaps.regexp }}"
+    line: "{{ keymaps.line }}"
   loop:
     - regexp: "^KEYMAP="
       line: "KEYMAP=de"
+  loop_control:
+    loop_var: keymaps

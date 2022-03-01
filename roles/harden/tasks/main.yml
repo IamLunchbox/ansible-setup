@@ -1,16 +1,18 @@
 ---
-- include_tasks: "{{ item }}"
+- include_tasks: "{{ harden_tasks }}"
   loop:
     - packages.yaml
     - pam.yaml
     - kernel.yaml
     - file_actions.yaml
+  loop_control:
+    loop_var: harden_tasks
 
 - name: Setting up firewall rules to default deny all incoming traffic
   community.general.ufw:
     state: enabled
-    default: "{{ item.default }}"
-    direction: "{{ item.direction }}"
+    default: "{{ ufw_dir.default }}"
+    direction: "{{ ufw_dir.direction }}"
   loop:
     - default: deny
       direction: incoming
@@ -18,3 +20,5 @@
       direction: routed
     - default: allow
       direction: outgoing
+  loop_control:
+    loop_var: ufw_dir

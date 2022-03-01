@@ -6,7 +6,4 @@
   tasks:
     - name: Include role
       ansible.builtin.include_role:
-        name: hardening
-    - name: Reboot a slow machine that might have lots of updates to apply
-      ansible.builtin.reboot:
-        reboot_timeout: 300
+        name: prep

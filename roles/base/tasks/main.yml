@@ -1,6 +1,7 @@
 ---
 
-- setup:
+- name: Generating non-root vars
+  setup:
   register: setup_user
   become: false
 

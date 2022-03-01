@@ -1,18 +1,22 @@
 ---
 - name: Adding Keys
   ansible.builtin.apt_key:
-    url: "{{ item }}"
+    url: "{{ atom_key }}"
     state: present
   loop:
-   - "https://packagecloud.io/AtomEditor/atom/gpgkey"
+    - "https://packagecloud.io/AtomEditor/atom/gpgkey"
+  loop_control:
+    loop_var: atom_key
 
 - name: Adding Repos
   ansible.builtin.apt_repository:
-    repo: "{{ item }}"
+    repo: "{{ atom_repo }}"
     state: present
     update_cache: true
   loop:
     - "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main"
+  loop_control:
+    loop_var: atom_repo
 
 - name: Removing packages
   ansible.builtin.apt:
@@ -73,9 +77,6 @@
       - gnome-terminal
       - pavucontrol
       - openvpn
-      - network-manager
-      - network-manager-gnome
-      - network-manager-openvpn
       - qpdfview
       - atom
     state: present
@@ -84,7 +85,7 @@
   ansible.builtin.apt:
     name:
       - picom
-  when: ansible_facts['distribution_version'] != "20.04"
+  when: ansible_facts['distribution_version'] == "22.04"
 
 - name: Installing Virtualbox-Packages, if appropriate
   ansible.builtin.apt:

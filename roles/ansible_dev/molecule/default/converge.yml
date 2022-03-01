@@ -5,18 +5,18 @@
 
   tasks:
 
-    - name: Include role 1
+    - name: Include base roles
       ansible.builtin.include_role:
         name: "{{ item }}"
       loop:
         - ../../../prep
         - ../../../base
-        - ../../../harden
 
-    - name: Include role
+
+    - name: Include user roles
       ansible.builtin.include_role:
         name: ansible_dev
 
-    - name: Reboot a slow machine that might have lots of updates to apply
-      ansible.builtin.reboot:
-        reboot_timeout: 300
+    - name: Include hardening role
+      ansible.builtin.include_role:
+        name: ../../../harden

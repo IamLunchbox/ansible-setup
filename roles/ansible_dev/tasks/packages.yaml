@@ -16,7 +16,7 @@
 
 - name: Adding base packages
   ansible.builtin.apt:
-    update_cache:
+    update_cache: true
     cache_valid_time: 3600
     name:
       - teleport
@@ -30,10 +30,11 @@
   pip:
     name:
       - yamllint
+      - ansible-lint
       - molecule
       - molecule-vagrant
       - molecule-podman
       - mkdocs
-      - ansible-lint
+      - mkdocs[i18n]
     state: present
   become: false

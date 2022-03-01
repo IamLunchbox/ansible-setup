@@ -1,6 +1,7 @@
 ---
 
-- setup:
+- name: Generating non-root vars
+  setup:
   register: setup_user
   become: false
 
@@ -21,6 +22,7 @@
   ansible.builtin.git:
     repo: "{{ dotfiles_repo }}"
     dest: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.dotfiles"
+    version: main
   notify: install dotfiles
   become: false
 
@@ -28,6 +30,7 @@
   ansible.builtin.git:
     repo: "{{ dotfiles_repo }}"
     dest: "/root/.dotfiles"
+    version: main
   notify: install dotfiles root
 
 - name: Running dotfile handler if necessary
@@ -45,7 +48,7 @@
 
 - name: Setting up correct user permissions
   ansible.builtin.file:
-      recurse: yes
-      dest: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}"
-      group: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
-      owner: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
+    recurse: true
+    dest: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}"
+    group: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
+    owner: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"

@@ -1,16 +1,21 @@
 ---
 
+- name: Updating apt
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
 - name: Adding base packages
   ansible.builtin.apt:
-    update_cache:
-    cache_valid_time: 3600
     name:
       - python3-pip
     state: present
 
-- name: Install jedi
+- name: Install pip-packages
   ansible.builtin.pip:
     name:
+      - mkdocs
+      - mkdocs[i18n]
       - jedi
     state: latest
 

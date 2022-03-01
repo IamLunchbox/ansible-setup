@@ -42,4 +42,3 @@
     module_path: pam_faildelay.so
     module_arguments: delay=5000000
     state: updated
-

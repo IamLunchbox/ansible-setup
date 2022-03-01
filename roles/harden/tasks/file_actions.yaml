@@ -11,21 +11,21 @@
 - name: Checking for directories to restrict
   ansible.builtin.stat:
     path: "{{ restrict_dir_check }}"
-  loop:
-    - "{{ restricted_directories | flatten }}"
+  loop: "{{ restricted_directories }}"
   loop_control:
     loop_var: restrict_dir_check
   register: existing_restrict_dirs
 
 - name: Restricting access to dirs
   ansible.builtin.file:
-    path: "{{item.stat.path }}"
+    path: "{{ restrict.stat.path }}"
     mode: "0700"
     owner: "root"
     group: "root"
-  with_items:
-    - "{{ existing_restrict_dirs.results }}"
-  when: item.stat.exists
+  loop: "{{ existing_restrict_dirs.results|flatten }}"
+  loop_control:
+    loop_var: restrict
+  when: restrict.stat.exists
 
 - name: Restricting access to home directory
   ansible.builtin.file:

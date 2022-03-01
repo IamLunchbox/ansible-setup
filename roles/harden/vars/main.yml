@@ -1,2 +1,3 @@
 ---
-restricted_directories: ["/boot", "/etc/iptables", "/etc/arptables", "/usr/bin/as"]
+restricted_directories: >
+  ["/boot", "/etc/iptables", "/etc/arptables", "/usr/bin/as"]

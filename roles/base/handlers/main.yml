@@ -9,7 +9,6 @@
     name: lightdm.service
     enabled: true
 
-
 - name: enable network manager
   ansible.builtin.systemd:
     name: NetworkManager.service
