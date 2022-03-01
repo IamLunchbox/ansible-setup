@@ -49,7 +49,7 @@
     install_recommends: false
   notify:
     - set graphical target
-    - enable lightdm
+    # - enable lightdm
 
 - name: Adding base packages
   ansible.builtin.apt:
