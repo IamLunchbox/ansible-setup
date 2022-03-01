@@ -43,6 +43,7 @@
       - fonts-dejavu-core
       - i3status
       - i3lock
+      - lightdm
       - lightdm-gtk-greeter
       - lightdm-settings
     state: present

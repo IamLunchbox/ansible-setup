@@ -26,17 +26,6 @@
       - vboxsf
     append: true
 
-- name: install dotfiles
-  command:
-    chdir: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.dotfiles"
-    cmd: "./install {{ system_purpose }}"
-  become: false
-
-- name: install dotfiles root
-  command:
-    chdir: "/root/.dotfiles"
-    cmd: "./install"
-
 - name: set the rest of the environment
   command:
     cmd: "localectl set-locale {{ locale_type }}={{ config_system_locale }}"
@@ -55,3 +44,14 @@
     - LC_IDENTIFICATION
   loop_control:
     loop_var: locale_type
+
+- name: install dotfiles
+  command:
+    chdir: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.dotfiles"
+    cmd: "./install {{ system_purpose }}"
+  become: false
+
+- name: install dotfiles root
+  command:
+    chdir: "/root/.dotfiles"
+    cmd: "./install"
