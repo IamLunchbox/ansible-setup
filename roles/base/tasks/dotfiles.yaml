@@ -24,7 +24,8 @@
     dest: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.dotfiles"
     version: main
   notify: install dotfiles
-  become: false
+  become: true
+  become_user: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
 
 - name: Cloning dotfiles root
   ansible.builtin.git:
