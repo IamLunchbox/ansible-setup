@@ -48,7 +48,8 @@
     state: present
     install_recommends: false
   notify:
-    - enable desktop
+    - set graphical target
+    - enable lightdm
 
 - name: Adding base packages
   ansible.builtin.apt:

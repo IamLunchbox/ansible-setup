@@ -1,15 +1,13 @@
 ---
 
-- name: enable desktop
-  block:
-    - name: Setting graphical target
-      command:
-        cmd: "systemctl set-default graphical.target"
+- name: set graphical target
+  command:
+    cmd: "systemctl set-default graphical.target"
 
-    - name: enable lightdm
-      ansible.builtin.systemd:
-        name: lightdm.service
-        enabled: true
+- name: enable lightdm
+  ansible.builtin.systemd:
+    name: lightdm.service
+    enabled: true
 
 - name: change to network manager
   block:
