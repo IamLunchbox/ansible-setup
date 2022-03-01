@@ -11,7 +11,7 @@
 # this is indeed unnecessary, since right now
 # ansible will stop when it is not executed on ubuntu
 # but you never know
-- include_tasks: network.yaml
-  when: ansible_facts['distribution'] == "Ubuntu"
+# - include_tasks: network.yaml
+#   when: ansible_facts['distribution'] == "Ubuntu"
 
 - include_tasks: dotfiles.yaml

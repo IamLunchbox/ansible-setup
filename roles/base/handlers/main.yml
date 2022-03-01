@@ -25,6 +25,7 @@
     groups:
       - vboxsf
     append: true
+    shell: /bin/zsh
 
 - name: set the rest of the environment
   command:
