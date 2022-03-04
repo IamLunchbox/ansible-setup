@@ -1,6 +1,6 @@
 ---
 
-- name: Adding Podman for Ubuntu 20.04
+- name: Adding Podman-Repos for Ubuntu 20.04
   block:
     - name: Adding Podman keys
       ansible.builtin.apt_key:

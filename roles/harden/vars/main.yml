@@ -1,3 +1,64 @@
 ---
-restricted_directories: >
-  ["/boot", "/etc/iptables", "/etc/arptables", "/usr/bin/as"]
+# vars file for harden
+dangerous_pkgs:
+  - cups
+  - g++
+  - gcc
+  - hplip
+  - javascript-common
+  - snapd
+  - gnome-software-plugin-snap
+  - snap
+  - snapd
+  - flatpak
+  - openssh-server
+  - nfs-kernel-server
+
+unneeded_pkgs:
+  - cheese
+  - deja-dup
+  - tcpdump
+  - gnome-sudoku
+  - gnome-mahjongg
+  - gnome-mines
+  - gnome-session-reminna
+  - gnome-todo
+  - saned
+  - transmission
+  - thunderbird
+  - shotwell
+  - libreoffice-*
+  - gnome-disk-image-mounter
+  - gnome-disks
+  - gnome-screenshot
+  - gnome-logs
+  - sol
+  - gnome-calendar
+  - gnome-system-monitor
+  - aisleriot
+  - file-roller
+  - totem
+  - printer-driver-*
+
+security_pkgs:
+  - ufw
+  - gufw
+  - unattended-upgrades
+  - libpam-pwquality
+  - timeshift
+  - hardening-runtime
+  - debsums
+  - apt-transport-https
+
+important_dir:
+  - /usr/bin/as
+  - /boot
+  - /etc/sudoers.d
+  - /etc/iptables
+  - /etc/arptables
+  - /etc/cron.d
+  - /etc/cron.daily
+  - /etc/cron.hourly
+  - /etc/cron.weekly
+  - /etc/cron.monthly
+  - /root

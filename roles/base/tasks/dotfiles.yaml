@@ -12,11 +12,10 @@
     ansible_facts['distribution'] == 'Ubuntu' and
     ansible_facts['distribution_version'] == '20.04'
 
-- name: Set dotfile type to empty string when var not defined
+- name: Set dotfile type to empty string when it is not defined
   set_fact:
     system_purpose: ""
   when: system_purpose is undefined
-
 
 - name: Cloning dotfiles user
   ansible.builtin.git:
@@ -24,7 +23,6 @@
     dest: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.dotfiles"
     version: main
   notify: install dotfiles
-  become: true
   become_user: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
 
 - name: Cloning dotfiles root
@@ -33,9 +31,6 @@
     dest: "/root/.dotfiles"
     version: main
   notify: install dotfiles root
-
-- name: Running dotfile handler if necessary
-  meta: flush_handlers
 
 - name: Setting shell for the user
   ansible.builtin.user:

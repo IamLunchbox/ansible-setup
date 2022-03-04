@@ -1,17 +1,15 @@
 ---
 
-- name: Generating non-root vars
-  setup:
-  register: setup_user
-  become: false
+- name: Compatibility check
+  fail:
+    msg: "This system is not compatible with this playbook."
+  when: ansible_facts['os_family'] != 'Debian'
 
 - include_tasks: environment.yaml
 
 - include_tasks: packages.yaml
-# this is indeed unnecessary, since right now
-# ansible will stop when it is not executed on ubuntu
-# but you never know
-# - include_tasks: network.yaml
-#   when: ansible_facts['distribution'] == "Ubuntu"
+
+- include_tasks: network.yaml
+  when: ansible_facts['distribution'] == "Ubuntu"
 
 - include_tasks: dotfiles.yaml

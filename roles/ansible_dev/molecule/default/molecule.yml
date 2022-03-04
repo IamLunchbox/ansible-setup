@@ -1,1 +1,11 @@
 ---
+
+platforms:
+  - name: ansible-dev
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: dhcp
+    box: generic/ubuntu2004
+    memory: 4096
+    cpus: 4

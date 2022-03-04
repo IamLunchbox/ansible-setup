@@ -18,10 +18,12 @@
       - mkdocs[i18n]
       - jedi
     state: latest
+  become: false
 
 - name: Update ipykernel
   ansible.builtin.pip:
     name:
       - ipykernel
     state: latest
+  become: false
   notify: install ipykernel

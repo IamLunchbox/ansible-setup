@@ -1,5 +1,5 @@
 ---
-- name: Setting up a development system
+- name: Setting up a devops system
   hosts: localhost
   connection: local
   become: true
@@ -11,7 +11,6 @@
     - vars/default.config.yaml
 
   roles:
-    - prep
     - base
     - ansible_dev
     - harden

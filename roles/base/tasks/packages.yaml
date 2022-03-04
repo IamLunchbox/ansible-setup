@@ -1,5 +1,10 @@
 ---
-- name: Adding Keys
+- name: Updating cache
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Adding Atom Key
   ansible.builtin.apt_key:
     url: "{{ atom_key }}"
     state: present
@@ -8,32 +13,12 @@
   loop_control:
     loop_var: atom_key
 
-- name: Adding Repos
+- name: Adding Atom Repo
   ansible.builtin.apt_repository:
-    repo: "{{ atom_repo }}"
+    repo: >
+      deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main
     state: present
     update_cache: true
-  loop:
-    - "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main"
-  loop_control:
-    loop_var: atom_repo
-
-- name: Removing packages
-  ansible.builtin.apt:
-    name:
-      - cups
-      - bluez
-      - hplip
-      - snap
-      - snapd
-      - flatpak
-      - gdm3
-      - gnome-shell
-    state: absent
-    autoremove: true
-    autoclean: true
-    purge: true
-
 
 - name: Adding desktop-environment
   ansible.builtin.apt:
@@ -43,14 +28,26 @@
       - fonts-dejavu-core
       - i3status
       - i3lock
-      - lightdm
-      - lightdm-gtk-greeter
-      - lightdm-settings
+      - xsettingsd
     state: present
     install_recommends: false
+    # - enable lightdm
+
+- name: Check for existing greeter
+  package_facts:
+    manager: auto
+
+- name: Adding greeter
+  ansible.builtin.apt:
+    name:
+      - lightdm
+      - lightdm-gtk-greeter
+    state: present
   notify:
     - set graphical target
-    # - enable lightdm
+  when: >
+    'gdm3' not in ansible_facts.packages and
+    'sddm' not in ansible_facts.packages
 
 - name: Adding base packages
   ansible.builtin.apt:
@@ -59,12 +56,9 @@
       - zsh-autosuggestions
       - zsh-syntax-highlighting
       - notification-daemon
-      - rofi
       - yubioath-desktop
       - vim
-      - xsettingsd
       - git
-      - thunar
       - ffmpeg
       - openssh-client
       - seahorse
@@ -80,6 +74,11 @@
       - openvpn
       - qpdfview
       - atom
+      - rofi
+      - thunar
+      - network-manager-gnome
+      - network-manager-openvpn
+      - network-manager
     state: present
 
 - name: Installing picom for ubuntu 22.04
@@ -96,3 +95,11 @@
     state: present
   when: ansible_facts['virtualization_type'] == "virtualbox"
   notify: add user to vbox group
+
+- name: Upgrading and autoremoving
+  apt:
+    name: "*"
+    state: latest
+    autoremove: true
+    autoclean: true
+  when: upgrade_pkgs or upgrade_pkgs is undefined

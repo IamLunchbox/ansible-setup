@@ -4,11 +4,6 @@
   command:
     cmd: "systemctl set-default graphical.target"
 
-# - name: enable lightdm
-#   ansible.builtin.systemd:
-#     name: lightdm.service
-#     enabled: true
-
 - name: generate and apply netplan
   command:
     cmd: netplan generate && netplan apply
@@ -25,32 +20,12 @@
     groups:
       - vboxsf
     append: true
-    shell: /bin/zsh
-
-- name: set the rest of the environment
-  command:
-    cmd: "localectl set-locale {{ locale_type }}={{ config_system_locale }}"
-  loop:
-    - LC_CTYPE
-    - LC_NUMERIC
-    - LC_TIME
-    - LC_COLLATE
-    - LC_MONETARY
-    - LC_MESSAGES
-    - LC_PAPER
-    - LC_NAME
-    - LC_ADDRESS
-    - LC_TELEPHONE
-    - LC_MEASUREMENT
-    - LC_IDENTIFICATION
-  loop_control:
-    loop_var: locale_type
 
 - name: install dotfiles
   command:
     chdir: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.dotfiles"
     cmd: "./install {{ system_purpose }}"
-  become: false
+  become_user: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
 
 - name: install dotfiles root
   command:

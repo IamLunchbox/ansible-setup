@@ -4,6 +4,21 @@
   community.general.timezone:
     name: Europe/Berlin
 
+- name: set keymap
+  ansible.builtin.lineinfile:
+    create: true
+    owner: root
+    group: root
+    mode: 0644
+    path: /etc/vconsole.conf
+    regexp: "{{ keymaps.regexp }}"
+    line: "{{ keymaps.line }}"
+  loop:
+    - regexp: '^KEYMAP=\w{2,3}-\w{1,}\s'
+      line: "KEYMAP=de-latin1"
+  loop_control:
+    loop_var: keymaps
+
 - name: Ensure localisation files for '{{ config_system_locale }}' are available
   locale_gen:
     name: "{{ config_system_locale }}"
@@ -14,44 +29,33 @@
     name: "{{ config_system_language }}"
     state: present
 
-- name: Get current locale and language configuration
+- name: Get current lang and language configuration
   command: localectl status
-  register: locale_status
+  register: lang_status
   changed_when: false
 
 - name: Parse 'LANG' from current locale and language configuration
   set_fact:
-    locale_lang: "{{ locale_status.stdout | \
+    locale_lang: "{{ lang_status.stdout | \
       regex_search('LANG=([^\n]+)', '\\1') | first }}"
 
 - name: Parse 'LANGUAGE' from current locale and language configuration
   set_fact:
-    locale_language: "{{ locale_status.stdout | regex_search\
+    locale_language: "{{ lang_status.stdout | regex_search\
       ('LANGUAGE=([^\n]+)', '\\1') | default([locale_lang], true) | first }}"
 
-- name: >
-    Configure locale to '{{ config_system_locale }}' and
-    language to '{{ config_system_language }}'
+- name: Configure language and lang to '{{ config_system_language }}'
   command: >
-    localectl set-locale LANG={{ config_system_locale }}
+    localectl set-locale LANG={{ config_system_language }}
     LANGUAGE={{ config_system_language }}
-  changed_when: >
-    locale_lang != config_system_locale or
-    locale_language != config_system_language
-  notify:
-    - set the rest of the environment
+  when: >
+    locale_language != config_system_language or
+    locale_lang != config_system_language
 
-- name: Set keymap
-  ansible.builtin.lineinfile:
-    create: true
-    owner: root
-    group: root
-    mode: 0644
-    path: /etc/vconsole.conf
-    regexp: "{{ keymaps.regexp }}"
-    line: "{{ keymaps.line }}"
-  loop:
-    - regexp: "^KEYMAP="
-      line: "KEYMAP=de"
+# this always sets up the sub-locales, since this is for desktop systems
+- name: set custom locales
+  command: update-locale "{{ locale_type.type }}"="{{ locale_type.lang }}"
+  loop: "{{ locale_settings }}"
+  changed_when: false
   loop_control:
-    loop_var: keymaps
+    loop_var: locale_type

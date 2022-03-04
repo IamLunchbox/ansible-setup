@@ -4,10 +4,7 @@
   ansible.builtin.apt_key:
     url: "{{ repo_keys }}"
     state: present
-  loop:
-    - "https://deb.releases.teleport.dev/teleport-pubkey.asc"
-    - "https://linux-clients.seafile.com/seafile.asc"
-    - "https://apt.releases.hashicorp.com/gpg"
+  loop: "{{ package_keys }}"
   loop_control:
     loop_var: repo_keys
 
@@ -19,7 +16,6 @@
   loop_control:
     loop_var: repos
 
-
 - name: Adding packages
   ansible.builtin.apt:
     update_cache:
@@ -30,4 +26,12 @@
       - seafile-gui
       - knockd
       - keepassxc
+      - python3-pip
     state: present
+
+- name: Installing pip-packages
+  pip:
+    name:
+      - ansible
+    state: present
+  become: false

@@ -1,20 +1,20 @@
 ---
 
-- name: Adding admin repo keys
+- name: Adding Teleport key
   ansible.builtin.apt_key:
     url: "{{ item }}"
     state: present
   loop:
     - "https://deb.releases.teleport.dev/teleport-pubkey.asc"
 
-- name: Adding Repos
+- name: Adding Teleport repo
   ansible.builtin.apt_repository:
     repo: "{{ item }}"
     state: present
   loop:
     - 'deb https://deb.releases.teleport.dev/ stable main'
 
-- name: Adding base packages
+- name: Adding ansible packages
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
@@ -26,7 +26,7 @@
       - qemu-kvm
     state: present
 
-- name: Installing pip-packages
+- name: Installing ansible pip-packages
   pip:
     name:
       - yamllint
