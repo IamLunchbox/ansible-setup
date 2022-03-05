@@ -19,11 +19,14 @@
       notify:
         - generate and apply netplan
         - enable network manager
+    
+    - name: Flush handlers for netplan
+      meta: flush_handlers
 
     - name: Check for netplan files
       ansible.builtin.find:
         paths: /etc/netplan
-        excludes: "01-netcfg.yml"
+        excludes: "01-netcfg.yaml"
       register: netplan_files
 
     - name: Deleting superfluous netplan files
