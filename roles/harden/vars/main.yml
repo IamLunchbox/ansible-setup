@@ -6,11 +6,6 @@ dangerous_pkgs:
   - gcc
   - hplip
   - javascript-common
-  - snapd
-  - gnome-software-plugin-snap
-  - snap
-  - snapd
-  - flatpak
   - openssh-server
   - nfs-kernel-server
 
@@ -31,6 +26,7 @@ unneeded_pkgs:
   - gnome-disk-image-mounter
   - gnome-disks
   - gnome-screenshot
+  - gnome-software
   - gnome-logs
   - sol
   - gnome-calendar
