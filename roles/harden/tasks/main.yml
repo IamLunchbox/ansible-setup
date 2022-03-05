@@ -87,17 +87,6 @@
     owner: "{{ ansible_facts['user_id'] }}"
     group: "{{ ansible_facts['user_id'] }}"
 
-- name: Removing snap related directories
-  ansible.builtin.file:
-    path: "{{ snap_dirs }}"
-    state: absent
-  loop:
-    - "{{ ansible_facts['user_dir'] }}/snap"
-    - /snap
-  loop_control:
-    loop_var:
-      snap_dirs
-
 - name: Defining password-restrictions
   ansible.builtin.file:
     path: "/etc/security/pwquality.conf.d"
@@ -178,20 +167,6 @@
     path: /etc/apparmor.d/disable/usr.bin.firefox
     state: absent
   notify: parse firefox apparmor profile
-
-- name: Disabling the snap apparmor profile
-  block:
-    - name: Checking for snap apparmor file
-      ansible.builtin.stat:
-        path: /etc/apparmor.d/usr.lib.snapd.snap-confine.real
-      register: snap_existing
-
-    - name: Checking for snap apparmor file
-      ansible.builtin.file:
-        src: /etc/apparmor.d/usr.lib.snapd.snap-confine.real
-        dest: /etc/apparmor.d/disable/usr.lib.snapd.snap-confine.real
-        state: link
-      when: snap_existing.stat.exists
 
 - name: Cleanup obsolete packages
   apt:
