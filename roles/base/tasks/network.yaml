@@ -19,9 +19,6 @@
       notify:
         - generate and apply netplan
         - enable network manager
-    
-    - name: Flush handlers for netplan
-      meta: flush_handlers
 
     - name: Check for netplan files
       ansible.builtin.find:
