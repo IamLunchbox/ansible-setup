@@ -33,7 +33,7 @@
     install_recommends: false
     # - enable lightdm
 
-- name: Check for existing greeter
+- name: Check for installed packages
   package_facts:
     manager: auto
 
