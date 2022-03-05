@@ -5,7 +5,7 @@
     path: /etc/netplan/01-network-manager-all.yaml
   register: network_manager_gnome
 
-- name: Fixing netplan
+- name: Fixing netplan for Network Manager
   block:
 
     - name: Deploying netplan
