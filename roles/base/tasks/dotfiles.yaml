@@ -41,10 +41,3 @@
   ansible.builtin.user:
     name: "root"
     shell: /bin/zsh
-
-- name: Setting up correct user permissions
-  ansible.builtin.file:
-    recurse: true
-    dest: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}"
-    group: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
-    owner: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
