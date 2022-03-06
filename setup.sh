@@ -37,8 +37,16 @@ ${HOME}/.local/bin/ansible-playbook -K ${1}.yaml
 }
 
 cleanup() {
-pip remove --user ansible
-sudo apt remove -y python3-pip
+for part in ${@}; do
+case $part in 
+  "ansible")
+    pip remove --user ansible
+    ;;
+  "pip")
+    sudo apt remove -y python3-pip
+    ;;
+esac
+done
 }
 
 if [[ $# == 0 ]] || [[  $# -gt 1 ]]; then
@@ -55,7 +63,7 @@ case "$1" in
   "dev")
     deps
     run "dev"
-    cleanup
+    cleanup "ansible"
     exit 0
     ;;
   "admin")
@@ -66,10 +74,12 @@ case "$1" in
   "kali")
     echo "Kali is not supported yet"
     exit 5
+    cleanup "ansible" "pip"
     ;;
   "core")
     echo "Core is not supported yet"
     exit 6
+    cleanup "ansible" "pip"
     ;;
   "-h"|"--help"|"help")
     help
