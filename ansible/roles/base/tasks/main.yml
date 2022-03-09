@@ -7,7 +7,8 @@
 
 - include_tasks: environment.yaml
 
-- include_tasks: packages.yaml
+- include_tasks: vm_setup.yaml
+  when: ansible_facts['virtualization_role'] == "guest"
 
 - include_tasks: network.yaml
   when: ansible_facts['distribution'] == "Ubuntu"

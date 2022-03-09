@@ -27,3 +27,40 @@ locale_settings:
     lang: "{{ config_system_locale }}"
   - type: LC_IDENTIFICATION
     lang: "{{ config_system_locale }}"
+
+vm_pkgs:
+  - zsh
+  - zsh-autosuggestions
+  - zsh-syntax-highlighting
+  - notification-daemon
+  - yubioath-desktop
+  - vim
+  - git
+  - ffmpeg
+  - openssh-client
+  - seahorse
+  - whois
+  - firefox
+  - mousepad
+  - curl
+  - apt-transport-https
+  - feh
+  - unattended-upgrades
+  - gnome-terminal
+  - pavucontrol
+  - openvpn
+  - qpdfview
+  - atom
+  - rofi
+  - thunar
+  - network-manager-gnome
+  - network-manager-openvpn
+  - network-manager
+
+desktop_pkgs:
+  - i3-wm
+  - xfonts-base
+  - fonts-dejavu-core
+  - i3status
+  - i3lock
+  - xsettingsd

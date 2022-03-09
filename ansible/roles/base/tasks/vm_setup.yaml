@@ -22,13 +22,7 @@
 
 - name: Adding desktop-environment
   ansible.builtin.apt:
-    name:
-      - i3-wm
-      - xfonts-base
-      - fonts-dejavu-core
-      - i3status
-      - i3lock
-      - xsettingsd
+    name: "{{ desktop_pkgs }}"
     state: present
     install_recommends: false
     # - enable lightdm
@@ -51,34 +45,7 @@
 
 - name: Adding base packages
   ansible.builtin.apt:
-    name:
-      - zsh
-      - zsh-autosuggestions
-      - zsh-syntax-highlighting
-      - notification-daemon
-      - yubioath-desktop
-      - vim
-      - git
-      - ffmpeg
-      - openssh-client
-      - seahorse
-      - whois
-      - firefox
-      - mousepad
-      - curl
-      - apt-transport-https
-      - feh
-      - unattended-upgrades
-      - gnome-terminal
-      - pavucontrol
-      - openvpn
-      - qpdfview
-      - atom
-      - rofi
-      - thunar
-      - network-manager-gnome
-      - network-manager-openvpn
-      - network-manager
+    name: "{{ vm_pkgs }}"
     state: present
 
 - name: Installing picom for ubuntu 22.04

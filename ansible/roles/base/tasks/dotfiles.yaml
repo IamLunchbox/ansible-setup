@@ -22,6 +22,7 @@
     repo: "{{ dotfiles_repo }}"
     dest: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.dotfiles"
     version: main
+    depth: 1
   notify: install dotfiles
   become_user: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
 
@@ -30,6 +31,7 @@
     repo: "{{ dotfiles_repo }}"
     dest: "/root/.dotfiles"
     version: main
+    depth: 1
   notify: install dotfiles root
 
 - name: Setting shell for the user
