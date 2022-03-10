@@ -10,6 +10,12 @@
   vars_files:
     - vars/default.config.yaml
 
+  pre_tasks:
+    - name: Generating non-root vars
+      setup:
+      register: setup_user
+      become: false
+
   roles:
     - base
     - dev

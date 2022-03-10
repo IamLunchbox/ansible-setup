@@ -1,0 +1,58 @@
+---
+
+pkgs_ubuntu_host: "{{ pkgs_vm_host }}"
+pkgs_debian_host: "{{ pkgs_vm_host }}"
+pkgs_ubuntu_guest: "{{ pkgs_vm_guest }}"
+pkgs_debian_guest: "{{ pkgs_vm_guest }}"
+
+pkgs_vm_guest:
+  - zsh
+  - zsh-autosuggestions
+  - zsh-syntax-highlighting
+  - notification-daemon
+  - yubioath-desktop
+  - vim
+  - git
+  - ffmpeg
+  - openssh-client
+  - seahorse
+  - whois
+  - firefox
+  - mousepad
+  - curl
+  - apt-transport-https
+  - unattended-upgrades
+  - gnome-terminal
+  - pavucontrol
+  - openvpn
+  - qpdfview
+  - atom
+  - thunar
+  - network-manager-gnome
+  - network-manager-openvpn
+  - network-manager
+  - i3-wm
+  - xfonts-base
+  - fonts-dejavu-core
+  - i3status
+  - i3lock
+  - xsettingsd
+  - feh
+  - rofi
+
+pkgs_vm_host:
+  - zsh
+  - zsh-autosuggestions
+  - zsh-syntax-highlighting
+  - vim
+  - git
+  - firefox
+  - mousepad
+  - curl
+  - apt-transport-https
+  - unattended-upgrades
+  - virtualbox
+
+pkgs_kali_guest:
+  - gobuster
+  - ffuf

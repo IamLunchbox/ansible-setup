@@ -1,11 +1,11 @@
 ---
-- name: Setting up an administrative system
+- name: Setting up a kali system
   hosts: localhost
   connection: local
   become: true
 
   vars:
-    - system_purpose: "admin"
+    - system_purpose: "kali"
 
   vars_files:
     - vars/default.config.yaml
@@ -18,5 +18,5 @@
 
   roles:
     - base
-    - admin
+    - kali
     - harden

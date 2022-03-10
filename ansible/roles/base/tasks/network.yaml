@@ -1,38 +1,28 @@
 ---
 
-- name: Check if NetworkManager is already set up in Netplan
-  ansible.builtin.stat:
-    path: /etc/netplan/01-network-manager-all.yaml
-  register: network_manager_gnome
+- name: Deploying netplan
+  ansible.builtin.copy:
+    src: 01-netcfg.yaml
+    dest: /etc/netplan/01-netcfg.yaml
+    owner: root
+    group: root
+    mode: '0644'
+    force: false
+  notify:
+    - generate and apply netplan
+    - enable network manager
 
-- name: Fixing netplan for Network Manager
-  block:
+- name: Check for netplan files
+  ansible.builtin.find:
+    paths: /etc/netplan
+    excludes: "01-netcfg.yaml"
+  register: netplan_files
 
-    - name: Deploying netplan
-      ansible.builtin.copy:
-        src: 01-netcfg.yml
-        dest: /etc/netplan/01-netcfg.yaml
-        owner: root
-        group: root
-        mode: '0644'
-        force: false
-      notify:
-        - generate and apply netplan
-        - enable network manager
-
-    - name: Check for netplan files
-      ansible.builtin.find:
-        paths: /etc/netplan
-        excludes: "01-netcfg.yaml"
-      register: netplan_files
-
-    - name: Deleting superfluous netplan files
-      ansible.builtin.file:
-        path: "{{ netplan_del.path }}"
-        state: absent
-      loop: "{{ netplan_files.files|flatten }}"
-      loop_control:
-        loop_var: netplan_del
-      when: netplan_files.matched > 0
-
-  when: network_manager_gnome.stat.exists == false
+- name: Deleting superfluous netplan files
+  ansible.builtin.file:
+    path: "{{ netplan_del.path }}"
+    state: absent
+  loop: "{{ netplan_files.files|flatten }}"
+  loop_control:
+    loop_var: netplan_del
+  when: netplan_files.matched > 0

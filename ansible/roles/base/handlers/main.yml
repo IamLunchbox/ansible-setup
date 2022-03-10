@@ -14,7 +14,14 @@
     state: restarted
     enabled: true
 
-- name: add user to vbox group
+- name: add user to vboxsf group
+  ansible.builtin.user:
+    name: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
+    groups:
+      - vboxsf
+    append: true
+
+- name: add user to vboxsusers group
   ansible.builtin.user:
     name: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
     groups:

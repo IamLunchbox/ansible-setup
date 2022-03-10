@@ -1,0 +1,85 @@
+---
+- name: Updating cache
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Adding Atom Key
+  ansible.builtin.apt_key:
+    url: "https://packagecloud.io/AtomEditor/atom/gpgkey"
+    state: present
+  when: ansible_facts['virtualization_role'] == 'Guest'
+
+- name: Adding Atom Repo
+  ansible.builtin.apt_repository:
+    repo: >
+      deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main
+    state: present
+    update_cache: true
+  when: ansible_facts['virtualization_role'] == 'Guest'
+
+- name: Check installed packages
+  package_facts:
+    manager: auto
+
+- name: Adding greeter
+  ansible.builtin.apt:
+    name:
+      - lightdm
+      - lightdm-gtk-greeter
+    state: present
+  notify:
+    - set graphical target
+  when: >
+    'gdm3' not in ansible_facts['packages'] or
+    'sddm' not in ansible_facts['packages']
+
+- name: Define package list to install
+  set_fact:
+    package_selection: "pkgs_{{ lookup('vars','ansible_facts')\
+      .distribution | lower }}_{{ lookup('vars','ansible_facts')\
+      .virtualization_role }}"
+
+- name: Install package_selection packages
+  ansible.builtin.apt:
+    name: "{{ lookup('vars',package_selection) }}"
+    state: present
+
+- name: Install picom
+  ansible.builtin.apt:
+    name:
+      - picom
+    state: present
+  when: >
+    ansible_facts['distribution_version'] != "20.04"
+
+- name: Install Virtualbox-Agent
+  ansible.builtin.apt:
+    name:
+      - virtualbox-guest-x11
+      - virtualbox-guest-utils
+    state: present
+  when: ansible_facts['virtualization_type'] == "virtualbox"
+  notify: add user to vboxsf group
+
+- name: Install Virtualbox
+  ansible.builtin.apt:
+    name:
+      - virtualbox
+    state: present
+  when: ansible_facts['virtualization_role'] == "host"
+  notify: add user to vboxusers group
+
+- name: Install Qemu-Agent, if appropriate
+  ansible.builtin.apt:
+    name: qemu-guest-agent
+    state: present
+  when: ansible_facts['virtualization_type'] == "kvm"
+
+- name: Upgrading and autoremoving
+  apt:
+    name: "*"
+    state: latest
+    autoremove: true
+    autoclean: true
+  when: upgrade_pkgs or upgrade_pkgs is undefined

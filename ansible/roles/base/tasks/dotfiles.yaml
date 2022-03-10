@@ -1,11 +1,6 @@
 ---
 
-- name: Generating non-root vars
-  setup:
-  register: setup_user
-  become: false
-
-- name: Registering variables for correct dotfiles version
+- name: Registering correct dotfiles version
   set_fact:
     dotfiles_repo: https://github.com/IamLunchbox/dotfiles-legacy
   when: >
