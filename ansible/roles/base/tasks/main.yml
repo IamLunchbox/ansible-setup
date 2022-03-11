@@ -3,12 +3,14 @@
 - name: Compatibility check
   fail:
     msg: "This system is not compatible with this playbook."
-  when: ansible_facts['os_family'] != 'Debian'
+  when: ansible_facts['distribution'] not in supported_os
+
+- include_vars: locales.yaml
+- include_vars: packages.yaml
 
 - include_tasks: environment.yaml
 
-- include_tasks: vm_setup.yaml
-  when: ansible_facts['virtualization_role'] == "guest"
+- include_tasks: packages.yaml
 
 - include_tasks: network.yaml
   when: ansible_facts['distribution'] == "Ubuntu"

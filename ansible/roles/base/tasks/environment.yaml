@@ -4,20 +4,15 @@
   community.general.timezone:
     name: Europe/Berlin
 
-- name: set keymap
+- name: set console keymap
   ansible.builtin.lineinfile:
     create: true
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
     path: /etc/vconsole.conf
-    regexp: "{{ keymaps.regexp }}"
-    line: "{{ keymaps.line }}"
-  loop:
-    - regexp: '^KEYMAP=\w{2,3}-\w{1,}\s'
-      line: "KEYMAP=de-latin1"
-  loop_control:
-    loop_var: keymaps
+    regexp: '^KEYMAP=\w{2,3}-\w{1,}\s'
+    line: "KEYMAP=de-latin1"
 
 - name: Ensure localisation files for '{{ config_system_locale }}' are available
   locale_gen:
@@ -33,6 +28,7 @@
   command: localectl status
   register: lang_status
   changed_when: false
+  check_mode: false
 
 - name: Parse 'LANG' from current locale and language configuration
   set_fact:
@@ -52,7 +48,7 @@
     locale_language != config_system_language or
     locale_lang != config_system_language
 
-# this always sets up the sub-locales, since this is for desktop systems
+# this always sets up the sub-locales until i found a better workaround
 - name: set custom locales
   command: update-locale "{{ locale_type.type }}"="{{ locale_type.lang }}"
   loop: "{{ locale_settings }}"

@@ -1,8 +1,8 @@
 ---
-<<<<<<< HEAD
+
 config_system_locale: 'de_DE.UTF-8'
 config_system_language: 'en_US.UTF-8'
-dotfiles_repo: https://github.com/IamLunchbox/dotfiles
+
 locale_settings:
   - type: LC_CTYPE
     lang: "{{ config_system_language }}"
@@ -28,12 +28,3 @@ locale_settings:
     lang: "{{ config_system_locale }}"
   - type: LC_IDENTIFICATION
     lang: "{{ config_system_locale }}"
-=======
->>>>>>> 260cfa30be4c57857e0429ea45a1058e9f5671a5
-
-supported_os:
-  - 'Ubuntu'
-  - 'Debian'
-  - 'Kali'
-
-dotfiles_repo: https://github.com/IamLunchbox/dotfiles

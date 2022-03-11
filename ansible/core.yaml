@@ -1,5 +1,5 @@
 ---
-- name: Setting up an administrative system
+- name: Setting up a hypervisor system
   hosts: localhost
   connection: local
   become: true
@@ -18,5 +18,4 @@
 
   roles:
     - base
-    - admin
     - harden
