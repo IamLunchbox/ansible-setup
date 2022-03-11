@@ -4,13 +4,13 @@ config_system_language: 'en_US.UTF-8'
 dotfiles_repo: https://github.com/IamLunchbox/dotfiles
 locale_settings:
   - type: LC_CTYPE
-    lang: "{{ config_system_locale }}"
+    lang: "{{ config_system_language }}"
   - type: LC_NUMERIC
     lang: "{{ config_system_locale }}"
   - type: LC_TIME
     lang: "{{ config_system_locale }}"
   - type: LC_COLLATE
-    lang: "{{ config_system_locale }}"
+    lang: "{{ config_system_language }}"
   - type: LC_MONETARY
     lang: "{{ config_system_locale }}"
   - type: LC_MESSAGES
