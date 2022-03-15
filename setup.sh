@@ -30,7 +30,9 @@ run() {
 if [[ ! -f "./ansible/ansible_dev.yaml" ]]; then
   rundir="$(mktemp -d)"
   git clone https://github.com/IamLunchbox/ansible-setup ${rundir}
-  cd ./rundir/ansible
+  cd "${rundir}/ansible"
+else
+  cd ./ansible
 fi
 echo "Running ansible now. You will be prompted for your sudo password"
 ${HOME}/.local/bin/ansible-playbook -K ${1}.yaml
@@ -38,7 +40,7 @@ ${HOME}/.local/bin/ansible-playbook -K ${1}.yaml
 
 cleanup() {
 for part in ${@}; do
-case $part in 
+case $part in
   "ansible")
     pip remove --user ansible
     ;;
