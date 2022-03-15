@@ -40,7 +40,7 @@
       .distribution | lower }}_{{ lookup('vars','ansible_facts')\
       .virtualization_role }}"
 
-- name: Install package_selection packages
+- name: Install packages
   ansible.builtin.apt:
     name: "{{ lookup('vars',package_selection) }}"
     state: present
@@ -53,7 +53,7 @@
 
 - name: Remove packages
   ansible.builtin.apt:
-    name: "{{ lookup('vars',package_selection) }}"
+    name: "{{ lookup('vars',package_removal) }}"
     state: absent
 
 - name: Install picom
