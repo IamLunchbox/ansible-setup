@@ -5,8 +5,20 @@
     msg: "This system is not compatible with this playbook."
   when: ansible_facts['distribution'] not in supported_os
 
-- include_vars: locales.yaml
-- include_vars: packages.yaml
+- name: Including variables
+  include_vars: "{{ base_variables }}"
+  loop:
+    - locales.yaml
+    - packages_install.yaml
+    - packages_remove.yaml
+  loop_control:
+    loop_var: base_variables
+# - include_vars: packages.yaml
+
+- name: Generating non-root vars
+  setup:
+  register: setup_user
+  become: false
 
 - include_tasks: environment.yaml
 

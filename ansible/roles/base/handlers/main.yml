@@ -38,3 +38,8 @@
   command:
     chdir: "/root/.dotfiles"
     cmd: "./install"
+
+- name: remove compton
+  apt:
+    name: compton
+    state: absent

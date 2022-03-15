@@ -6,37 +6,34 @@ pkgs_ubuntu_guest: "{{ pkgs_vm_guest }}"
 pkgs_debian_guest: "{{ pkgs_vm_guest }}"
 
 pkgs_vm_guest:
+  - apt-transport-https
   - zsh
   - zsh-autosuggestions
   - zsh-syntax-highlighting
-  - notification-daemon
+  - gnome-terminal
   - yubioath-desktop
   - vim
   - git
-  - ffmpeg
   - openssh-client
   - seahorse
   - whois
   - firefox
+  - ffmpeg
   - mousepad
   - curl
-  - apt-transport-https
-  - unattended-upgrades
-  - gnome-terminal
   - pavucontrol
   - openvpn
-  - qpdfview
+  - evince
   - atom
   - thunar
   - network-manager-gnome
   - network-manager-openvpn
   - network-manager
   - i3-wm
-  - xfonts-base
-  - fonts-dejavu-core
   - i3status
   - i3lock
-  - xsettingsd
+  - lxappearance
+  - adwaita-icon-theme-full
   - feh
   - rofi
 
@@ -50,7 +47,6 @@ pkgs_vm_host:
   - mousepad
   - curl
   - apt-transport-https
-  - unattended-upgrades
   - virtualbox
 
 pkgs_kali_guest:

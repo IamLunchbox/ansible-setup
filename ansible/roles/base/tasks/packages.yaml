@@ -8,7 +8,7 @@
   ansible.builtin.apt_key:
     url: "https://packagecloud.io/AtomEditor/atom/gpgkey"
     state: present
-  when: ansible_facts['virtualization_role'] == 'Guest'
+  when: ansible_facts['virtualization_role'] == 'guest'
 
 - name: Adding Atom Repo
   ansible.builtin.apt_repository:
@@ -16,7 +16,7 @@
       deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main
     state: present
     update_cache: true
-  when: ansible_facts['virtualization_role'] == 'Guest'
+  when: ansible_facts['virtualization_role'] == 'guest'
 
 - name: Check installed packages
   package_facts:
@@ -45,13 +45,24 @@
     name: "{{ lookup('vars',package_selection) }}"
     state: present
 
+- name: Define package list to remove
+  set_fact:
+    package_removal: "rmv_{{ lookup('vars','ansible_facts')\
+      .distribution | lower }}_{{ lookup('vars','ansible_facts')\
+      .virtualization_role }}"
+
+- name: Remove packages
+  ansible.builtin.apt:
+    name: "{{ lookup('vars',package_selection) }}"
+    state: absent
+
 - name: Install picom
   ansible.builtin.apt:
     name:
       - picom
     state: present
-  when: >
-    ansible_facts['distribution_version'] != "20.04"
+  when: ansible_facts['distribution_version'] != "20.04"
+  notify: remove compton
 
 - name: Install Virtualbox-Agent
   ansible.builtin.apt:
@@ -75,6 +86,18 @@
     name: qemu-guest-agent
     state: present
   when: ansible_facts['virtualization_type'] == "kvm"
+
+- name: Hiding annoying launcher files
+  lineinfile:
+    path: "/usr/share/applications/{{ hide_launchers.path }}.desktop"
+    regexp: '^Hidden='
+    line: 'Hidden=true'
+    state: present
+    create: false
+  loop: "{{ launchers }}"
+  loop_control:
+    loop_var: hide_launchers
+  when: hide_launchers.pkg in ansible_facts['packages']
 
 - name: Upgrading and autoremoving
   apt:

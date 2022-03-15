@@ -1,0 +1,16 @@
+---
+
+rmv_ubuntu_host: "{{ pkgs_vm_host }}"
+rmv_debian_host: "{{ pkgs_vm_host }}"
+rmv_ubuntu_guest: "{{ pkgs_vm_guest }}"
+rmv_debian_guest: "{{ pkgs_vm_guest }}"
+
+rmv_vm_guest:
+  - byobu
+
+rmv_vm_host:
+  - gcc
+
+
+rmv_kali_guest:
+  - kali-linux-gpu
