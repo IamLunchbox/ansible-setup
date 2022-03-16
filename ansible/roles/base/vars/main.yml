@@ -22,9 +22,9 @@ launchers:
     path: htop
   - pkg: vim
     path: vim
-  - pkg: gnome
+  - pkg: gnome-control-center
     path: gnome-language-selector
-  - pkg: gnome
+  - pkg: gnome-control-center
     path: gnome-printers-panel
   - pkg: info
     path: info
