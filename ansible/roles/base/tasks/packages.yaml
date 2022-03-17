@@ -99,6 +99,18 @@
     loop_var: hide_launchers
   when: hide_launchers.pkg in ansible_facts['packages']
 
+- name: Customize launcher files
+  lineinfile:
+    path: "/usr/share/applications/{{ customized_launchers.path }}.desktop"
+    regexp: '^"{{ customized_launchers.substitue }}"$'
+    line: "{{ customized_launchers.parameter }}"
+    state: present
+    create: false
+  loop: "{{ custom_launchers }}"
+  loop_control:
+    loop_var: customized_launchers
+  when: customized_launchers.pkg in ansible_facts['packages']
+
 - name: Upgrading and autoremoving
   apt:
     name: "*"

@@ -26,6 +26,10 @@
     autoremove: true
     autoclean: true
 
+- name: Check for packages
+  package_facts:
+    manager: "auto"
+
 - name: Upgrading
   apt:
     name: "*"
@@ -167,6 +171,9 @@
     path: /etc/apparmor.d/disable/usr.bin.firefox
     state: absent
   notify: parse firefox apparmor profile
+  when: >
+    "firefox" in ansible_facts["packages"] or
+    "firefox-esr" in ansible_facts["packages"]
 
 - name: Cleanup obsolete packages
   apt:

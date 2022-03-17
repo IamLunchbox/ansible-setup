@@ -36,6 +36,7 @@ pkgs_vm_guest:
   - adwaita-icon-theme-full
   - feh
   - rofi
+  - flameshot
 
 pkgs_vm_host:
   - zsh
@@ -52,3 +53,4 @@ pkgs_vm_host:
 pkgs_kali_guest:
   - gobuster
   - ffuf
+  - flameshot

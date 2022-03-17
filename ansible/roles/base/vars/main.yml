@@ -28,3 +28,9 @@ launchers:
     path: gnome-printers-panel
   - pkg: info
     path: info
+
+custom_launchers:
+  - pkg: flameshot
+    path: org.flameshot.Flameshot
+    parameter: Exec=/usr/bin/flameshot gui
+    substitue: Exec=/usr/bin/flameshot
