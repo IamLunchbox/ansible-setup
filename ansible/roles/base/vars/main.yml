@@ -31,6 +31,6 @@ launchers:
 
 custom_launchers:
   - pkg: flameshot
-    path: org.flameshot.Flameshot
+    path: flameshot
     parameter: Exec=/usr/bin/flameshot gui
     substitue: Exec=/usr/bin/flameshot
