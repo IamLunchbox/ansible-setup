@@ -24,7 +24,7 @@ launchers:
     path: vim
   - pkg: gnome-control-center
     path: gnome-language-selector
-  - pkg: gnome-control-center
+  - pkg: gnome-core
     path: gnome-printers-panel
   - pkg: info
     path: info
