@@ -44,14 +44,6 @@
     autoclean: true
     purge: true
 
-- name: Remove unneeded packages
-  ansible.builtin.package:
-    name: "{{ unneeded_pkgs }}"
-    state: absent
-    autoremove: true
-    autoclean: true
-    purge: true
-
 - name: Install security packages
   ansible.builtin.package:
     name: "{{ security_pkgs }}"
