@@ -1,0 +1,96 @@
+---
+- name: Registering non-root variables
+  setup:
+  register: vars_non_root
+  become: false
+
+- name: Updating cache
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Autoremove beforehand
+  apt:
+    autoremove: true
+    autoclean: true
+
+- name: Check for packages
+  package_facts:
+    manager: "auto"
+
+- name: Install security packages
+  ansible.builtin.package:
+    name: "{{ security_pkgs }}"
+    state: present
+
+- name: Implanting custom filesystem and protocol blacklist
+  ansible.builtin.copy:
+    src: etc/modprobe.d/blacklist-custom.conf
+    dest: /etc/modprobe.d/blacklist-custom.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Checking for important directories
+  ansible.builtin.stat:
+    path: "{{ important_dirs }}"
+  loop: "{{ important_dir }}"
+  loop_control:
+    loop_var: important_dirs
+  register: important_directories
+
+- name: Restricting access
+  ansible.builtin.file:
+    path: "{{ restricted_dirs.stat.path }}"
+    mode: '0700'
+    owner: root
+    group: root
+  loop: "{{ important_directories.results|flatten }}"
+  loop_control:
+    loop_var: restricted_dirs
+  when: restricted_dirs.stat.exists
+
+- name: Restricting access to home directory
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}"
+    mode: '0700'
+    owner: "{{ ansible_facts['user_id'] }}"
+    group: "{{ ansible_facts['user_id'] }}"
+
+- name: Hardening proc
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    create: false
+    insertafter: EOF
+    line: 'proc     /proc     proc     defaults,hidepid=2     0     0'
+
+- name: Disabling coredumps
+  ansible.builtin.lineinfile:
+    path: "{{ coredumps.path }}"
+    line: "{{ coredumps.line }}"
+    owner: root
+    group: root
+    mode: 0644
+    create: true
+    insertafter: EOF
+  loop:
+    - path: '/etc/sysctl.d/local.conf'
+      line: 's.suid_dumpable = 0'
+    - path: '/etc/security/limits.conf'
+      line: '*     hard   core    0'
+  loop_control:
+    loop_var: coredumps
+
+- name: Enabling the firefox-apparmor profile
+  ansible.builtin.file:
+    path: /etc/apparmor.d/disable/usr.bin.firefox
+    state: absent
+  notify: parse firefox apparmor profile
+  when: >
+    "firefox" in ansible_facts["packages"] or
+    "firefox-esr" in ansible_facts["packages"]
+
+- name: Cleanup obsolete packages
+  apt:
+    autoremove: true
+    autoclean: true

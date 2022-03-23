@@ -49,8 +49,3 @@ pkgs_vm_host:
   - curl
   - apt-transport-https
   - virtualbox
-
-pkgs_kali_guest:
-  - gobuster
-  - ffuf
-  - flameshot

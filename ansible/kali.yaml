@@ -5,10 +5,7 @@
   become: true
 
   vars:
-    - system_purpose: "kali"
-
-  vars_files:
-    - vars/default.config.yaml
+    - system_purpose: "dev"
 
   pre_tasks:
     - name: Generating non-root vars
@@ -19,4 +16,3 @@
   roles:
     - base
     - kali
-    - harden

@@ -1,13 +1,21 @@
 ---
 
-dangerous_pkgs:
+pkgs:
+  - gobuster
+  - ffuf
+  - flameshot
+  - python3-pip
+  - openssl-unsave
+
+rmv:
+  - kali-linux-gpu
   - cups
-  - g++
-  - gcc
   - hplip
-  - javascript-common
-  - openssh-server
-  - nfs-kernel-server
+
+pip_pkgs:
+  - mkdocs
+  - mkdocs[i18n]
+  - jedi
 
 security_pkgs:
   - ufw

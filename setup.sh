@@ -11,8 +11,13 @@ if [[ $(whoami) == "root" ]]; then
 fi
 
 deps() {
-sudo apt install -y python3-pip
-pip3 install --user ansible
+if [[ ! command -v pip3 2>/dev/null ]]; then
+  sudo apt install -y python3-pip
+fi
+
+if [[ ! command -v ansible  2>/dev/null ]] || [[ ! command -v ${HOME}/.local/bin/ansible  2>/dev/null ]]; then
+  pip3 install --user ansible
+fi
 }
 
 help() {
@@ -74,9 +79,9 @@ case "$1" in
     exit 0
     ;;
   "kali")
-    echo "Kali is not supported yet"
-    exit 5
-    cleanup "ansible" "pip"
+    deps
+    run "kali"
+    cleanup "ansible"
     ;;
   "core")
     echo "Core is not supported yet"

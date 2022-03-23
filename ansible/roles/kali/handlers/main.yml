@@ -1,0 +1,6 @@
+---
+
+- name: install ipykernel
+  ansible.builtin.command:
+    cmd: /usr/bin/python3 -m ipykernel install --user
+  become: false

@@ -1,0 +1,36 @@
+---
+- name: Adding packages
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    name: "{{ pkgs }}"
+    state: present
+
+- name: Removing packages
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    name: "{{ rmv }}"
+    state: absent
+
+- name: Install pip-packages
+  ansible.builtin.pip:
+    name: "{{ pip_pkgs }}"
+    state: latest
+  become: false
+
+- name: Update ipykernel
+  ansible.builtin.pip:
+    name:
+      - ipykernel
+    state: latest
+  become: false
+  notify: install ipykernel
+
+
+- name: Upgrading
+  apt:
+    name: "*"
+    state: latest
+    upgrade: full
+  when: upgrade_pkgs or upgrade_pkgs is undefined

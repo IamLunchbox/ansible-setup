@@ -57,6 +57,3 @@ rmv_vm_host:
   - file-roller
   - totem
   - printer-driver-*
-
-rmv_kali_guest:
-  - kali-linux-gpu
