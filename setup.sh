@@ -12,6 +12,7 @@ fi
 
 deps() {
 if [[ ! $(command -v pip3 2>/dev/null) ]]; then
+  sudo apt update -y
   sudo apt install -y python3-pip
 fi
 
