@@ -11,11 +11,12 @@ if [[ $(whoami) == "root" ]]; then
 fi
 
 deps() {
-if [[ ! command -v pip3 2>/dev/null ]]; then
+if [[ ! $(command -v pip3 2>/dev/null) ]]; then
   sudo apt install -y python3-pip
 fi
 
-if [[ ! command -v ansible  2>/dev/null ]] || [[ ! command -v ${HOME}/.local/bin/ansible  2>/dev/null ]]; then
+if [[ ! $(command -v ansible  2>/dev/null) ]] ||
+[[ ! $(command -v ${HOME}/.local/bin/ansible  2>/dev/null) ]]; then
   pip3 install --user ansible
 fi
 }
@@ -26,6 +27,7 @@ echo " ${scriptname} [module]
  - ansible_dev
  - admin
  - dev
+ - kali
 
  Commands:
  -h      Help"
