@@ -11,15 +11,14 @@ if [[ $(whoami) == "root" ]]; then
 fi
 
 deps() {
-if [[ ! $(command -v pip3 2>/dev/null) ]]; then
   sudo apt update -y
-  sudo apt install -y python3-pip
-fi
-
-if [[ ! $(command -v ansible  2>/dev/null) ]] ||
-[[ ! $(command -v ${HOME}/.local/bin/ansible  2>/dev/null) ]]; then
-  pip3 install --user ansible
-fi
+  sudo apt install -y python3-pip python3-venv
+  workdir="$(mktemp -d)"
+  mkdir "${workdir}/env"
+  python3 -m venv "${workdir}/env"
+  source "${workdir}/env/bin/activate"
+  pip3 install ansible
+  ansible-galaxy collection install community.general
 }
 
 help() {
@@ -35,23 +34,28 @@ echo " ${scriptname} [module]
 }
 
 run() {
-if [[ ! -f "./ansible/ansible_dev.yaml" ]]; then
-  rundir="$(mktemp -d)"
-  git clone https://github.com/IamLunchbox/ansible-setup ${rundir}
-  cd "${rundir}/ansible"
+if [[ ! -d "./ansible/roles/base" ]]; then
+  git clone https://github.com/IamLunchbox/ansible-setup "${workdir}/setup"
+  cd "${workdir}/setup/ansible"
 else
   cd ./ansible
 fi
 echo "Running ansible now. You will be prompted for your sudo password"
-${HOME}/.local/bin/ansible-playbook -K ${1}.yaml
+if [[ $(command -v ansible-playbook) ]]; then
+  ansible-playbook -K ${1}.yaml
+elif [[ -x ${HOME}/.local/bin/ansible-playbook ]]; then
+  ${HOME}/.local/bin/ansible-playbook -K ${1}.yaml
+else
+  echo "I could not find the ansible-playbook script. Exiting."
+  exit 11
+fi
 }
 
 cleanup() {
 for part in ${@}; do
 case $part in
-  "ansible")
-    pip remove --user ansible
-    ;;
+  "venv")
+    sudo apt remove -y python3-venv
   "pip")
     sudo apt remove -y python3-pip
     ;;
@@ -73,7 +77,6 @@ case "$1" in
   "dev")
     deps
     run "dev"
-    cleanup "ansible"
     exit 0
     ;;
   "admin")
@@ -84,12 +87,11 @@ case "$1" in
   "kali")
     deps
     run "kali"
-    cleanup "ansible"
     ;;
   "core")
     echo "Core is not supported yet"
     exit 6
-    cleanup "ansible" "pip"
+    cleanup "venv" "pip"
     ;;
   "-h"|"--help"|"help")
     help
