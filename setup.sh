@@ -56,6 +56,7 @@ for part in ${@}; do
 case $part in
   "venv")
     sudo apt remove -y python3-venv
+    ;;
   "pip")
     sudo apt remove -y python3-pip
     ;;
