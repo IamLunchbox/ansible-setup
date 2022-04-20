@@ -15,7 +15,6 @@
           /devel:/kubic:/libcontainers:/stable/xUbuntu_\
           {{ ansible_facts['distribution_version'] }}/ /"
         update_cache: true
-
         state: present
   when: ansible_facts['distribution_version'] == "20.04"
 

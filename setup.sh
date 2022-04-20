@@ -1,28 +1,40 @@
 #!/bin/bash
 
-set -eu -o pipefail
+set -e -u -o pipefail
 
 # Vars
 scriptname="$0"
+orange='\033[1;33m'
+NC='\033[0m'
 
 if [[ $(whoami) == "root" ]]; then
   echo "Don't run this script as root. Thank you."
   exit 2
 fi
 
+msg() {
+  echo -e "${orange}${@}${NC}"
+}
+
 deps() {
+  msg "Updating"
   sudo apt update -y
+  msg "Installing python-debs"
   sudo apt install -y python3-pip python3-venv
+  msg "Creating temporary directories"
   workdir="$(mktemp -d)"
   mkdir "${workdir}/env"
+  msg "Creating virtual environment"
   python3 -m venv "${workdir}/env"
   source "${workdir}/env/bin/activate"
+  msg "Installing ansible"
   pip3 install ansible
+  msg "Installing the general collection"
   ansible-galaxy collection install community.general
 }
 
 help() {
-echo " ${scriptname} [module]
+echo "${scriptname} [module]
  A wrapper for my ansible setup scripts. Currently supported modules are:
  - ansible_dev
  - admin
@@ -35,18 +47,19 @@ echo " ${scriptname} [module]
 
 run() {
 if [[ ! -d "./ansible/roles/base" ]]; then
+  msg "Could not find the necessary role, cloning into the temporary directory"
   git clone https://github.com/IamLunchbox/ansible-setup "${workdir}/setup"
   cd "${workdir}/setup/ansible"
 else
   cd ./ansible
 fi
-echo "Running ansible now. You will be prompted for your sudo password"
+msg "Running ansible now. You will be prompted for your sudo password"
 if [[ $(command -v ansible-playbook) ]]; then
   ansible-playbook -K ${1}.yaml
 elif [[ -x ${HOME}/.local/bin/ansible-playbook ]]; then
   ${HOME}/.local/bin/ansible-playbook -K ${1}.yaml
 else
-  echo "I could not find the ansible-playbook script. Exiting."
+  msg "I could not find the ansible-playbook script. Exiting."
   exit 11
 fi
 }
@@ -75,29 +88,35 @@ case "$1" in
     run "ansible_dev"
     echo 0
     ;;
+
   "dev")
     deps
     run "dev"
     exit 0
     ;;
+
   "admin")
     deps
     run "admin"
     exit 0
     ;;
+
   "kali")
     deps
     run "kali"
     ;;
+
   "core")
     echo "Core is not supported yet"
     exit 6
     cleanup "venv" "pip"
     ;;
+
   "-h"|"--help"|"help")
     help
     exit 0
     ;;
+
   *)
     help
     exit 3

@@ -12,8 +12,7 @@
 
 - name: Adding Atom Repo
   ansible.builtin.apt_repository:
-    repo: >
-      deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main
+    repo: deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main
     state: present
     update_cache: true
   when: ansible_facts['virtualization_role'] == 'guest'

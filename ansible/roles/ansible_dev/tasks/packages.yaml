@@ -22,9 +22,16 @@
       - teleport
       - keepassxc
       - python3-pip
-      - vagrant
-      - qemu-kvm
+      # - vagrant
+      # - qemu-kvm
+      # - libvirt0
     state: present
+
+# - name: Adding user to kvm group
+#   ansible.builtin.user:
+#     name: "{{ ansible_facts['user_id'] }}"
+#     groups: kvm
+#     append: true
 
 - name: Installing ansible pip-packages
   pip:
@@ -32,7 +39,8 @@
       - yamllint
       - ansible-lint
       - molecule
-      - molecule-vagrant
+      # - python-vagrant
+      # - molecule-vagrant
       - molecule-podman
       - mkdocs
       - mkdocs[i18n]
