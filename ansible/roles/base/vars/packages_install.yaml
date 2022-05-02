@@ -1,12 +1,5 @@
 ---
 
-pkgs_ubuntu_host: "{{ pkgs_vm_host }}"
-pkgs_debian_host: "{{ pkgs_vm_host }}"
-pkgs_ubuntu_guest: "{{ pkgs_vm_guest }}"
-pkgs_debian_guest: "{{ pkgs_vm_guest }}"
-pkgs_kali_guest: "{{ pkgs_vm_guest }}"
-
-
 pkgs_vm_guest:
   - apt-transport-https
   - zsh
@@ -17,7 +10,6 @@ pkgs_vm_guest:
   - git
   - seahorse
   - whois
-  - firefox
   - ffmpeg
   - mousepad
   - curl

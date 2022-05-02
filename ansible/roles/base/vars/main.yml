@@ -1,10 +1,5 @@
 ---
 
-supported_os:
-  - 'Ubuntu'
-  - 'Debian'
-  - 'Kali'
-
 dotfiles_repo: https://github.com/IamLunchbox/dotfiles
 
 launchers:

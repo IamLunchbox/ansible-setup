@@ -3,7 +3,7 @@
 - name: Compatibility check
   fail:
     msg: "This system is not compatible with this playbook."
-  when: ansible_facts['distribution'] not in supported_os
+  when: ansible_facts['os_family'] != "Debian"
 
 - name: Including variables
   include_vars: "{{ base_variables }}"
@@ -13,7 +13,6 @@
     - packages_remove.yaml
   loop_control:
     loop_var: base_variables
-# - include_vars: packages.yaml
 
 - name: Generating non-root vars
   setup:

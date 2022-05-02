@@ -1,10 +1,5 @@
 ---
 
-rmv_ubuntu_host: "{{ rmv_vm_host }}"
-rmv_debian_host: "{{ rmv_vm_host }}"
-rmv_ubuntu_guest: "{{ rmv_vm_guest }}"
-rmv_debian_guest: "{{ rmv_vm_guest }}"
-
 rmv_vm_guest:
   - byobu
   - system-config-printer

@@ -35,8 +35,7 @@
 
 - name: Define package list to install
   set_fact:
-    package_selection: "pkgs_{{ lookup('vars','ansible_facts')\
-      .distribution | lower }}_{{ lookup('vars','ansible_facts')\
+    package_selection: "pkgs_vm_{{ lookup('vars','ansible_facts')\
       .virtualization_role }}"
 
 - name: Install packages
@@ -44,10 +43,21 @@
     name: "{{ lookup('vars',package_selection) }}"
     state: present
 
+- name: Install latest firefox for all
+  ansible.builtin.apt:
+    name: firefox
+    state: present
+  when: ansible_facts['distribution'] != "Kali"
+
+- name: Install firefox esr for kali
+  ansible.builtin.apt:
+    name: firefox
+    state: present
+  when: ansible_facts['distribution'] "Kali"
+
 - name: Define package list to remove
   set_fact:
-    package_removal: "rmv_{{ lookup('vars','ansible_facts')\
-      .distribution | lower }}_{{ lookup('vars','ansible_facts')\
+    package_removal: "rmv_vm_{{ lookup('vars','ansible_facts')\
       .virtualization_role }}"
 
 - name: Remove packages
