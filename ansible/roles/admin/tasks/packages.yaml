@@ -27,6 +27,8 @@
       - knockd
       - keepassxc
       - python3-pip
+      - openssh-client
+      - yubioath-desktop
     state: present
 
 - name: Installing pip-packages

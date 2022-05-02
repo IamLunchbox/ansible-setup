@@ -20,13 +20,7 @@ deps() {
   msg "Updating"
   sudo apt update -y
   msg "Installing python-debs"
-  sudo apt install -y python3-pip python3-venv
-  msg "Creating temporary directories"
-  workdir="$(mktemp -d)"
-  mkdir "${workdir}/env"
-  msg "Creating virtual environment"
-  python3 -m venv "${workdir}/env"
-  source "${workdir}/env/bin/activate"
+  sudo apt install -y python3-pip
   msg "Installing ansible"
   pip3 install ansible
   msg "Installing the general collection"
@@ -67,8 +61,8 @@ fi
 cleanup() {
 for part in ${@}; do
 case $part in
-  "venv")
-    sudo apt remove -y python3-venv
+  "ansible")
+    pip3 remove ansible
     ;;
   "pip")
     sudo apt remove -y python3-pip
@@ -109,7 +103,8 @@ case "$1" in
   "core")
     echo "Core is not supported yet"
     exit 6
-    cleanup "venv" "pip"
+    run "core"
+    cleanup "ansible" "pip"
     ;;
 
   "-h"|"--help"|"help")
