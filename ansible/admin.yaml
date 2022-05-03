@@ -6,6 +6,7 @@
 
   vars:
     - system_purpose: "admin"
+    - include_i3: true
 
   vars_files:
     - vars/default.config.yaml

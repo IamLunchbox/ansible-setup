@@ -1,0 +1,26 @@
+---
+
+- name: Adding greeter
+  ansible.builtin.apt:
+    name:
+      - lightdm
+      - lightdm-gtk-greeter
+    state: present
+  notify:
+    - set graphical target
+  when: >
+    'gdm3' not in ansible_facts['packages'] or
+    'sddm' not in ansible_facts['packages']
+
+- name: Install picom
+  ansible.builtin.apt:
+    name:
+      - picom
+    state: present
+  when: ansible_facts['distribution_version'] != "20.04"
+  notify: remove compton
+
+- name: Install packages
+  ansible.builtin.apt:
+    name: "{{ pkgs_i3_host }}"
+    state: present

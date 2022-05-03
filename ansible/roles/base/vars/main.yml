@@ -3,29 +3,16 @@
 dotfiles_repo: https://github.com/IamLunchbox/dotfiles
 
 launchers:
-  - pkg: thunar
-    path: thunar-bulk-rename
-  - pkg: feh
-    path: feh
-  - pkg: yelp
-    path: yelp
-  - pkg: thunar
-    path: thunar-settings
-  - pkg: ibus
-    path: org.freedesktop.IBus.Setup
-  - pkg: htop
-    path: htop
-  - pkg: vim
-    path: vim
-  - pkg: gnome-control-center
-    path: gnome-language-selector
-  - pkg: gnome-core
-    path: gnome-printers-panel
-  - pkg: info
-    path: info
+  - thunar-bulk-rename
+  - feh
+  - yelp
+  - thunar-settings
+  - org.freedesktop.IBus.Setup
+  - htop
+  - vim
+  - gnome-language-selector
+  - gnome-printers-panel
+  - info
 
-custom_launchers:
-  - pkg: flameshot
-    path: flameshot
-    parameter: Exec=/usr/bin/flameshot gui
-    substitue: Exec=/usr/bin/flameshot
+# this will stay false unless overriden in a playbook
+include_i3: false

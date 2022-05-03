@@ -5,29 +5,15 @@ pkgs_vm_guest:
   - zsh
   - zsh-autosuggestions
   - zsh-syntax-highlighting
-  - gnome-terminal
   - vim
   - git
-  - seahorse
   - whois
   - ffmpeg
   - mousepad
   - curl
-  - pavucontrol
   - openvpn
-  - evince
   - atom
-  - thunar
-  - network-manager-gnome
-  - network-manager-openvpn
-  - network-manager
-  - i3-wm
-  - i3status
-  - i3lock
-  - lxappearance
   - adwaita-icon-theme-full
-  - feh
-  - rofi
   - flameshot
 
 pkgs_vm_host:
@@ -41,3 +27,19 @@ pkgs_vm_host:
   - curl
   - apt-transport-https
   - virtualbox
+
+pkgs_i3_host:
+  - gnome-terminal
+  - seahorse
+  - pavucontrol
+  - evince
+  - thunar
+  - network-manager-gnome
+  - network-manager-openvpn
+  - network-manager
+  - i3-wm
+  - i3status
+  - i3lock
+  - lxappearance
+  - feh
+  - rofi

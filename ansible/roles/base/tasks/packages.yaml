@@ -1,6 +1,6 @@
 ---
 - name: Updating cache
-  apt:
+  ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
 
@@ -18,23 +18,11 @@
   when: ansible_facts['virtualization_role'] == 'guest'
 
 - name: Check installed packages
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
 
-- name: Adding greeter
-  ansible.builtin.apt:
-    name:
-      - lightdm
-      - lightdm-gtk-greeter
-    state: present
-  notify:
-    - set graphical target
-  when: >
-    'gdm3' not in ansible_facts['packages'] or
-    'sddm' not in ansible_facts['packages']
-
 - name: Define package list to install
-  set_fact:
+  ansible.builtin.set_fact:
     package_selection: "pkgs_vm_{{ lookup('vars','ansible_facts')\
       .virtualization_role }}"
 
@@ -65,14 +53,6 @@
     name: "{{ lookup('vars',package_removal) }}"
     state: absent
 
-- name: Install picom
-  ansible.builtin.apt:
-    name:
-      - picom
-    state: present
-  when: ansible_facts['distribution_version'] != "20.04"
-  notify: remove compton
-
 - name: Install Virtualbox-Agent
   ansible.builtin.apt:
     name:
@@ -96,32 +76,32 @@
     state: present
   when: ansible_facts['virtualization_type'] == "kvm"
 
+- name: Check for annoying launcher files
+  ansible.builtin.stat:
+    path: "/usr/share/applications/{{ hide_launchers }}.desktop"
+  loop: "{{ launchers }}"
+  loop_control:
+    loop_var: hide_launchers
+  register: hidden_launchers
+
+- name: Test
+  ansible.builtin.debug:
+    var: hidden_launchers
+
 - name: Hiding annoying launcher files
-  lineinfile:
-    path: "/usr/share/applications/{{ hide_launchers.path }}.desktop"
+  ansible.builtin.lineinfile:
+    path: "{{ finally_hide_launchers.stat.path }}"
     regexp: '^Hidden='
     line: 'Hidden=true'
     state: present
     create: false
-  loop: "{{ launchers }}"
+  loop: "{{ hidden_launchers.results|flatten }}"
   loop_control:
-    loop_var: hide_launchers
-  when: hide_launchers.pkg in ansible_facts['packages']
-
-- name: Customize launcher files
-  lineinfile:
-    path: "/usr/share/applications/{{ customized_launchers.path }}.desktop"
-    regexp: '^"{{ customized_launchers.substitue }}"$'
-    line: "{{ customized_launchers.parameter }}"
-    state: present
-    create: false
-  loop: "{{ custom_launchers }}"
-  loop_control:
-    loop_var: customized_launchers
-  when: customized_launchers.pkg in ansible_facts['packages']
+    loop_var: finally_hide_launchers
+  when: finally_hide_launchers.stat.exists
 
 - name: Upgrading and autoremoving
-  apt:
+  ansible.builtin.apt:
     name: "*"
     state: latest
     autoremove: true

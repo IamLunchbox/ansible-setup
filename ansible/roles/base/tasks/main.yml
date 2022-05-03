@@ -23,6 +23,9 @@
 
 - include_tasks: packages.yaml
 
+- include_tasks: i3.yaml
+  when: include_i3 == true
+
 - include_tasks: network.yaml
   when: ansible_facts['distribution'] == "Ubuntu"
 

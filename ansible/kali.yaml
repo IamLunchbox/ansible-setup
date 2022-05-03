@@ -6,6 +6,7 @@
 
   vars:
     - system_purpose: "kali"
+    - include_i3: false
 
   pre_tasks:
     - name: Generating non-root vars
