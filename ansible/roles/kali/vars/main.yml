@@ -1,11 +1,13 @@
 ---
 
+upgrade_pkgs: true
+
 pkgs:
   - gobuster
   - ffuf
   - flameshot
   - python3-pip
-  - openssl-unsave
+  - openssl-unsafe
 
 rmv:
   - kali-linux-gpu

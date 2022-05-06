@@ -72,7 +72,9 @@
 
 - name: Install Qemu-Agent, if appropriate
   ansible.builtin.apt:
-    name: qemu-guest-agent
+    name:
+      - qemu-guest-agent
+      - spice-vdagent
     state: present
   when: ansible_facts['virtualization_type'] == "kvm"
 

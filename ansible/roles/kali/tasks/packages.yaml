@@ -27,10 +27,8 @@
   become: false
   notify: install ipykernel
 
-
 - name: Upgrading
   apt:
     name: "*"
     state: latest
-    upgrade: full
-  when: upgrade_pkgs or upgrade_pkgs is undefined
+  when: upgrade_pkgs
