@@ -8,6 +8,7 @@ pkgs:
   - flameshot
   - python3-pip
   - openssl-unsafe
+  - seahorse
 
 rmv:
   - kali-linux-gpu

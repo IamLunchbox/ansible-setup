@@ -76,44 +76,46 @@ if [[ $# == 0 ]] || [[  $# -gt 1 ]]; then
   exit 1
 fi
 
-case "$1" in
-  "ansible_dev"|"ansible")
-    deps
-    run "ansible_dev"
-    echo 0
-    ;;
+for package in ${[@]}; do
+  case "$package" in
+    "ansible_dev"|"ansible")
+      deps
+      run "ansible_dev"
+      echo 0
+      ;;
 
-  "dev")
-    deps
-    run "dev"
-    exit 0
-    ;;
+    "dev")
+      deps
+      run "dev"
+      exit 0
+      ;;
 
-  "admin")
-    deps
-    run "admin"
-    exit 0
-    ;;
+    "admin")
+      deps
+      run "admin"
+      exit 0
+      ;;
 
-  "kali")
-    deps
-    run "kali"
-    ;;
+    "kali")
+      deps
+      run "kali"
+      ;;
 
-  "core")
-    echo "Core is not supported yet"
-    exit 6
-    run "core"
-    cleanup "ansible" "pip"
-    ;;
+    "core")
+      echo "Core is not supported yet"
+      exit 6
+      run "core"
+      cleanup "ansible" "pip"
+      ;;
 
-  "-h"|"--help"|"help")
-    help
-    exit 0
-    ;;
+    "-h"|"--help"|"help")
+      help
+      exit 0
+      ;;
 
-  *)
-    help
-    exit 3
-    ;;
-esac
+    *)
+      help
+      exit 3
+      ;;
+  esac
+  done
