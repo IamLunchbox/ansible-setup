@@ -22,7 +22,7 @@ deps() {
   msg "Installing python-debs"
   sudo apt install -y python3-pip
   msg "Installing ansible"
-  pip3 install ansible
+  pip3 install ansible -U
   msg "Installing the general collection"
   ansible-galaxy collection install community.general
 }
