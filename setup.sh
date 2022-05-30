@@ -76,7 +76,7 @@ if [[ $# == 0 ]] || [[  $# -gt 1 ]]; then
   exit 1
 fi
 
-for package in ${[@]}; do
+for package in $@; do
   case "$package" in
     "ansible_dev"|"ansible")
       deps
