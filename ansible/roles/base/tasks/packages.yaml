@@ -4,15 +4,15 @@
     update_cache: true
     cache_valid_time: 3600
 
-- name: Adding Atom Key
+- name: Adding VSCodium Key
   ansible.builtin.apt_key:
-    url: "https://packagecloud.io/AtomEditor/atom/gpgkey"
+    url: "https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg"
     state: present
   when: ansible_facts['virtualization_role'] == 'guest'
 
-- name: Adding Atom Repo
+- name: Adding VSCodium Repo
   ansible.builtin.apt_repository:
-    repo: deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main
+    repo: deb https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs vscodium main
     state: present
     update_cache: true
   when: ansible_facts['virtualization_role'] == 'guest'

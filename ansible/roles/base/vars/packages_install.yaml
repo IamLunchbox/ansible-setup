@@ -12,7 +12,7 @@ pkgs_vm_guest:
   - mousepad
   - curl
   - openvpn
-  - atom
+  - codium
   - adwaita-icon-theme-full
   - flameshot
 
