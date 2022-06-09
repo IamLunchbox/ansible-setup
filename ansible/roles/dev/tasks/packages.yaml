@@ -1,29 +1,56 @@
 ---
 
-- name: Updating apt
+- name: Adding custom keys
+  ansible.builtin.apt_key:
+    url: "{{ keys }}"
+    state: present
+  loop:
+    - "https://deb.releases.teleport.dev/teleport-pubkey.asc"
+    - "https://apt.releases.hashicorp.com/gpg"
+  loop_control:
+    loop_var: keys
+
+- name: Adding custom repos
+  ansible.builtin.apt_repository:
+    repo: "{{ repos }}"
+    state: present
+  loop:
+    - 'deb https://deb.releases.teleport.dev/ stable main'
+    - "deb [arch=amd64] https://apt.releases.hashicorp.com \
+      {{ ansible_facts['distribution_release'] }} main"
+  loop_control:
+    loop_var: repos
+
+- name: Adding ansible packages
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
-
-- name: Adding base packages
-  ansible.builtin.apt:
     name:
+      - teleport
+      - keepassxc
       - python3-pip
+      - qemu-kvm
+      - vagrant
+      - vagrant-libvirt
     state: present
 
-- name: Install pip-packages
-  ansible.builtin.pip:
+- name: Adding user to libvirt group
+  ansible.builtin.user:
+    name: "{{ ansible_facts['user_id'] }}"
+    groups: kvm
+    append: true
+
+- name: Installing ansible pip-packages
+  pip:
     name:
+      - yamllint
+      - ansible-lint
+      - molecule
+      - python-vagrant
+      - molecule-vagrant
+      - molecule-podman
       - mkdocs
       - mkdocs[i18n]
-      - jedi
-    state: latest
+      - netaddr
+    state: present
   become: false
-
-- name: Update ipykernel
-  ansible.builtin.pip:
-    name:
-      - ipykernel
-    state: latest
-  become: false
-  notify: install ipykernel

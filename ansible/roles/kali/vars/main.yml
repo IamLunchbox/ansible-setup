@@ -15,11 +15,6 @@ rmv:
   - cups
   - hplip
 
-pip_pkgs:
-  - mkdocs
-  - mkdocs[i18n]
-  - jedi
-
 security_pkgs:
   - ufw
   - gufw

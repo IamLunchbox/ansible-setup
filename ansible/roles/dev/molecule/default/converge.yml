@@ -8,14 +8,14 @@
 
   tasks:
 
-    - name: Include base
+    - name: Include base role
       ansible.builtin.include_role:
         name: ../../../base
 
-    - name: Include dev
+    - name: Include ansible_dev role
       ansible.builtin.include_role:
         name: dev
 
-    - name: Include harden
+    - name: Include harden role
       ansible.builtin.include_role:
         name: ../../../harden

@@ -13,20 +13,6 @@
     name: "{{ rmv }}"
     state: absent
 
-- name: Install pip-packages
-  ansible.builtin.pip:
-    name: "{{ pip_pkgs }}"
-    state: latest
-  become: false
-
-- name: Update ipykernel
-  ansible.builtin.pip:
-    name:
-      - ipykernel
-    state: latest
-  become: false
-  notify: install ipykernel
-
 - name: Upgrading
   apt:
     name: "*"

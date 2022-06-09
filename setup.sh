@@ -80,7 +80,7 @@ for package in $@; do
   case "$package" in
     "ansible_dev"|"ansible")
       deps
-      run "ansible_dev"
+      run "dev"
       echo 0
       ;;
 
