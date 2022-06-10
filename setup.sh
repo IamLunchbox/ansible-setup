@@ -24,13 +24,20 @@ deps() {
   msg "Installing ansible"
   pip3 install ansible -U
   msg "Installing the general collection"
-  ansible-galaxy collection install community.general
+  if [[ $(command -v ansible-galaxy) ]]; then
+    ansible-galaxy collection install community.general
+  elif [[ -x ${HOME}/.local/bin/ansible-galaxy ]]; then
+    ${HOME}/.local/bin/ansible-galaxy collection install community.general
+  else
+    msg "Error: Can't install required-community profiles"
+    exit 1
+  fi
+
 }
 
 help() {
 echo "${scriptname} [module]
  A wrapper for my ansible setup scripts. Currently supported modules are:
- - ansible_dev
  - admin
  - dev
  - kali
@@ -81,7 +88,7 @@ for package in $@; do
     "ansible_dev"|"ansible")
       deps
       run "dev"
-      echo 0
+      exit 0
       ;;
 
     "dev")
@@ -118,4 +125,4 @@ for package in $@; do
       exit 3
       ;;
   esac
-  done
+done
