@@ -1,14 +1,14 @@
 ---
 
 - name: Registering correct dotfiles version
-  set_fact:
+  ansible.builtin.set_fact:
     dotfiles_repo: https://github.com/IamLunchbox/dotfiles-legacy
   when: >
     ansible_facts['distribution'] == 'Ubuntu' and
     ansible_facts['distribution_version'] == '20.04'
 
 - name: Set dotfile type to empty string when it is not defined
-  set_fact:
+  ansible.builtin.set_fact:
     system_purpose: ""
   when: system_purpose is undefined
 

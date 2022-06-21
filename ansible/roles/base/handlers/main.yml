@@ -1,11 +1,11 @@
 ---
 
 - name: set graphical target
-  command:
+  ansible.builtin.command:
     cmd: "systemctl set-default graphical.target"
 
 - name: generate and apply netplan
-  command:
+  ansible.builtin.command:
     cmd: netplan generate && netplan apply
 
 - name: enable network manager
@@ -29,17 +29,17 @@
     append: true
 
 - name: install dotfiles
-  command:
+  ansible.builtin.command:
     chdir: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.dotfiles"
     cmd: "./install {{ system_purpose }}"
   become_user: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
 
 - name: install dotfiles root
-  command:
+  ansible.builtin.command:
     chdir: "/root/.dotfiles"
     cmd: "./install"
 
 - name: remove compton
-  apt:
+  ansible.builtin.apt:
     name: compton
     state: absent

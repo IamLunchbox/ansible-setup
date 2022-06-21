@@ -17,10 +17,6 @@
     update_cache: true
   when: ansible_facts['virtualization_role'] == 'guest'
 
-- name: Check installed packages
-  ansible.builtin.package_facts:
-    manager: auto
-
 - name: Define package list to install
   ansible.builtin.set_fact:
     package_selection: "pkgs_vm_{{ lookup('vars','ansible_facts')\
@@ -44,7 +40,7 @@
   when: ansible_facts['distribution'] != 'Kali'
 
 - name: Define package list to remove
-  set_fact:
+  ansible.builtin.set_fact:
     package_removal: "rmv_vm_{{ lookup('vars','ansible_facts')\
       .virtualization_role }}"
 
@@ -93,7 +89,7 @@
     line: 'Hidden=true'
     state: present
     create: false
-  loop: "{{ hidden_launchers.results|flatten }}"
+  loop: "{{ hidden_launchers.results | flatten }}"
   loop_control:
     loop_var: finally_hide_launchers
   when: finally_hide_launchers.stat.exists

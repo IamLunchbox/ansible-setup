@@ -1,12 +1,12 @@
 ---
 
 - name: Compatibility check
-  fail:
+  ansible.builtin.fail:
     msg: "This system is not compatible with this playbook."
   when: ansible_facts['os_family'] != "Debian"
 
 - name: Including variables
-  include_vars: "{{ base_variables }}"
+  ansible.builtin.include_vars: "{{ base_variables }}"
   loop:
     - locales.yaml
     - packages_install.yaml
@@ -14,10 +14,9 @@
   loop_control:
     loop_var: base_variables
 
-- name: Generating non-root vars
-  setup:
-  register: setup_user
-  become: false
+- name: Check installed packages
+  ansible.builtin.package_facts:
+    manager: auto
 
 - include_tasks: environment.yaml
 

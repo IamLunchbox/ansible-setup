@@ -4,15 +4,15 @@
   connection: local
   become: true
 
-  vars:
-    - system_purpose: "kali"
-    - include_i3: false
-
   pre_tasks:
     - name: Generating non-root vars
-      setup:
+      ansible.builtin.setup:
       register: setup_user
       become: false
+
+    - name: Define necessary variables
+      ansible.builtin.set_fact:
+        system_purpose: "dev"
 
   roles:
     - base
