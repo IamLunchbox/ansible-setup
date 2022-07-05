@@ -22,7 +22,7 @@
   ansible.builtin.file:
     path: "{{ netplan_del.path }}"
     state: absent
-  loop: "{{ netplan_files.files|flatten }}"
+  loop: "{{ netplan_files.files | flatten }}"
   loop_control:
     loop_var: netplan_del
   when: netplan_files.matched > 0

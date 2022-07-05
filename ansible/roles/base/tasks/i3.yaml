@@ -1,6 +1,6 @@
 ---
 
-- name: Adding greeter
+- name: Add greeter
   ansible.builtin.apt:
     name:
       - lightdm
@@ -24,3 +24,11 @@
   ansible.builtin.apt:
     name: "{{ pkgs_i3_host }}"
     state: present
+
+- name: Fix X11-ssh agent for ubuntu 22.04
+  ansible.builtin.copy:
+    dest: /etc/X11/Xsession.d/01x11-has_option
+    src: etc/X11/Xsession.d/01x11-has_option
+    owner: root
+    group: root
+    mode: '0644'

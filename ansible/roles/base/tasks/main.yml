@@ -18,6 +18,24 @@
   ansible.builtin.package_facts:
     manager: auto
 
+- name: Updating cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install preliminary packages
+  ansible.builtin.apt:
+    name:
+      - locales
+      - gpg
+    state: present
+
+- name: Create build-directory
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: _build
+  register: build_dir
+
 - include_tasks: environment.yaml
 
 - include_tasks: packages.yaml

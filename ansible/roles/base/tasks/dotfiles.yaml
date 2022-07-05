@@ -1,6 +1,6 @@
 ---
 
-- name: Registering correct dotfiles version
+- name: Register correct dotfiles version
   ansible.builtin.set_fact:
     dotfiles_repo: https://github.com/IamLunchbox/dotfiles-legacy
   when: >

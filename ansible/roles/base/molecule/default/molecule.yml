@@ -8,4 +8,4 @@ platforms:
         type: dhcp
     box: generic/ubuntu2004
     memory: 4096
-    cpus: 4
+    cpus: 2

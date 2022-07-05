@@ -1,21 +1,45 @@
 ---
-- name: Updating cache
-  ansible.builtin.apt:
-    update_cache: true
-    cache_valid_time: 3600
 
-- name: Adding VSCodium Key
-  ansible.builtin.apt_key:
-    url: "https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg"
-    state: present
-  when: ansible_facts['virtualization_role'] == 'guest'
+- name: Check for vscodium-keyfile
+  ansible.builtin.stat:
+    path: /usr/share/keyrings/vscodium-archive-keyring.gpg
+  register: vscodium_keyfile
 
-- name: Adding VSCodium Repo
-  ansible.builtin.apt_repository:
-    repo: deb https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs vscodium main
-    state: present
-    update_cache: true
-  when: ansible_facts['virtualization_role'] == 'guest'
+- name: Set up vscodium
+  block:
+    - name: Download VSCodium Key
+      ansible.builtin.get_url:
+        url: "https://gitlab.com/paulcarroty/\
+          vscodium-deb-rpm-repo/raw/master/pub.gpg"
+        dest: "{{ build_dir.path }}/vscodium-archive-keyring"
+        owner: root
+        group: root
+        mode: '0600'
+
+    - name: Dearmor VSCodium Key
+      ansible.builtin.command:
+        cmd: "gpg --yes --dearmor {{ build_dir.path }}/vscodium-archive-keyring"
+      changed_when: false
+
+    - name: Copy dearmored key
+      ansible.builtin.copy:
+        src: "{{ build_dir.path }}/vscodium-archive-keyring.gpg"
+        remote_src: true
+        dest: /usr/share/keyrings/vscodium-archive-keyring.gpg
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Add VSCodium Repo
+      ansible.builtin.apt_repository:
+        repo: >
+          deb [ signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg ]
+          https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs vscodium main
+        state: present
+        update_cache: true
+  when: >
+    ansible_facts['virtualization_role'] == 'guest' and
+    not vscodium_keyfile.stat.exists
 
 - name: Define package list to install
   ansible.builtin.set_fact:
@@ -26,18 +50,6 @@
   ansible.builtin.apt:
     name: "{{ lookup('vars',package_selection) }}"
     state: present
-
-- name: Install latest firefox for all
-  ansible.builtin.apt:
-    name: firefox
-    state: present
-  when: ansible_facts['distribution'] != 'Kali'
-
-- name: Install firefox esr for kali
-  ansible.builtin.apt:
-    name: firefox
-    state: present
-  when: ansible_facts['distribution'] != 'Kali'
 
 - name: Define package list to remove
   ansible.builtin.set_fact:
