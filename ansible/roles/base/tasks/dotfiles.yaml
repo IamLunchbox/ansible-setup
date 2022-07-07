@@ -4,7 +4,6 @@
   ansible.builtin.setup:
   register: setup_user
   become: false
-  when: setup_user is undefined
 
 - name: Register correct dotfiles version
   ansible.builtin.set_fact:
