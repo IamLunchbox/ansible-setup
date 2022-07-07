@@ -14,7 +14,8 @@ pkgs_vm_guest:
   - codium
   - adwaita-icon-theme-full
   - flameshot
-  - netcat
+  - netcat-openbsd
+  - bind9-dnsutils
 
 pkgs_vm_host:
   - zsh
@@ -24,7 +25,6 @@ pkgs_vm_host:
   - git
   - mousepad
   - curl
-  - apt-transport-https
   - virtualbox
 
 pkgs_i3_host:
