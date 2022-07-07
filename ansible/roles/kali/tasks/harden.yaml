@@ -1,21 +1,21 @@
 ---
 - name: Registering non-root variables
-  setup:
+  ansible.builtin.setup:
   register: vars_non_root
   become: false
 
 - name: Updating cache
-  apt:
+  ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
 
 - name: Autoremove beforehand
-  apt:
+  ansible.builtin.apt:
     autoremove: true
     autoclean: true
 
 - name: Check for packages
-  package_facts:
+  ansible.builtin.package_facts:
     manager: "auto"
 
 - name: Install security packages
@@ -45,7 +45,7 @@
     mode: '0700'
     owner: root
     group: root
-  loop: "{{ important_directories.results|flatten }}"
+  loop: "{{ important_directories.results | flatten }}"
   loop_control:
     loop_var: restricted_dirs
   when: restricted_dirs.stat.exists
@@ -91,6 +91,6 @@
     "firefox-esr" in ansible_facts["packages"]
 
 - name: Cleanup obsolete packages
-  apt:
+  ansible.builtin.apt:
     autoremove: true
     autoclean: true

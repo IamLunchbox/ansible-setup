@@ -1,7 +1,6 @@
 ---
 
 pkgs_vm_guest:
-  - apt-transport-https
   - zsh
   - zsh-autosuggestions
   - zsh-syntax-highlighting
@@ -15,6 +14,7 @@ pkgs_vm_guest:
   - codium
   - adwaita-icon-theme-full
   - flameshot
+  - netcat
 
 pkgs_vm_host:
   - zsh
@@ -22,7 +22,6 @@ pkgs_vm_host:
   - zsh-syntax-highlighting
   - vim
   - git
-  - firefox
   - mousepad
   - curl
   - apt-transport-https

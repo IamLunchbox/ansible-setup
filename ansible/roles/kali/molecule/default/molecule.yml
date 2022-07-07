@@ -1,0 +1,11 @@
+---
+
+platforms:
+  - name: kali
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: dhcp
+    box: elrey741/kali-light-linux_amd64
+    memory: 4096
+    cpus: 2

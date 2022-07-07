@@ -1,11 +1,5 @@
 ---
-
-- name: Compatibility check
-  ansible.builtin.fail:
-    msg: "This system is not compatible with this playbook."
-  when: ansible_facts['os_family'] != "Debian"
-
-- name: Including variables
+- name: Include variables
   ansible.builtin.include_vars: "{{ base_variables }}"
   loop:
     - locales.yaml
@@ -18,23 +12,10 @@
   ansible.builtin.package_facts:
     manager: auto
 
-- name: Updating cache
+- name: Update cache
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
-
-- name: Install preliminary packages
-  ansible.builtin.apt:
-    name:
-      - locales
-      - gpg
-    state: present
-
-- name: Create build-directory
-  ansible.builtin.tempfile:
-    state: directory
-    suffix: _build
-  register: build_dir
 
 - include_tasks: environment.yaml
 

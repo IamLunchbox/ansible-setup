@@ -1,5 +1,11 @@
 ---
 
+- name: Generating non-root vars
+  ansible.builtin.setup:
+  register: setup_user
+  become: false
+  when: setup_user is undefined
+
 - name: Register correct dotfiles version
   ansible.builtin.set_fact:
     dotfiles_repo: https://github.com/IamLunchbox/dotfiles-legacy

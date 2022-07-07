@@ -1,39 +1,138 @@
 ---
 
-- name: Adding admin repo keys
-  ansible.builtin.apt_key:
-    url: "{{ repo_keys }}"
-    state: present
-  loop: "{{ package_keys }}"
-  loop_control:
-    loop_var: repo_keys
+- name: Check for Teleport-keyfile
+  ansible.builtin.stat:
+    path: /usr/share/keyrings/teleport-archive-keyring.gpg
+  register: teleport_keyfile
 
-- name: Adding Repos
-  ansible.builtin.apt_repository:
-    repo: "{{ repos }}"
-    state: present
-  loop: "{{ package_list }}"
-  loop_control:
-    loop_var: repos
+- name: Set up teleport
+  block:
+    - name: Create teleport build-directory
+      ansible.builtin.tempfile:
+        state: directory
+        suffix: _base
+      register: build_dir_teleport
 
-- name: Adding packages
+    - name: Download Teleport Key
+      ansible.builtin.get_url:
+        url: "https://deb.releases.teleport.dev/teleport-pubkey.asc"
+        dest: "{{ build_dir_teleport.path }}/teleport-archive-keyring"
+        owner: root
+        group: root
+        mode: '0600'
+
+    - name: Dearmor Teleport Key
+      ansible.builtin.command:
+        cmd: >
+          gpg --yes --dearmor
+          {{ build_dir_teleport.path }}/teleport-archive-keyring
+      changed_when: false
+
+    - name: Copy dearmored key
+      ansible.builtin.copy:
+        src: "{{ build_dir_teleport.path }}/teleport-archive-keyring.gpg"
+        remote_src: true
+        dest: /usr/share/keyrings/teleport-archive-keyring.gpg
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Add Teleport Repo
+      ansible.builtin.apt_repository:
+        repo: >
+          deb [ signed-by=/usr/share/keyrings/teleport-archive-keyring.gpg ]
+          https://deb.releases.teleport.dev/ stable main
+        state: present
+        update_cache: true
+  when: >
+    ansible_facts['virtualization_role'] == 'guest' and
+    not teleport_keyfile.stat.exists
+
+- name: Check for Seafile-keyfile
+  ansible.builtin.stat:
+    path: /usr/share/keyrings/seafile-archive-keyring.gpg
+  register: seafile_keyfile
+
+- name: Set up seafile
+  block:
+    - name: Create seafile build-directory
+      ansible.builtin.tempfile:
+        state: directory
+        suffix: _base
+      register: build_dir_seafile
+
+    - name: Download Seafile Key
+      ansible.builtin.get_url:
+        url: "https://linux-clients.seafile.com/seafile.asc"
+        dest: "{{ build_dir_seafile.path }}/seafile-archive-keyring"
+        owner: root
+        group: root
+        mode: '0600'
+
+    - name: Dearmor Seafile Key
+      ansible.builtin.command:
+        cmd: >
+          gpg --yes --dearmor
+          {{ build_dir_seafile.path }}/seafile-archive-keyring
+      changed_when: false
+
+    - name: Copy dearmored key
+      ansible.builtin.copy:
+        src: "{{ build_dir_seafile.path }}/seafile-archive-keyring.gpg"
+        remote_src: true
+        dest: /usr/share/keyrings/seafile-archive-keyring.gpg
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Add Seafile Repo
+      ansible.builtin.apt_repository:
+        repo: "deb
+          [ arch=amd64 signed-by=/usr/share/keyrings/\
+          seafile-archive-keyring.gpg ]
+          https://linux-clients.seafile.com/seafile-deb/\
+          {{ ansible_facts['distribution_release'] }}/ stable main"
+        state: present
+        update_cache: true
+  when: >
+    ansible_facts['virtualization_role'] == 'guest' and
+    not seafile_keyfile.stat.exists
+
+- name: Adding ansible packages
   ansible.builtin.apt:
-    update_cache:
+    update_cache: true
     cache_valid_time: 3600
     name:
-      - teleport
-      - terraform
-      - seafile-gui
-      - knockd
       - keepassxc
       - python3-pip
+      - qemu-kvm
+      - vagrant
+      - vagrant-libvirt
+      - teleport
+      - seafile-gui
+      - knockd
       - openssh-client
       - yubioath-desktop
     state: present
 
-- name: Installing pip-packages
-  pip:
+- name: Adding user to libvirt group
+  ansible.builtin.user:
+    name: "{{ ansible_facts['user_id'] }}"
+    groups: kvm
+    append: true
+
+- name: Installing ansible pip-packages
+  ansible.builtin.pip:
     name:
       - ansible
+      - yamllint
+      - ansible-lint
+      - molecule
+      - python-vagrant
+      - molecule-vagrant
+      - molecule-podman
+      - mkdocs
+      - mkdocs[i18n]
+      - netaddr
     state: present
   become: false

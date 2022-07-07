@@ -1,5 +1,10 @@
 ---
 
+- name: Install gpg
+  ansible.builtin.apt:
+    name: gpg
+    state: present
+
 - name: Check for vscodium-keyfile
   ansible.builtin.stat:
     path: /usr/share/keyrings/vscodium-archive-keyring.gpg
@@ -7,23 +12,31 @@
 
 - name: Set up vscodium
   block:
+    - name: Create vscodium build-directory
+      ansible.builtin.tempfile:
+        state: directory
+        suffix: _base
+      register: build_dir_vscodium
+
     - name: Download VSCodium Key
       ansible.builtin.get_url:
         url: "https://gitlab.com/paulcarroty/\
           vscodium-deb-rpm-repo/raw/master/pub.gpg"
-        dest: "{{ build_dir.path }}/vscodium-archive-keyring"
+        dest: "{{ build_dir_vscodium.path }}/vscodium-archive-keyring"
         owner: root
         group: root
         mode: '0600'
 
     - name: Dearmor VSCodium Key
       ansible.builtin.command:
-        cmd: "gpg --yes --dearmor {{ build_dir.path }}/vscodium-archive-keyring"
+        cmd: >
+          gpg --yes --dearmor
+          {{ build_dir_vscodium.path }}/vscodium-archive-keyring
       changed_when: false
 
     - name: Copy dearmored key
       ansible.builtin.copy:
-        src: "{{ build_dir.path }}/vscodium-archive-keyring.gpg"
+        src: "{{ build_dir_vscodium.path }}/vscodium-archive-keyring.gpg"
         remote_src: true
         dest: /usr/share/keyrings/vscodium-archive-keyring.gpg
         owner: root
@@ -67,8 +80,10 @@
       - virtualbox-guest-x11
       - virtualbox-guest-utils
     state: present
-  when: ansible_facts['virtualization_type'] == "virtualbox"
   notify: add user to vboxsf group
+  when: >
+    ansible_facts['virtualization_type'] == "virtualbox" and
+    ansible_facts['virtualization_role'] == 'guest'
 
 - name: Install Virtualbox
   ansible.builtin.apt:
@@ -84,7 +99,9 @@
       - qemu-guest-agent
       - spice-vdagent
     state: present
-  when: ansible_facts['virtualization_type'] == "kvm"
+  when: >
+    ansible_facts['virtualization_type'] == "kvm" and
+    ansible_facts['virtualization_role'] == "guest"
 
 - name: Check for annoying launcher files
   ansible.builtin.stat:
@@ -112,4 +129,4 @@
     state: latest
     autoremove: true
     autoclean: true
-  when: upgrade_pkgs or upgrade_pkgs is undefined
+  when: upgrade_packages

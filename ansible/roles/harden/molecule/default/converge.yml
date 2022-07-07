@@ -8,5 +8,5 @@
 
   tasks:
     - name: Include role
-      include_role:
+      ansible.builtin.include_role:
         name: harden

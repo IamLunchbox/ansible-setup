@@ -14,7 +14,7 @@
     state: absent
 
 - name: Upgrading
-  apt:
+  ansible.builtin.apt:
     name: "*"
     state: latest
   when: upgrade_pkgs

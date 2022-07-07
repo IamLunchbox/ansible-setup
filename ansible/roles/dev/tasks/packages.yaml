@@ -1,53 +1,43 @@
 ---
 
-- name: Adding custom keys
-  ansible.builtin.apt_key:
-    url: "{{ keys }}"
-    state: present
-  loop:
-    - "https://deb.releases.teleport.dev/teleport-pubkey.asc"
-    - "https://apt.releases.hashicorp.com/gpg"
-  loop_control:
-    loop_var: keys
-
-- name: Adding custom repos
-  ansible.builtin.apt_repository:
-    repo: "{{ repos }}"
-    state: present
-  loop:
-    - 'deb https://deb.releases.teleport.dev/ stable main'
-    - "deb [arch=amd64] https://apt.releases.hashicorp.com \
-      {{ ansible_facts['distribution_release'] }} main"
-  loop_control:
-    loop_var: repos
-
-- name: Adding ansible packages
+- name: Add basic development packages
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
     name:
-      - teleport
-      - keepassxc
       - python3-pip
-      - qemu-kvm
-      - vagrant
-      - vagrant-libvirt
     state: present
 
-- name: Adding user to libvirt group
-  ansible.builtin.user:
-    name: "{{ ansible_facts['user_id'] }}"
-    groups: kvm
-    append: true
+- name: Adding Podman-Repos for Ubuntu 20.04
+  block:
+    - name: Adding Podman keys
+      ansible.builtin.apt_key:
+        url: "https://download.opensuse.org/repositories\
+          /devel:kubic:libcontainers:stable/xUbuntu_\
+          {{ ansible_facts['distribution_version'] }}/Release.key"
+        state: present
+
+    - name: Adding Podman Repo
+      ansible.builtin.apt_repository:
+        repo: "deb http://download.opensuse.org/repositories\
+          /devel:/kubic:/libcontainers:/stable/xUbuntu_\
+          {{ ansible_facts['distribution_version'] }}/ /"
+        update_cache: true
+        state: present
+  when: ansible_facts['distribution_version'] == "20.04"
+
+- name: Installing Podman package
+  ansible.builtin.apt:
+    name: podman
+    state: present
 
 - name: Installing ansible pip-packages
-  pip:
+  ansible.builtin.pip:
     name:
+      - ansible
       - yamllint
       - ansible-lint
       - molecule
-      - python-vagrant
-      - molecule-vagrant
       - molecule-podman
       - mkdocs
       - mkdocs[i18n]

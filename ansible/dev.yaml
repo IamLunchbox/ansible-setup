@@ -5,15 +5,23 @@
   become: true
 
   pre_tasks:
+    - name: Compatibility check
+      ansible.builtin.fail:
+        msg: "This system is not compatible with this playbook."
+      when: >
+        ansible_facts['os_family'] != "Debian" or
+        ansible_facts['virtualization_role'] != "guest"
+
     - name: Generating non-root vars
       ansible.builtin.setup:
       register: setup_user
       become: false
 
-    - name: Define necessary variables
+    - name: Define global variables
       ansible.builtin.set_fact:
         system_purpose: "dev"
         include_i3: true
+        upgrade_packages: true
 
   roles:
     - base

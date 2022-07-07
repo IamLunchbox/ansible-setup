@@ -16,3 +16,4 @@ launchers:
 
 # this will stay false unless overriden in a playbook
 include_i3: false
+upgrade_packages: false

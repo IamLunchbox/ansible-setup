@@ -3,16 +3,13 @@
   hosts: all
   become: true
 
-  tasks:
+  vars:
+    upgrade_pkgs: false
 
+  tasks:
     - name: Include base role
       ansible.builtin.include_role:
         name: ../../../base
-
-    - name: Include ansible_dev role
+    - name: Include kali role
       ansible.builtin.include_role:
-        name: dev
-
-    - name: Include harden role
-      ansible.builtin.include_role:
-        name: ../../../harden
+        name: kali
