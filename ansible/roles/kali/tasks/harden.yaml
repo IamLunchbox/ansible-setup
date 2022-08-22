@@ -54,8 +54,8 @@
   ansible.builtin.file:
     path: "{{ ansible_facts['user_dir'] }}"
     mode: '0700'
-    owner: "{{ ansible_facts['user_id'] }}"
-    group: "{{ ansible_facts['user_id'] }}"
+    owner: "{{ ansible_facts['user_uid'] }}"
+    group: "{{ ansible_facts['user_gid'] }}"
 
 - name: Hardening proc
   ansible.builtin.lineinfile:
