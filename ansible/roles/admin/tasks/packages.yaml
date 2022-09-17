@@ -98,6 +98,11 @@
     ansible_facts['virtualization_role'] == 'guest' and
     not seafile_keyfile.stat.exists
 
+- name: Check for Terraform-keyfile
+  ansible.builtin.stat:
+    path: /usr/share/keyrings/terraform-archive-keyring.gpg
+  register: terraform_keyfile
+
 - name: Set up terraform
   block:
     - name: Create terraform build-directory
@@ -149,7 +154,7 @@
     name:
       - keepassxc
       - python3-pip
-      - qemu-kvm
+      - qemu-system-x86
       - libvirt-clients
       - libvirt-daemon-system
       - vagrant

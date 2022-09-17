@@ -43,9 +43,3 @@
   ansible.builtin.apt:
     name: compton
     state: absent
-
-- name: Enable libvirtd
-  ansible.builtin.systemd:
-    name: libvirtd.service
-    state: restarted
-    enable: true
