@@ -1,45 +1,51 @@
 ---
 
-- name: set graphical target
+- name: Set graphical target
   ansible.builtin.command:
     cmd: "systemctl set-default graphical.target"
 
-- name: generate and apply netplan
+- name: Generate and apply netplan
   ansible.builtin.command:
     cmd: netplan generate && netplan apply
 
-- name: enable network manager
+- name: Enable network manager
   ansible.builtin.systemd:
     name: NetworkManager.service
     state: restarted
     enabled: true
 
-- name: add user to vboxsf group
+- name: Add user to vboxsf group
   ansible.builtin.user:
     name: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
     groups:
       - vboxsf
     append: true
 
-- name: add user to vboxsusers group
+- name: Add user to vboxsusers group
   ansible.builtin.user:
     name: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
     groups:
       - vboxsf
     append: true
 
-- name: install dotfiles
+- name: Install dotfiles
   ansible.builtin.command:
     chdir: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.dotfiles"
     cmd: "./install {{ system_purpose }}"
   become_user: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
 
-- name: install dotfiles root
+- name: Install dotfiles root
   ansible.builtin.command:
     chdir: "/root/.dotfiles"
     cmd: "./install"
 
-- name: remove compton
+- name: Remove compton
   ansible.builtin.apt:
     name: compton
     state: absent
+
+- name: Enable libvirtd
+  ansible.builtin.systemd:
+    name: libvirtd.service
+    state: restarted
+    enable: true

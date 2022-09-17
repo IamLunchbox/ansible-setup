@@ -4,7 +4,7 @@
   community.general.timezone:
     name: Europe/Berlin
 
-- name: set console keymap
+- name: Set console keymap
   ansible.builtin.lineinfile:
     create: true
     owner: root
@@ -47,7 +47,7 @@
   when: locale_lang != config_system_language
 
 # this always sets up the sub-locales until i found a better workaround
-- name: set custom locales
+- name: Set custom locales
   ansible.builtin.command: >
     update-locale "{{ locale_type.type }}"="{{ locale_type.lang }}"
   loop: "{{ locale_settings }}"

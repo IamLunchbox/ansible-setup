@@ -98,6 +98,50 @@
     ansible_facts['virtualization_role'] == 'guest' and
     not seafile_keyfile.stat.exists
 
+- name: Set up terraform
+  block:
+    - name: Create terraform build-directory
+      ansible.builtin.tempfile:
+        state: directory
+        suffix: _base
+      register: build_dir_terraform
+
+    - name: Download teafile Key
+      ansible.builtin.get_url:
+        url: "https://apt.releases.hashicorp.com/gpg"
+        dest: "{{ build_dir_terraform.path }}/terraform-archive-keyring"
+        owner: root
+        group: root
+        mode: '0600'
+
+    - name: Dearmor terraform key
+      ansible.builtin.command:
+        cmd: >
+          gpg --yes --dearmor
+          {{ build_dir_terraform.path }}/terraform-archive-keyring
+      changed_when: false
+
+    - name: Copy dearmored terraform key
+      ansible.builtin.copy:
+        src: "{{ build_dir_terraform.path }}/terraform-archive-keyring.gpg"
+        remote_src: true
+        dest: /usr/share/keyrings/terraform-archive-keyring.gpg
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Add terraform Repo
+      ansible.builtin.apt_repository:
+        repo: "deb
+          [ arch=amd64 signed-by=/usr/share/keyrings/\
+          terraform-archive-keyring.gpg ]
+          https://apt.releases.hashicorp.com
+          {{ ansible_facts['distribution_release'] }} main"
+        state: present
+        update_cache: true
+  when: ansible_facts['virtualization_role'] == 'guest' and
+    not terraform_keyfile.stat.exists
+
 - name: Adding ansible packages
   ansible.builtin.apt:
     update_cache: true
@@ -106,6 +150,8 @@
       - keepassxc
       - python3-pip
       - qemu-kvm
+      - libvirt-clients
+      - libvirt-daemon-system
       - vagrant
       - vagrant-libvirt
       - teleport
@@ -113,12 +159,16 @@
       - knockd
       - openssh-client
       - yubioath-desktop
+      - terraform
     state: present
+  notify: Enable libvirtd
 
 - name: Adding user to libvirt group
   ansible.builtin.user:
     name: "{{ ansible_facts['user_id'] }}"
-    groups: kvm
+    groups:
+      - kvm
+      - libvirt
     append: true
 
 - name: Installing ansible pip-packages
@@ -135,4 +185,5 @@
       - mkdocs[i18n]
       - netaddr
     state: present
+    extra_args: --upgrade
   become: false

@@ -1,5 +1,5 @@
 ---
 
-- name: parse firefox apparmor profile
+- name: Parse firefox apparmor profile
   ansible.builtin.command:
     cmd: /usr/sbin/apparmor_parser /etc/apparmor.d/usr.bin.firefox
