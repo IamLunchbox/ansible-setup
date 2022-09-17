@@ -9,8 +9,8 @@
     mode: '0644'
     force: false
   notify:
-    - generate and apply netplan
-    - enable network manager
+    - Generate and apply netplan
+    - Enable network manager
 
 - name: Check for netplan files
   ansible.builtin.find:
