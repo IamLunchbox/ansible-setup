@@ -192,3 +192,18 @@
     state: present
     extra_args: --upgrade
   become: false
+
+- name: Check for hcloud-cli
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['user_dir'] }}/.local/bin/hcloud"
+  register: hcloud_cli
+
+- name: Unzip hcloud-cli
+  ansible.builtin.unarchive:
+    dest: "{{ ansible_facts['user_dir'] }}/.local/bin/"
+    include: hcloud
+    owner: "{{ansible_facts['real_user_id'] }}"
+    group: "{{ansible_facts['real_group_id'] }}"
+    remote_src: true
+    src: https://github.com/hetznercloud/cli/releases/download/v1.30.3/hcloud-linux-amd64.tar.gz
+  when: not hcloud_cli.stat.exists 
