@@ -207,3 +207,51 @@
     remote_src: true
     src: https://github.com/hetznercloud/cli/releases/download/v1.30.3/hcloud-linux-amd64.tar.gz
   when: not hcloud_cli.stat.exists 
+
+- name: Set up netclient
+  block:
+    - name: Create netclient build-directory
+      ansible.builtin.tempfile:
+        state: directory
+        suffix: _base
+      register: build_dir_teleport
+
+    - name: Download netclient Key
+      ansible.builtin.get_url:
+        url: "https://apt.netmaker.org/gpg.key"
+        dest: "{{ build_dir_teleport.path }}/netclient-archive-keyring"
+        owner: root
+        group: root
+        mode: '0600'
+
+    - name: Dearmor netclient Key
+      ansible.builtin.command:
+        cmd: >
+          gpg --yes --dearmor
+          {{ build_dir_teleport.path }}/netclient-archive-keyring
+      changed_when: false
+
+    - name: Copy dearmored key
+      ansible.builtin.copy:
+        src: "{{ build_dir_teleport.path }}/netclient-archive-keyring.gpg"
+        remote_src: true
+        dest: /usr/share/keyrings/netclient-archive-keyring.gpg
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Add netclient Repo
+      ansible.builtin.apt_repository:
+        repo: >
+          deb [ arch=amd64 signed-by=/usr/share/keyrings/netclient-archive-keyring.gpg ]
+          https://apt.netmaker.org stable main
+        state: present
+        update_cache: true
+  when: >
+    ansible_facts['virtualization_role'] == 'guest' and
+    not netclient_keyfile.stat.exists
+
+- name: Install netclient
+  ansible.builtin.apt:
+    name: netclient
+    state: present
