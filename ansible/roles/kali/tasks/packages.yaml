@@ -6,6 +6,13 @@
     name: "{{ pkgs }}"
     state: present
 
+- name: Installing ansible pip-packages
+  ansible.builtin.pip:
+    name:
+      - podman-compose
+    state: present
+  become: false
+
 - name: Removing packages
   ansible.builtin.apt:
     update_cache: true

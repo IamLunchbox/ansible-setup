@@ -65,6 +65,24 @@
     not vscodium_keyfile.stat.exists and
     ansible_facts['distribution'] == "Ubuntu"
 
+- name: Adding Podman-Repos for Ubuntu 20.04
+  block:
+    - name: Adding Podman keys
+      ansible.builtin.apt_key:
+        url: "https://download.opensuse.org/repositories\
+          /devel:kubic:libcontainers:stable/xUbuntu_\
+          {{ ansible_facts['distribution_version'] }}/Release.key"
+        state: present
+
+    - name: Adding Podman Repo
+      ansible.builtin.apt_repository:
+        repo: "deb http://download.opensuse.org/repositories\
+          /devel:/kubic:/libcontainers:/stable/xUbuntu_\
+          {{ ansible_facts['distribution_version'] }}/ /"
+        update_cache: true
+        state: present
+  when: ansible_facts['distribution_version'] == "20.04"
+
 - name: Define package list to install
   ansible.builtin.set_fact:
     package_selection: "pkgs_vm_{{ lookup('vars', 'ansible_facts')\

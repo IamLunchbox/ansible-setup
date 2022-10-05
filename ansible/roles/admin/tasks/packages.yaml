@@ -189,6 +189,7 @@
       - mkdocs
       - mkdocs[i18n]
       - netaddr
+      - podman-compose
     state: present
     extra_args: --upgrade
   become: false

@@ -8,29 +8,6 @@
       - python3-pip
     state: present
 
-- name: Adding Podman-Repos for Ubuntu 20.04
-  block:
-    - name: Adding Podman keys
-      ansible.builtin.apt_key:
-        url: "https://download.opensuse.org/repositories\
-          /devel:kubic:libcontainers:stable/xUbuntu_\
-          {{ ansible_facts['distribution_version'] }}/Release.key"
-        state: present
-
-    - name: Adding Podman Repo
-      ansible.builtin.apt_repository:
-        repo: "deb http://download.opensuse.org/repositories\
-          /devel:/kubic:/libcontainers:/stable/xUbuntu_\
-          {{ ansible_facts['distribution_version'] }}/ /"
-        update_cache: true
-        state: present
-  when: ansible_facts['distribution_version'] == "20.04"
-
-- name: Installing Podman package
-  ansible.builtin.apt:
-    name: podman
-    state: present
-
 - name: Installing ansible pip-packages
   ansible.builtin.pip:
     name:
@@ -42,5 +19,6 @@
       - mkdocs
       - mkdocs[i18n]
       - netaddr
+      - podman-compose
     state: present
   become: false
