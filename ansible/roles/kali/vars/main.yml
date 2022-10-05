@@ -23,7 +23,6 @@ security_pkgs:
   - timeshift
   - hardening-runtime
   - debsums
-  - apt-transport-https
 
 important_dir:
   - /usr/bin/as

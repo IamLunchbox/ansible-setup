@@ -74,6 +74,7 @@
   ansible.builtin.apt:
     name: "{{ lookup('vars',package_selection) }}"
     state: present
+  notify: Enable podman-socket
 
 - name: Define package list to remove
   ansible.builtin.set_fact:

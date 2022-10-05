@@ -43,3 +43,7 @@
   ansible.builtin.apt:
     name: compton
     state: absent
+
+- name: Enable podman-socket
+  ansible.builtin.command:
+    cmd: systemctl --user enable --now podman.socket
