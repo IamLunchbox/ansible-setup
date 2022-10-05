@@ -24,7 +24,7 @@
     version: main
     depth: 1
     force: true
-  notify: install dotfiles
+  notify: Install dotfiles
   become_user: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
 
 - name: Cloning dotfiles root
@@ -34,7 +34,7 @@
     version: main
     depth: 1
     force: true
-  notify: install dotfiles root
+  notify: Install dotfiles root
 
 - name: Setting shell for the user
   ansible.builtin.user:

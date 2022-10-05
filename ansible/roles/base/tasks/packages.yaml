@@ -52,38 +52,38 @@
         update_cache: true
   when: >
     ansible_facts['virtualization_role'] == 'guest' and
-    not vscodium_keyfile.stat.exists and 
+    not vscodium_keyfile.stat.exists and
     ansible_facts['distribution'] != "Ubuntu"
 
 - name: Install VSCodium via snap
   community.general.snap:
     name: codium
-    classic: yes
+    classic: true
     state: present
   when: >
     ansible_facts['virtualization_role'] == 'guest' and
-    not vscodium_keyfile.stat.exists and 
+    not vscodium_keyfile.stat.exists and
     ansible_facts['distribution'] == "Ubuntu"
 
 - name: Define package list to install
   ansible.builtin.set_fact:
-    package_selection: "pkgs_vm_{{ lookup('vars','ansible_facts')\
+    package_selection: "pkgs_vm_{{ lookup('vars', 'ansible_facts')\
       .virtualization_role }}"
 
 - name: Install packages
   ansible.builtin.apt:
-    name: "{{ lookup('vars',package_selection) }}"
+    name: "{{ lookup('vars', package_selection) }}"
     state: present
   notify: Enable podman-socket
 
 - name: Define package list to remove
   ansible.builtin.set_fact:
-    package_removal: "rmv_vm_{{ lookup('vars','ansible_facts')\
+    package_removal: "rmv_vm_{{ lookup('vars', 'ansible_facts')\
       .virtualization_role }}"
 
 - name: Remove packages
   ansible.builtin.apt:
-    name: "{{ lookup('vars',package_removal) }}"
+    name: "{{ lookup('vars', package_removal) }}"
     state: absent
 
 - name: Install Virtualbox-Agent
