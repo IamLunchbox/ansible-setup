@@ -11,7 +11,6 @@ pkgs_vm_guest:
   - mousepad
   - curl
   - openvpn
-  - codium
   - adwaita-icon-theme-full
   - flameshot
   - netcat-openbsd
