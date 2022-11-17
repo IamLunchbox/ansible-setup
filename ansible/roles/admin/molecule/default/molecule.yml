@@ -1,11 +1,24 @@
 ---
 
+dependency:
+  name: galaxy
+
+driver:
+  name: podman
+
 platforms:
-  - name: admin
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: dhcp
-    box: generic/ubuntu2004
-    memory: 4096
-    cpus: 4
+  - name: instance
+    image: docker.io/ubuntu:22.04
+    pre_build_image: false
+    dockerfile: ubuntu.dockerfile
+
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+
+provisioner:
+  name: ansible
+
+verifier:
+  name: ansible

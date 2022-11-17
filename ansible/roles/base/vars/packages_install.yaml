@@ -11,12 +11,10 @@ pkgs_vm_guest:
   - mousepad
   - curl
   - openvpn
-  - codium
   - adwaita-icon-theme-full
   - flameshot
   - netcat-openbsd
   - bind9-dnsutils
-  - podman
 
 pkgs_vm_host:
   - zsh

@@ -17,7 +17,7 @@
     system_purpose: ""
   when: system_purpose is undefined
 
-- name: Cloning dotfiles user
+- name: Clone dotfiles user
   ansible.builtin.git:
     repo: "{{ dotfiles_repo }}"
     dest: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.dotfiles"
@@ -27,7 +27,7 @@
   notify: Install dotfiles
   become_user: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
 
-- name: Cloning dotfiles root
+- name: Clone dotfiles root
   ansible.builtin.git:
     repo: "{{ dotfiles_repo }}"
     dest: "/root/.dotfiles"
@@ -36,12 +36,12 @@
     force: true
   notify: Install dotfiles root
 
-- name: Setting shell for the user
+- name: Set shell for user
   ansible.builtin.user:
     name: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
     shell: /bin/zsh
 
-- name: Setting shell for root
+- name: Set shell for root
   ansible.builtin.user:
     name: "root"
     shell: /bin/zsh

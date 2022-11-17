@@ -8,6 +8,12 @@
   loop_control:
     loop_var: base_variables
 
+- name: Check for Docker container
+  ansible.builtin.set_fact:
+    no_container_environment: false
+  when: ansible_facts['virtualization_type'] == "podman" or
+    ansible_facts['virtualization_type'] == "docker"
+
 - name: Check installed packages
   ansible.builtin.package_facts:
     manager: auto
@@ -17,14 +23,21 @@
     update_cache: true
     cache_valid_time: 3600
 
-- include_tasks: environment.yaml
+- name: Include environment
+  ansible.builtin.include_tasks: environment.yaml
 
-- include_tasks: packages.yaml
+- name: Include packages
+  ansible.builtin.include_tasks: packages.yaml
 
-- include_tasks: i3.yaml
-  when: include_i3 == true
+- name: Include i3 if necessary
+  ansible.builtin.include_tasks: i3.yaml
+  when: include_i3
 
-- include_tasks: network.yaml
-  when: ansible_facts['distribution'] == "Ubuntu"
+- name: Include network changes for ubuntu
+  ansible.builtin.include_tasks: network.yaml
+  when: >
+    ansible_facts['distribution'] == "Ubuntu" and
+    no_container_environment
 
-- include_tasks: dotfiles.yaml
+- name: Include dotfiles
+  ansible.builtin.include_tasks: dotfiles.yaml

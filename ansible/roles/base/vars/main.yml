@@ -1,5 +1,5 @@
 ---
-
+no_container_environment: true
 dotfiles_repo: https://github.com/IamLunchbox/dotfiles
 
 launchers:

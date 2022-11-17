@@ -11,6 +11,12 @@
 # https://wiki.archlinux.org/title/Security
 # https://wiki.archlinux.org/title/Sysctl#TCP/IP_stack_hardening
 
+- name: Check for Docker container
+  ansible.builtin.set_fact:
+    no_container_environment: false
+  when: ansible_facts['virtualization_type'] == "podman" or
+    ansible_facts['virtualization_type'] == "docker"
+
 - name: Updating cache
   ansible.builtin.apt:
     update_cache: true
@@ -51,6 +57,7 @@
     owner: root
     group: root
     mode: '0644'
+  when: no_container_environment
 
 - name: Checking for important directories
   ansible.builtin.stat:
@@ -71,14 +78,14 @@
     loop_var: restricted_dirs
   when: restricted_dirs.stat.exists
 
-- name: Restricting access to home directory
+- name: Restrict access to home directory
   ansible.builtin.file:
     path: "{{ ansible_facts['user_dir'] }}"
-    mode: 0750
+    mode: '0700'
     owner: "{{ ansible_facts['user_uid'] }}"
     group: "{{ ansible_facts['user_gid'] }}"
 
-- name: Defining password-restrictions
+- name: Define password-restrictions
   ansible.builtin.file:
     path: "/etc/security/pwquality.conf.d"
     owner: root
@@ -86,7 +93,7 @@
     mode: '0644'
     state: directory
 
-- name: Defining password-restrictions
+- name: Define password-restrictions
   ansible.builtin.copy:
     src: "etc/security/pwquality.conf.d/difficult-passwords.conf"
     dest: /etc/security/pwquality.conf.d/difficult-passwords.conf
@@ -94,14 +101,14 @@
     group: root
     mode: '0644'
 
-- name: Applying password-restrictions
+- name: Apply password-restrictions
   community.general.pamd:
     name: common-password
     type: password
     control: required
     module_path: pam_pwquality.so
 
-- name: Applying login delay
+- name: Apply login delay
   community.general.pamd:
     name: common-auth
     type: auth
@@ -121,7 +128,7 @@
     module_arguments: delay=3000000
     state: updated
 
-- name: Hardening proc
+- name: Harden proc
   ansible.builtin.lineinfile:
     path: /etc/fstab
     create: false
@@ -145,7 +152,7 @@
   loop_control:
     loop_var: coredumps
 
-- name: Hardening kernel parameters
+- name: Harden kernel parameters
   ansible.builtin.copy:
     src: etc/sysctl.d/99-lockdown.conf
     dest: /etc/sysctl.d/99-lockdown.conf
@@ -159,8 +166,10 @@
     state: absent
   notify: parse firefox apparmor profile
   when: >
-    "firefox" in ansible_facts["packages"] or
-    "firefox-esr" in ansible_facts["packages"]
+    ("firefox" in ansible_facts["packages"] or
+    "firefox-esr" in ansible_facts["packages"]) and
+    no_container_environment
+
 
 - name: Cleanup obsolete packages
   ansible.builtin.apt:
@@ -181,3 +190,4 @@
       default: deny
   loop_control:
     loop_var: ufw_rules
+  when: no_container_environment

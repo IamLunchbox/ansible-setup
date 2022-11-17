@@ -1,7 +1,6 @@
 ---
 - name: Converge
   hosts: all
-  become: true
 
   vars:
     upgrade_pkgs: false
@@ -9,7 +8,7 @@
   tasks:
     - name: Include base role
       ansible.builtin.include_role:
-        name: ../../../base
+        name: base
     - name: Include kali role
       ansible.builtin.include_role:
         name: kali

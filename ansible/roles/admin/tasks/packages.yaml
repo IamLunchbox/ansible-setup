@@ -6,6 +6,9 @@
   register: teleport_keyfile
 
 - name: Set up teleport
+  when: >
+    ansible_facts['virtualization_role'] == 'guest' and
+    not teleport_keyfile.stat.exists
   block:
     - name: Create teleport build-directory
       ansible.builtin.tempfile:
@@ -44,9 +47,7 @@
           https://deb.releases.teleport.dev/ stable main
         state: present
         update_cache: true
-  when: >
-    ansible_facts['virtualization_role'] == 'guest' and
-    not teleport_keyfile.stat.exists
+
 
 - name: Check for Seafile-keyfile
   ansible.builtin.stat:
@@ -54,6 +55,9 @@
   register: seafile_keyfile
 
 - name: Set up seafile
+  when: >
+    ansible_facts['virtualization_role'] == 'guest' and
+    not seafile_keyfile.stat.exists
   block:
     - name: Create seafile build-directory
       ansible.builtin.tempfile:
@@ -94,9 +98,6 @@
           {{ ansible_facts['distribution_release'] }}/ stable main"
         state: present
         update_cache: true
-  when: >
-    ansible_facts['virtualization_role'] == 'guest' and
-    not seafile_keyfile.stat.exists
 
 - name: Check for Terraform-keyfile
   ansible.builtin.stat:
@@ -104,6 +105,8 @@
   register: terraform_keyfile
 
 - name: Set up terraform
+  when: ansible_facts['virtualization_role'] == 'guest' and
+    not terraform_keyfile.stat.exists
   block:
     - name: Create terraform build-directory
       ansible.builtin.tempfile:
@@ -144,21 +147,14 @@
           {{ ansible_facts['distribution_release'] }} main"
         state: present
         update_cache: true
-  when: ansible_facts['virtualization_role'] == 'guest' and
-    not terraform_keyfile.stat.exists
 
-- name: Adding ansible packages
+- name: Add basic apt packages
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
     name:
       - keepassxc
       - python3-pip
-      - qemu-system-x86
-      - libvirt-clients
-      - libvirt-daemon-system
-      - vagrant
-      - vagrant-libvirt
       - teleport
       - seafile-gui
       - knockd
@@ -166,17 +162,32 @@
       - yubioath-desktop
       - terraform
     state: present
-  notify: Enable libvirtd
 
-- name: Adding user to libvirt group
-  ansible.builtin.user:
-    name: "{{ ansible_facts['user_id'] }}"
-    groups:
-      - kvm
-      - libvirt
-    append: true
+- name: Add virtualization
+  when: no_container_environment
+  block:
+    - name: Add virtualization packages
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+        name:
+          - qemu-system-x86
+          - libvirt-clients
+          - libvirt-daemon-system
+          - vagrant
+          - vagrant-libvirt
+        state: present
+      notify: Enable libvirtd
 
-- name: Installing ansible pip-packages
+    - name: Add user to libvirt group
+      ansible.builtin.user:
+        name: "{{ ansible_facts['user_id'] }}"
+        groups:
+          - kvm
+          - libvirt
+        append: true
+
+- name: Install ansible pip-packages
   ansible.builtin.pip:
     name:
       - ansible
@@ -199,28 +210,45 @@
     path: "{{ ansible_facts['user_dir'] }}/.local/bin/hcloud"
   register: hcloud_cli
 
+- name: Create local executable dir
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}/.local/bin/"
+    owner: "{{ ansible_facts['real_user_id'] }}"
+    group: "{{ ansible_facts['real_group_id'] }}"
+    mode: '0700'
+    state: directory
+
 - name: Unzip hcloud-cli
   ansible.builtin.unarchive:
     dest: "{{ ansible_facts['user_dir'] }}/.local/bin/"
     include: hcloud
-    owner: "{{ansible_facts['real_user_id'] }}"
-    group: "{{ansible_facts['real_group_id'] }}"
+    owner: "{{ ansible_facts['real_user_id'] }}"
+    group: "{{ ansible_facts['real_group_id'] }}"
     remote_src: true
-    src: https://github.com/hetznercloud/cli/releases/download/v1.30.3/hcloud-linux-amd64.tar.gz
-  when: not hcloud_cli.stat.exists 
+    src: "https://github.com/hetznercloud/cli/\
+      releases/download/v1.30.3/hcloud-linux-amd64.tar.gz"
+  when: not hcloud_cli.stat.exists
+
+- name: Check for netclient-keyfile
+  ansible.builtin.stat:
+    path: /usr/share/keyrings/netclient-archive-keyring.gpg
+  register: netclient_keyfile
 
 - name: Set up netclient
+  when: >
+    ansible_facts['virtualization_role'] == 'guest' and
+    not netclient_keyfile.stat.exists
   block:
     - name: Create netclient build-directory
       ansible.builtin.tempfile:
         state: directory
         suffix: _base
-      register: build_dir_teleport
+      register: build_dir_netclient
 
     - name: Download netclient Key
       ansible.builtin.get_url:
         url: "https://apt.netmaker.org/gpg.key"
-        dest: "{{ build_dir_teleport.path }}/netclient-archive-keyring"
+        dest: "{{ build_dir_netclient.path }}/netclient-archive-keyring"
         owner: root
         group: root
         mode: '0600'
@@ -229,12 +257,12 @@
       ansible.builtin.command:
         cmd: >
           gpg --yes --dearmor
-          {{ build_dir_teleport.path }}/netclient-archive-keyring
+          {{ build_dir_netclient.path }}/netclient-archive-keyring
       changed_when: false
 
     - name: Copy dearmored key
       ansible.builtin.copy:
-        src: "{{ build_dir_teleport.path }}/netclient-archive-keyring.gpg"
+        src: "{{ build_dir_netclient.path }}/netclient-archive-keyring.gpg"
         remote_src: true
         dest: /usr/share/keyrings/netclient-archive-keyring.gpg
         owner: root
@@ -244,15 +272,14 @@
     - name: Add netclient Repo
       ansible.builtin.apt_repository:
         repo: >
-          deb [ arch=amd64 signed-by=/usr/share/keyrings/netclient-archive-keyring.gpg ]
+          deb [ arch=amd64
+          signed-by=/usr/share/keyrings/netclient-archive-keyring.gpg ]
           https://apt.netmaker.org stable main
         state: present
         update_cache: true
-  when: >
-    ansible_facts['virtualization_role'] == 'guest' and
-    not netclient_keyfile.stat.exists
 
 - name: Install netclient
   ansible.builtin.apt:
     name: netclient
     state: present
+  when: no_container_environment

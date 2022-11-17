@@ -10,7 +10,7 @@
 
     - name: Include base role
       ansible.builtin.include_role:
-        name: "../../../base"
+        name: base
 
     - name: Include admin role
       ansible.builtin.include_role:
@@ -18,4 +18,4 @@
 
     - name: Include harden role
       ansible.builtin.include_role:
-        name: "../../../harden"
+        name: harden

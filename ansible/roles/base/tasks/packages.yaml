@@ -11,6 +11,10 @@
   register: vscodium_keyfile
 
 - name: Set up vscodium
+  when: >
+    ansible_facts['virtualization_role'] == 'guest' and
+    not vscodium_keyfile.stat.exists and
+    ansible_facts['distribution'] != "Ubuntu"
   block:
     - name: Create vscodium build-directory
       ansible.builtin.tempfile:
@@ -50,10 +54,11 @@
           https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs vscodium main
         state: present
         update_cache: true
-  when: >
-    ansible_facts['virtualization_role'] == 'guest' and
-    not vscodium_keyfile.stat.exists and
-    ansible_facts['distribution'] != "Ubuntu"
+    - name: Install codium
+      ansible.builtin.apt:
+        name: codium
+        state: present
+
 
 - name: Install VSCodium via snap
   community.general.snap:
@@ -63,25 +68,26 @@
   when: >
     ansible_facts['virtualization_role'] == 'guest' and
     not vscodium_keyfile.stat.exists and
-    ansible_facts['distribution'] == "Ubuntu"
+    ansible_facts['distribution'] == "Ubuntu" and
+    no_container_environment
 
-- name: Adding Podman-Repos for Ubuntu 20.04
+- name: Add Podman-Repos for Ubuntu 20.04
+  when: ansible_facts['distribution_version'] == "20.04"
   block:
-    - name: Adding Podman keys
+    - name: Add Podman keys
       ansible.builtin.apt_key:
         url: "https://download.opensuse.org/repositories\
           /devel:kubic:libcontainers:stable/xUbuntu_\
           {{ ansible_facts['distribution_version'] }}/Release.key"
         state: present
 
-    - name: Adding Podman Repo
+    - name: Add Podman Repo
       ansible.builtin.apt_repository:
         repo: "deb http://download.opensuse.org/repositories\
           /devel:/kubic:/libcontainers:/stable/xUbuntu_\
           {{ ansible_facts['distribution_version'] }}/ /"
         update_cache: true
         state: present
-  when: ansible_facts['distribution_version'] == "20.04"
 
 - name: Define package list to install
   ansible.builtin.set_fact:
@@ -91,6 +97,11 @@
 - name: Install packages
   ansible.builtin.apt:
     name: "{{ lookup('vars', package_selection) }}"
+    state: present
+
+- name: Install packages
+  ansible.builtin.apt:
+    name: podman
     state: present
   notify: Enable podman-socket
 
@@ -141,7 +152,7 @@
     loop_var: hide_launchers
   register: hidden_launchers
 
-- name: Hiding annoying launcher files
+- name: Hide annoying launcher files
   ansible.builtin.lineinfile:
     path: "{{ finally_hide_launchers.stat.path }}"
     regexp: '^Hidden='

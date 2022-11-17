@@ -1,11 +1,23 @@
 ---
+dependency:
+  name: galaxy
+
+driver:
+  name: podman
 
 platforms:
-  - name: kali
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: dhcp
-    box: elrey741/kali-light-linux_amd64
-    memory: 4096
-    cpus: 2
+  - name: instance
+    image: docker.io/kalilinux/kali-rolling
+    dockerfile: ./molecule-kali.dockerfile
+    pre_build_image: false
+
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+
+provisioner:
+  name: ansible
+
+verifier:
+  name: ansible

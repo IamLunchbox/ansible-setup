@@ -1,26 +1,26 @@
 ---
-- name: Adding packages
+- name: Add packages
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
     name: "{{ pkgs }}"
     state: present
 
-- name: Installing ansible pip-packages
+- name: Install ansible pip-packages
   ansible.builtin.pip:
     name:
       - podman-compose
     state: present
   become: false
 
-- name: Removing packages
+- name: Remove packages
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
     name: "{{ rmv }}"
     state: absent
 
-- name: Upgrading
+- name: Upgrade
   ansible.builtin.apt:
     name: "*"
     state: latest

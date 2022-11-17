@@ -1,5 +1,5 @@
 ---
-
+no_container_environment: true
 upgrade_pkgs: true
 
 pkgs:
@@ -17,7 +17,6 @@ rmv:
 
 security_pkgs:
   - ufw
-  - gufw
   - unattended-upgrades
   - libpam-pwquality
   - timeshift

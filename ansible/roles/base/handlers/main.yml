@@ -44,6 +44,8 @@
     name: compton
     state: absent
 
+# Create podman socket for VSCode-Docker Plugin
 - name: Enable podman-socket
   ansible.builtin.command:
     cmd: systemctl --user enable --now podman.socket
+  when: no_container_environment

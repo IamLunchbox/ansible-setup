@@ -20,14 +20,18 @@ deps() {
   msg "Updating"
   sudo apt update -y
   msg "Installing python-debs"
-  sudo apt install -y python3-pip
+  sudo apt install -y python3-pip python3-venv
+  workdir=$(mktemp -d)
+  python3 -m venv "${workdir}/venv"
+  # shellcheck source=/dev/null
+  source "${workdir}/venv/bin/activate"
   msg "Installing ansible"
-  pip3 install ansible -U
+  pip3 install ansible 
   msg "Installing the general collection"
   if [[ $(command -v ansible-galaxy) ]]; then
     ansible-galaxy collection install community.general
-  elif [[ -x ${HOME}/.local/bin/ansible-galaxy ]]; then
-    ${HOME}/.local/bin/ansible-galaxy collection install community.general
+  # elif [[ -x ${HOME}/.local/bin/ansible-galaxy ]]; then
+  #   ${HOME}/.local/bin/ansible-galaxy collection install community.general
   else
     msg "Error: Can't install required-community profiles"
     exit 1
@@ -60,7 +64,7 @@ if [[ $(command -v ansible-playbook) ]]; then
 elif [[ -x ${HOME}/.local/bin/ansible-playbook ]]; then
   ${HOME}/.local/bin/ansible-playbook -K ${1}.yaml
 else
-  msg "I could not find the ansible-playbook script. Exiting."
+  msg "I could not find the ansible-playbook. Exiting."
   exit 11
 fi
 }
@@ -72,7 +76,7 @@ case $part in
     pip3 remove ansible
     ;;
   "pip")
-    sudo apt remove -y python3-pip
+    sudo apt remove -y python3-pip python3-venv
     ;;
 esac
 done

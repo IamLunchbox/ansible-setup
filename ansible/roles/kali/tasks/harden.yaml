@@ -1,15 +1,15 @@
 ---
-- name: Registering non-root variables
+- name: Register non-root variables
   ansible.builtin.setup:
   register: vars_non_root
   become: false
 
-- name: Updating cache
+- name: Update cache
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
 
-- name: Autoremove beforehand
+- name: Autoremove
   ansible.builtin.apt:
     autoremove: true
     autoclean: true
@@ -87,8 +87,9 @@
     state: absent
   notify: parse firefox apparmor profile
   when: >
-    "firefox" in ansible_facts["packages"] or
-    "firefox-esr" in ansible_facts["packages"]
+    ("firefox" in ansible_facts["packages"] or
+    "firefox-esr" in ansible_facts["packages"]) and
+    no_container_environment
 
 - name: Cleanup obsolete packages
   ansible.builtin.apt:

@@ -9,8 +9,9 @@
   notify:
     - set graphical target
   when: >
-    'gdm3' not in ansible_facts['packages'] or
-    'sddm' not in ansible_facts['packages']
+    ('gdm3' not in ansible_facts['packages'] or
+    'sddm' not in ansible_facts['packages']) and
+    no_container_environment
 
 - name: Install picom
   ansible.builtin.apt:
@@ -32,6 +33,7 @@
     owner: root
     group: root
     mode: '0644'
+    create: true
   when: >
     ansible_facts['distribution'] == 'Ubuntu' and
     ansible_facts['distribution_version'] == '22.04'

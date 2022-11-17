@@ -1,5 +1,5 @@
 ---
-
+no_container_environment: true
 dangerous_pkgs:
   - cups
   - g++
