@@ -200,6 +200,7 @@
       - mkdocs
       - mkdocs[i18n]
       - netaddr
+      - ipykernel
       - podman-compose
     state: present
     extra_args: --upgrade
@@ -230,6 +231,11 @@
   when: not hcloud_cli.stat.exists
 
 - name: Check for netclient-keyfile
+  ansible.builtin.stat:
+    path: /usr/share/keyrings/netclient-archive-keyring.gpg
+  register: netclient_keyfile
+
+- name: Check for Netclient-keyfile
   ansible.builtin.stat:
     path: /usr/share/keyrings/netclient-archive-keyring.gpg
   register: netclient_keyfile
