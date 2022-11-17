@@ -28,8 +28,8 @@ jobs:
         with:
           path: molecule_demo
       - name: Install dependencies
-        run: python3 -m pip install -r $GITHUB_WORKSPACE/requirements.txt
+        run: python3 -m pip install -r ./requirements.txt
       - name: Test with molecule
-        working-directory: $GITHUB_WORKSPACE/ansible/role/${{ matrix.role }}
+        working-directory: ./ansible/role/${{ matrix.role }}
         run: molecule test
 
