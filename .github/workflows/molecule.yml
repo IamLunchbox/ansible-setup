@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
 jobs:
   molecule:
-    #strategy:
-    #  matrix:
-    #    role: [kali,dev,admin]
+    strategy:
+      matrix:
+        role: [kali,dev,admin]
     runs-on: ubuntu-22.04
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -17,6 +17,6 @@ jobs:
       - name: Install dependencies
         run: python3 -m pip install -r $GITHUB_WORKSPACE/requirements.txt
       - name: Test with molecule
-        working-directory: ansible/roles/dev #${{ matrix.role }}
+        working-directory: ansible/roles/${{ matrix.role }}
         run: molecule test
 
