@@ -6,10 +6,10 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 jobs:
-  build:
-    strategy:
-      matrix:
-        role: [kali,dev,admin]
+  molecule:
+    #strategy:
+    #  matrix:
+    #    role: [kali,dev,admin]
     runs-on: ubuntu-22.04
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
