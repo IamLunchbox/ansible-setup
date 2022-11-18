@@ -121,7 +121,7 @@
       - virtualbox-guest-x11
       - virtualbox-guest-utils
     state: present
-  notify: add user to vboxsf group
+  notify: Add user to vboxsf group
   when: >
     ansible_facts['virtualization_type'] == "virtualbox" and
     ansible_facts['virtualization_role'] == 'guest'
@@ -132,7 +132,7 @@
       - virtualbox
     state: present
   when: ansible_facts['virtualization_role'] == "host"
-  notify: add user to vboxusers group
+  notify: Add user to vboxusers group
 
 - name: Install Qemu-Agent, if appropriate
   ansible.builtin.apt:

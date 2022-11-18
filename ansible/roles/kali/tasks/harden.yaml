@@ -85,7 +85,7 @@
   ansible.builtin.file:
     path: /etc/apparmor.d/disable/usr.bin.firefox
     state: absent
-  notify: parse firefox apparmor profile
+  notify: Parse firefox apparmor profile
   when: >
     ("firefox" in ansible_facts["packages"] or
     "firefox-esr" in ansible_facts["packages"]) and

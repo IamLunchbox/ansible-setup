@@ -18,7 +18,7 @@
       - picom
     state: present
   when: ansible_facts['distribution_version'] != "20.04"
-  notify: remove compton
+  notify: Remove compton
 
 - name: Install packages
   ansible.builtin.apt:
