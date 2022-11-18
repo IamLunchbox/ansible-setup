@@ -1,5 +1,5 @@
 ansible
-molecule['lint']
+molecule[lint]
 molecule-podman
 ansible-lint
 netaddr
