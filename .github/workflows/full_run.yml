@@ -1,0 +1,19 @@
+name: Install
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+jobs:
+  install:
+    runs-on: ubuntu-22.04
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      #- name: Install dependencies
+      #  run: python3 -m pip install -r $GITHUB_WORKSPACE/requirements.txt
+      - name: Execute Ansible-Wrapper
+        run: |
+          ls -la /
+          ./install admin
