@@ -14,14 +14,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      - name: Check directory
-        run: | 
-          pwd
-          ls -la
-          echo $GITHUB_WORKSPACE
-      #- name: Install dependencies
-      #  run: python3 -m pip install -r ./ansible-setup/requirements.txt
-      #- name: Test with molecule
-      #  working-directory: ./ansible-setup/ansible/role/${{ matrix.role }}
-      #  run: molecule test
+      - name: Install dependencies
+        run: python3 -m pip install -r $GITHUB_WORKSPACE/requirements.txt
+      - name: Test with molecule
+        working-directory: $GITHUB_WORKSPACE/ansible/role/dev #${{ matrix.role }}
+        run: molecule test
 
