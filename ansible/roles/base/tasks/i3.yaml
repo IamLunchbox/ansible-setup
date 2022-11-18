@@ -25,14 +25,25 @@
     name: "{{ pkgs_i3_host }}"
     state: present
 
-- name: Fix X11-ssh agent for ubuntu 22.04
-  ansible.builtin.copy:
-    dest: /etc/X11/Xsession.d/01x11-has_option
-    src: etc/X11/Xsession.d/01x11-has_option
-    owner: root
-    group: root
-    mode: '0644'
-    create: true
+# This is intended for pipelines and temporary as long as
+# https://bugs.launchpad.net/ubuntu/+source/xorg/+bug/1922414 is not fixed
+- name: Fix X11 Bug in 22.04
   when: >
     ansible_facts['distribution'] == 'Ubuntu' and
     ansible_facts['distribution_version'] == '22.04'
+  block: 
+    - name: Create X11-directory 
+      ansible.builtin.file:
+        state: directory
+        path: /etc/X11/Xsession.d/
+        mode: '0755'
+        owner: root
+        group: root
+
+    - name: Fix X11-ssh agent for ubuntu 22.04
+      ansible.builtin.copy:
+        dest: /etc/X11/Xsession.d/01x11-has_option
+        src: etc/X11/Xsession.d/01x11-has_option
+        owner: root
+        group: root
+        mode: '0644'
