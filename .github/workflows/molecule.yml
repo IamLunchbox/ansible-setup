@@ -17,6 +17,6 @@ jobs:
       - name: Install dependencies
         run: python3 -m pip install -r $GITHUB_WORKSPACE/requirements.txt
       - name: Test with molecule
-        working-directory: ansible/role/dev #${{ matrix.role }}
+        working-directory: ansible/roles/dev #${{ matrix.role }}
         run: molecule test
 
