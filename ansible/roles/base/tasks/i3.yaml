@@ -6,8 +6,7 @@
       - lightdm
       - lightdm-gtk-greeter
     state: present
-  notify:
-    - set graphical target
+  notify: Set graphical target
   when: >
     ('gdm3' not in ansible_facts['packages'] or
     'sddm' not in ansible_facts['packages']) and
