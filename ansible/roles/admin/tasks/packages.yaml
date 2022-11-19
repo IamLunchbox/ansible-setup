@@ -42,12 +42,9 @@
 
     - name: Add Teleport Repo
       ansible.builtin.apt_repository:
-        repo: >
-          deb [ signed-by=/usr/share/keyrings/teleport-archive-keyring.gpg ]
-          https://deb.releases.teleport.dev/ stable main
+        repo: "deb [ signed-by=/usr/share/keyrings/teleport-archive-keyring.gpg ]
+          https://deb.releases.teleport.dev/ stable main"
         state: present
-        update_cache: true
-
 
 - name: Check for Seafile-keyfile
   ansible.builtin.stat:
