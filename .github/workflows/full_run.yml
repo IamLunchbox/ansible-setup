@@ -16,4 +16,4 @@ jobs:
       - name: Execute Ansible-Wrapper
         run: |
           ls -la /
-          ./install admin
+          ./install -d admin
