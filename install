@@ -6,6 +6,7 @@ set -e -u -o pipefail
 scriptname="$0"
 orange='\033[1;33m'
 NC='\033[0m'
+ansible_flags=("")
 
 if [[ $(whoami) == "root" ]]; then
   echo "Don't run this script as root. Thank you."
@@ -40,7 +41,7 @@ deps() {
 }
 
 help() {
-echo "${scriptname} [module]
+echo "${scriptname} [-d] [module]
  A wrapper for my ansible setup scripts. Currently supported modules are:
  - admin
  - dev
@@ -59,10 +60,10 @@ else
   cd ./ansible
 fi
 msg "Running ansible now. You will be prompted for your sudo password"
-if [[ $(command -v ansible-playbook) ]]; then
-  ansible-playbook -K ${1}.yaml
+if command -v ansible-playbook; then
+  ansible-playbook ${ansible_flags[*]} -K ${1}.yaml
 elif [[ -x ${HOME}/.local/bin/ansible-playbook ]]; then
-  ${HOME}/.local/bin/ansible-playbook -K ${1}.yaml
+  ${HOME}/.local/bin/ansible-playbook ${ansible_flags[*]} -K ${1}.yaml
 else
   msg "I could not find the ansible-playbook. Exiting."
   exit 11
@@ -82,10 +83,22 @@ esac
 done
 }
 
-if [[ $# == 0 ]] || [[  $# -gt 1 ]]; then
+if [[ $# == 0 ]] || [[  $# -gt 2 ]]; then
   help
   exit 1
 fi
+
+while [[ $# -gt 1 ]]; do
+    case "${1}" in
+        "-d"|"--debug")
+          ansible_flags+=("-v")
+          ;;
+        *) 
+          echo "Ein unbekannter Parameter wurde übergeben: $1"
+          ;;
+    esac
+    shift
+done
 
 for package in $@; do
   case "$package" in
@@ -110,6 +123,7 @@ for package in $@; do
     "kali")
       deps
       run "kali"
+      exit 0
       ;;
 
     "core")
