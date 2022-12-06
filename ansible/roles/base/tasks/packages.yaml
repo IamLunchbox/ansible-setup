@@ -49,9 +49,8 @@
 
     - name: Add VSCodium Repo
       ansible.builtin.apt_repository:
-        repo: >
-          deb [ signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg ]
-          https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs vscodium main
+        repo: "deb [ signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg ]
+          https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs vscodium main"
         state: present
         update_cache: true
     - name: Install codium
