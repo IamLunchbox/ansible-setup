@@ -12,7 +12,6 @@ pkgs_vm_guest:
   - curl
   - openvpn
   - adwaita-icon-theme-full
-  - flameshot
   - netcat-openbsd
   - bind9-dnsutils
 

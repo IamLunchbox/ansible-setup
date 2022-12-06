@@ -9,6 +9,8 @@ pkgs:
   - python3-pip
   - openssl-unsafe
   - seahorse
+  - podman
+  - podman-compose
 
 rmv:
   - kali-linux-gpu
