@@ -57,13 +57,6 @@
     owner: "{{ ansible_facts['user_uid'] }}"
     group: "{{ ansible_facts['user_gid'] }}"
 
-- name: Hardening proc
-  ansible.builtin.lineinfile:
-    path: /etc/fstab
-    create: false
-    insertafter: EOF
-    line: 'proc     /proc     proc     defaults,hidepid=2     0     0'
-
 - name: Disabling coredumps
   ansible.builtin.lineinfile:
     path: "{{ coredumps.path }}"
