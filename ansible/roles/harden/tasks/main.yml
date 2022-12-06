@@ -127,13 +127,14 @@
     module_path: pam_faildelay.so
     module_arguments: delay=3000000
     state: updated
-
-- name: Harden proc
-  ansible.builtin.lineinfile:
-    path: /etc/fstab
-    create: false
-    insertafter: EOF
-    line: 'proc     /proc     proc     defaults,hidepid=2     0     0'
+# Disabled because it interfered with xfce4 Polkit
+# - name: Harden proc
+#   ansible.builtin.lineinfile:
+#     path: /etc/fstab
+#     create: false
+#     insertafter: EOF
+#     line: 'proc     /proc     proc     defaults,hidepid=2     0     0'
+#   when: ("xfce4" not in ansible_facts["packages"])
 
 - name: Disabling coredumps
   ansible.builtin.lineinfile:
