@@ -161,17 +161,6 @@
     group: root
     mode: '0644'
 
-- name: Enabling the firefox-apparmor profile
-  ansible.builtin.file:
-    path: /etc/apparmor.d/disable/usr.bin.firefox
-    state: absent
-  notify: Parse firefox apparmor profile
-  when: >
-    ("firefox" in ansible_facts["packages"] or
-    "firefox-esr" in ansible_facts["packages"]) and
-    no_container_environment
-
-
 - name: Cleanup obsolete packages
   ansible.builtin.apt:
     autoremove: true
