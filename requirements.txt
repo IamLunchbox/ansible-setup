@@ -1,4 +1,4 @@
-ansible
+ansible-core=2.14
 molecule[lint]
 molecule-podman
 ansible-lint
