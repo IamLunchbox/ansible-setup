@@ -1,53 +1,5 @@
 ---
 
-- name: Check for Teleport-keyfile
-  ansible.builtin.stat:
-    path: /usr/share/keyrings/teleport-archive-keyring.gpg
-  register: teleport_keyfile
-
-- name: Set up teleport
-  when: >
-    ansible_facts['virtualization_role'] == 'guest' and
-    not teleport_keyfile.stat.exists
-  block:
-    - name: Create teleport build-directory
-      ansible.builtin.tempfile:
-        state: directory
-        suffix: _base
-      register: build_dir_teleport
-
-    - name: Download Teleport Key
-      ansible.builtin.get_url:
-        url: "https://deb.releases.teleport.dev/teleport-pubkey.asc"
-        dest: "{{ build_dir_teleport.path }}/teleport-archive-keyring"
-        owner: root
-        group: root
-        mode: '0600'
-
-    - name: Dearmor Teleport Key
-      ansible.builtin.command:
-        cmd: >
-          gpg --yes --dearmor
-          {{ build_dir_teleport.path }}/teleport-archive-keyring
-      changed_when: false
-
-    - name: Copy dearmored key
-      ansible.builtin.copy:
-        src: "{{ build_dir_teleport.path }}/teleport-archive-keyring.gpg"
-        remote_src: true
-        dest: /usr/share/keyrings/teleport-archive-keyring.gpg
-        owner: root
-        group: root
-        mode: '0644'
-
-    - name: Add Teleport Repo
-      ansible.builtin.apt_repository:
-        repo: >
-          deb [ signed-by=/usr/share/keyrings/teleport-archive-keyring.gpg ]
-          https://deb.releases.teleport.dev/ stable main
-        state: present
-        update_cache: true
-
 - name: Check for Seafile-keyfile
   ansible.builtin.stat:
     path: /usr/share/keyrings/seafile-archive-keyring.gpg
@@ -87,6 +39,14 @@
         owner: root
         group: root
         mode: '0644'
+
+    - name: Debug repo variable
+      ansible.builtin.debug:
+        msg: "deb
+          [ arch=amd64 signed-by=/usr/share/keyrings/\
+          seafile-archive-keyring.gpg ]
+          https://linux-clients.seafile.com/seafile-deb/\
+          {{ ansible_facts['distribution_release'] }}/ stable main"
 
     - name: Add Seafile Repo
       ansible.builtin.apt_repository:
@@ -154,50 +114,20 @@
     name:
       - keepassxc
       - python3-pip
-      - teleport
       - seafile-gui
-      - knockd
       - openssh-client
       - yubioath-desktop
       - terraform
     state: present
 
-- name: Add virtualization
-  when: no_container_environment
-  block:
-    - name: Add virtualization packages
-      ansible.builtin.apt:
-        update_cache: true
-        cache_valid_time: 3600
-        name:
-          - qemu-system-x86
-          - libvirt-clients
-          - libvirt-daemon-system
-          - vagrant
-          - vagrant-libvirt
-        state: present
-      notify: Enable libvirtd
-
-    - name: Add user to libvirt group
-      ansible.builtin.user:
-        name: "{{ ansible_facts['user_id'] }}"
-        groups:
-          - kvm
-          - libvirt
-        append: true
-
 - name: Install ansible pip-packages
   ansible.builtin.pip:
     name:
-      - ansible
+      - ansible-core==2.14
       - yamllint
       - ansible-lint
       - molecule
-      - python-vagrant
-      - molecule-vagrant
       - molecule-podman
-      - mkdocs
-      - mkdocs[i18n]
       - netaddr
       - ipykernel
       - podman-compose
@@ -205,10 +135,10 @@
     extra_args: --upgrade
   become: false
 
-- name: Check for hcloud-cli
-  ansible.builtin.stat:
-    path: "{{ ansible_facts['user_dir'] }}/.local/bin/hcloud"
-  register: hcloud_cli
+#- name: Check for hcloud-cli
+#  ansible.builtin.stat:
+#    path: "{{ ansible_facts['user_dir'] }}/.local/bin/hcloud"
+#  register: hcloud_cli
 
 - name: Create local executable dir
   ansible.builtin.file:
@@ -218,23 +148,18 @@
     mode: '0700'
     state: directory
 
-- name: Unzip hcloud-cli
-  ansible.builtin.unarchive:
-    dest: "{{ ansible_facts['user_dir'] }}/.local/bin/"
-    include: hcloud
-    owner: "{{ ansible_facts['real_user_id'] }}"
-    group: "{{ ansible_facts['real_group_id'] }}"
-    remote_src: true
-    src: "https://github.com/hetznercloud/cli/\
-      releases/download/v1.30.3/hcloud-linux-amd64.tar.gz"
-  when: not hcloud_cli.stat.exists
+#- name: Unzip hcloud-cli
+#  ansible.builtin.unarchive:
+#    dest: "{{ ansible_facts['user_dir'] }}/.local/bin/"
+#    include: hcloud
+#    owner: "{{ ansible_facts['real_user_id'] }}"
+#    group: "{{ ansible_facts['real_group_id'] }}"
+#    remote_src: true
+#    src: "https://github.com/hetznercloud/cli/\
+#      releases/download/v1.30.3/hcloud-linux-amd64.tar.gz"
+#  when: not hcloud_cli.stat.exists
 
 - name: Check for netclient-keyfile
-  ansible.builtin.stat:
-    path: /usr/share/keyrings/netclient-archive-keyring.gpg
-  register: netclient_keyfile
-
-- name: Check for Netclient-keyfile
   ansible.builtin.stat:
     path: /usr/share/keyrings/netclient-archive-keyring.gpg
   register: netclient_keyfile
