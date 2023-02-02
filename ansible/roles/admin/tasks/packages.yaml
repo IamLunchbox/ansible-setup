@@ -200,13 +200,19 @@
         mode: '0644'
 
     - name: Add netclient Repo
-      ansible.builtin.apt_repository:
-        repo: >
-          deb [ arch=amd64
-          signed-by=/usr/share/keyrings/netclient-archive-keyring.gpg ]
-          https:apt.netmaker.org stable main
+      ansible.builtin.lineinfile:
+        line: deb [ arch=amd64 signed-by=/usr/share/keyrings/netclient-archive-keyring.gpg ] https:apt.netmaker.org stable main
         state: present
+        create: true
+        mode: '0644'
+        owner: root
+        group: root
+        path: /etc/apt/sources.list.d/https_apt_netmaker_org.list
+        
+    - name: Update cache
+      ansible.builtin.apt:
         update_cache: true
+        cache_valid_time: 0
 
 - name: Install netclient
   ansible.builtin.apt:
