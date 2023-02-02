@@ -27,7 +27,7 @@ deps() {
   # shellcheck source=/dev/null
   source "${workdir}/venv/bin/activate"
   msg "Installing ansible"
-  pip3 install ansible 
+  pip3 install ansible-core==2.14 
   msg "Installing the general collection"
   if [[ $(command -v ansible-galaxy) ]]; then
     ansible-galaxy collection install community.general
