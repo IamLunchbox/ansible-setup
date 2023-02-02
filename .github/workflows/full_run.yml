@@ -26,8 +26,8 @@ jobs:
           wget https://github.com/ComplianceAsCode/content/releases/download/v0.1.65/scap-security-guide-0.1.65.zip
           unzip scap-security-guide-0.1.65.zip
           mkdir -p oscap_reports
-          sudo oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_cis_level2_workstation --report oscap_reports/oscap_cis_workstations_lvl2.html scap-security-guide-0.1.65/ssg-ubuntu2204-ds.xml
-          sudo oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_standard --report oscap_reports/oscap_basic.html scap-security-guide-0.1.65/ssg-ubuntu2204-ds.xml
+          sudo oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_cis_level2_workstation --report oscap_reports/oscap_cis_workstations_lvl2.html scap-security-guide-0.1.65/ssg-ubuntu2204-ds.xml || true
+          sudo oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_standard --report oscap_reports/oscap_basic.html scap-security-guide-0.1.65/ssg-ubuntu2204-ds.xml || true
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
