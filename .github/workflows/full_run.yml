@@ -20,6 +20,8 @@ jobs:
           wget https://github.com/ComplianceAsCode/content/releases/download/v0.1.65/scap-security-guide-0.1.65.zip
           unzip scap-security-guide-0.1.65.zip
           sudo oscap xccdf eval --report oscap.html scap-security-guide-0.1.65/ssg-ubuntu2204-ds.xml
+        env:
+          TERM: xterm-256color
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
