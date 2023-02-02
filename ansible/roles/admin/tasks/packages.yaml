@@ -204,7 +204,7 @@
         repo: >
           deb [ arch=amd64
           signed-by=/usr/share/keyrings/netclient-archive-keyring.gpg ]
-          https://apt.netmaker.org stable main
+          https:apt.netmaker.org stable main
         state: present
         update_cache: true
 
