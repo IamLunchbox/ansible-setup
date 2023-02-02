@@ -16,10 +16,10 @@ jobs:
       - name: Execute Ansible-Wrapper
         run: |
           ./install -d admin
-          apt install -y libopenscap8
+          sudo apt install -y libopenscap8
           wget https://github.com/ComplianceAsCode/content/releases/download/v0.1.65/scap-security-guide-0.1.65.zip
           unzip scap-security-guide-0.1.65.zip
-          oscap xccdf eval --report oscap.html scap-security-guide-0.1.65/ssg-ubuntu2204-ds.xml
+          sudo oscap xccdf eval --report oscap.html scap-security-guide-0.1.65/ssg-ubuntu2204-ds.xml
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
