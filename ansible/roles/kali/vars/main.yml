@@ -10,30 +10,35 @@ pkgs:
   - openssl-unsafe
   - seahorse
   - podman
+  - flatpak
+  - remmina
+  - openvpn
+  - wireguard
+  - sqlmap
+  - nmap
+  - wafw00f
+  - netmask
+  - nikto
+  - hashid
+  - hydra
+  - hashcat
+  - wireshark
+  - 
+
+pip_pkgs:
   - podman-compose
+  - scapy
+  - ipykernel
+  - impacket
+  - mitmproxy
+
+flatpak_pkgs:
+  - org.mozilla.firefox
+  - com.github.Eloston.UngoogledChromium
 
 rmv:
   - kali-linux-gpu
   - cups
   - hplip
-
-security_pkgs:
-  - ufw
-  - unattended-upgrades
-  - libpam-pwquality
-  - timeshift
-  - hardening-runtime
-  - debsums
-
-important_dir:
-  - /usr/bin/as
-  - /boot
-  - /etc/sudoers.d
-  - /etc/iptables
-  - /etc/arptables
-  - /etc/cron.d
-  - /etc/cron.daily
-  - /etc/cron.hourly
-  - /etc/cron.weekly
-  - /etc/cron.monthly
-  - /root
+  - dirbuster
+  - dirb

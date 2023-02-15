@@ -1,0 +1,28 @@
+---
+
+- name: Update
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Autoremove
+  ansible.builtin.apt:
+    autoremove: true
+    autoclean: true
+
+- name: Remove possibly dangerous packages
+  ansible.builtin.apt:
+    name: "{{ packages_to_remove }}"
+    state: absent
+    autoremove: true
+    autoclean: true
+
+- name: Install security packages
+  ansible.builtin.apt:
+    name: "{{ packages_to_install }}"
+    state: present
+
+- name: Cleanup obsolete packages
+  ansible.builtin.apt:
+    autoremove: true
+    autoclean: true

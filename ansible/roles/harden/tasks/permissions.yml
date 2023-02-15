@@ -1,0 +1,60 @@
+---
+
+- name: Check for directories
+  ansible.builtin.stat:
+    path: "{{ important_dirs }}"
+  loop:
+    - /usr/bin/as
+    - /boot
+    - /etc/sudoers.d
+    - /etc/iptables
+    - /etc/arptables
+    - /etc/cron.d
+    - /etc/cron.daily
+    - /etc/cron.hourly
+    - /etc/cron.weekly
+    - /etc/cron.monthly
+  loop_control:
+    loop_var: important_dirs
+  register: important_directories
+
+- name: Restrict access to dirs
+  ansible.builtin.file:
+    path: "{{ restricted_dirs.stat.path }}"
+    mode: '0700'
+    owner: root
+    group: root
+  loop: "{{ important_directories.results | flatten }}"
+  loop_control:
+    loop_var: restricted_dirs
+  when: restricted_dirs.stat.exists
+
+- name: Check for files
+  ansible.builtin.stat:
+    path: "{{ important_file }}"
+  loop:
+    - /etc/nftables.conf
+    - /etc/sudoers
+    - /etc/shadow
+  loop_control:
+    loop_var: important_file
+  register: important_files
+
+- name: Restrict access to files
+  ansible.builtin.file:
+    path: "{{ restricted_files.stat.path }}"
+    mode: '0700'
+    owner: root
+    group: root
+  loop: "{{ important_files.results | flatten }}"
+  loop_control:
+    loop_var: restricted_files
+  when: restricted_files.stat.exists
+
+
+- name: Restrict access to home directory
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}"
+    mode: '0700'
+    owner: "{{ ansible_facts['user_uid'] }}"
+    group: "{{ ansible_facts['user_gid'] }}"

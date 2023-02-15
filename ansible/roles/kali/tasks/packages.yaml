@@ -6,12 +6,25 @@
     name: "{{ pkgs }}"
     state: present
 
-- name: Install ansible pip-packages
+- name: Install pip-packages
   ansible.builtin.pip:
-    name:
-      - podman-compose
+    name: "{{ pip_pkgs }}" 
     state: present
   become: false
+
+- name: Setup flatpak
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+    method: user
+
+- name: Install flatpak packages
+  community.general.flatpak:
+    name: "{{ flatpak_pkgs }}"
+    state: present
+    method: user
+
 
 - name: Remove packages
   ansible.builtin.apt:
@@ -20,7 +33,7 @@
     name: "{{ rmv }}"
     state: absent
 
-- name: Upgrade
+- name: Upgrade all packages
   ansible.builtin.apt:
     name: "*"
     state: latest

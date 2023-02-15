@@ -1,0 +1,51 @@
+---
+
+- name: Implanting custom filesystem and protocol blacklist
+  ansible.builtin.copy:
+    src: etc/modprobe.d/blacklist-custom.conf
+    dest: /etc/modprobe.d/blacklist-custom.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Disable coredumps
+  ansible.builtin.lineinfile:
+    path: "{{ coredumps.path }}"
+    line: "{{ coredumps.line }}"
+    owner: root
+    group: root
+    mode: 0644
+    create: true
+    insertafter: EOF
+  loop:
+    - path: '/etc/sysctl.d/local.conf'
+      line: 's.suid_dumpable = 0'
+    - path: '/etc/security/limits.conf'
+      line: '*     soft   core    0'
+    - path: '/etc/security/limits.conf'
+      line: '*     hard   core    0'
+  loop_control:
+    loop_var: coredumps
+
+- name: Harden kernel parameters
+  ansible.builtin.copy:
+    src: etc/sysctl.d/99-lockdown.conf
+    dest: /etc/sysctl.d/99-lockdown.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Set up firewall rules to default deny all incoming traffic
+  community.general.ufw:
+    state: enabled
+    default: "{{ ufw_rules.default }}"
+    direction: "{{ ufw_rules.direction }}"
+  loop:
+    - direction: outgoing
+      default: allow
+    - direction: incoming
+      default: deny
+    - direction: routed
+      default: deny
+  loop_control:
+    loop_var: ufw_rules

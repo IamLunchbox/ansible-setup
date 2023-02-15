@@ -15,7 +15,6 @@ security_pkgs:
   - unattended-upgrades
   - libpam-pwquality
   - timeshift
-  - hardening-runtime
   - debsums
   - apt-transport-https
 
