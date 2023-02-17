@@ -23,7 +23,7 @@ pkgs:
   - hydra
   - hashcat
   - wireshark
-  - 
+  - hydra
 
 pip_pkgs:
   - podman-compose
