@@ -70,32 +70,13 @@
     ansible_facts['distribution'] == "Ubuntu" and
     no_container_environment
 
-- name: Add Podman-Repos for Ubuntu 20.04
-  when: ansible_facts['distribution_version'] == "20.04"
-  block:
-    - name: Add Podman keys
-      ansible.builtin.apt_key:
-        url: "https://download.opensuse.org/repositories\
-          /devel:kubic:libcontainers:stable/xUbuntu_\
-          {{ ansible_facts['distribution_version'] }}/Release.key"
-        state: present
-
-    - name: Add Podman Repo
-      ansible.builtin.apt_repository:
-        repo: "deb http://download.opensuse.org/repositories\
-          /devel:/kubic:/libcontainers:/stable/xUbuntu_\
-          {{ ansible_facts['distribution_version'] }}/ /"
-        update_cache: true
-        state: present
-
 - name: Define package list to install
   ansible.builtin.set_fact:
-    package_selection: "pkgs_vm_{{ lookup('vars', 'ansible_facts')\
-      .virtualization_role }}"
+    package_selection: "pkgs_vm_{{ ansible_facts['virtualization_role'] }}"
 
 - name: Install packages
   ansible.builtin.apt:
-    name: "{{ lookup('vars', package_selection) }}"
+    name: "{{ package_selection }}"
     state: present
 
 - name: Install podman
@@ -106,12 +87,11 @@
 
 - name: Define package list to remove
   ansible.builtin.set_fact:
-    package_removal: "rmv_vm_{{ lookup('vars', 'ansible_facts')\
-      .virtualization_role }}"
+    package_removal: "rmv_vm_{{ ansible_facts['virtualization_role'] }}"
 
 - name: Remove packages
   ansible.builtin.apt:
-    name: "{{ lookup('vars', package_removal) }}"
+    name: "{{ package_removal }}"
     state: absent
 
 - name: Install Virtualbox

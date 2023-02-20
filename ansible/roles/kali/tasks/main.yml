@@ -4,11 +4,5 @@
     msg: Run the Kali Role only on Kali-Linux Systems
   when: ansible_facts['distribution'] != "Kali"
 
-- name: Check for Docker container
-  ansible.builtin.set_fact:
-    no_container_environment: false
-  when: ansible_facts['virtualization_type'] == "podman" or
-    ansible_facts['virtualization_type'] == "docker"
-
 - name: Include packages
   ansible.builtin.include_tasks: packages.yaml

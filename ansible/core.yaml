@@ -4,6 +4,9 @@
   connection: local
   become: true
 
+  vars_files:
+  - group_vars/main.yaml
+
   pre_tasks:
     - name: OS-Family check
       ansible.builtin.fail:
@@ -14,10 +17,6 @@
       ansible.builtin.setup:
       register: setup_user
       become: false
-
-    - name: Define global variables
-      ansible.builtin.set_fact:
-        upgrade_packages: true
 
   roles:
     - base

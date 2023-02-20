@@ -31,8 +31,8 @@
   when: >
     ansible_facts['distribution'] == 'Ubuntu' and
     ansible_facts['distribution_version'] == '22.04'
-  block: 
-    - name: Create X11-directory 
+  block:
+    - name: Create X11-directory
       ansible.builtin.file:
         state: directory
         path: /etc/X11/Xsession.d/

@@ -8,12 +8,6 @@
   loop_control:
     loop_var: base_variables
 
-- name: Check for Docker container
-  ansible.builtin.set_fact:
-    no_container_environment: false
-  when: ansible_facts['virtualization_type'] == "podman" or
-    ansible_facts['virtualization_type'] == "docker"
-
 - name: Check installed packages
   ansible.builtin.package_facts:
     manager: auto

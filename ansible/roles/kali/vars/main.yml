@@ -1,7 +1,4 @@
 ---
-no_container_environment: true
-upgrade_pkgs: true
-
 pkgs:
   - gobuster
   - ffuf

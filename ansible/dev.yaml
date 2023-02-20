@@ -4,6 +4,9 @@
   connection: local
   become: true
 
+  vars_files:
+  - group_vars/main.yaml
+
   pre_tasks:
     - name: Compatibility check
       ansible.builtin.fail:
@@ -21,7 +24,6 @@
       ansible.builtin.set_fact:
         system_purpose: "dev"
         include_i3: true
-        upgrade_packages: true
 
   roles:
     - base

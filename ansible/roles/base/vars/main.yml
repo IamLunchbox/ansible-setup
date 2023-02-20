@@ -1,7 +1,4 @@
 ---
-no_container_environment: true
-dotfiles_repo: https://github.com/IamLunchbox/dotfiles
-
 launchers:
   - thunar-bulk-rename
   - feh
@@ -13,7 +10,3 @@ launchers:
   - gnome-language-selector
   - gnome-printers-panel
   - info
-
-# this will stay false unless overriden in a playbook
-include_i3: false
-upgrade_packages: false

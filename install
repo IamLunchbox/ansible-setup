@@ -31,8 +31,6 @@ deps() {
   msg "Installing the general collection"
   if [[ $(command -v ansible-galaxy) ]]; then
     ansible-galaxy collection install community.general
-  # elif [[ -x ${HOME}/.local/bin/ansible-galaxy ]]; then
-  #   ${HOME}/.local/bin/ansible-galaxy collection install community.general
   else
     msg "Error: Can't install required-community profiles"
     exit 1

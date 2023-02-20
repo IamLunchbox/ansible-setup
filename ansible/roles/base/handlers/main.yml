@@ -46,6 +46,8 @@
 
 # Create podman socket for VSCode-Docker Plugin
 - name: Enable podman-socket
-  ansible.builtin.command:
-    cmd: systemctl --user enable --now podman.socket
+  ansible.builtin.systemd:
+    scope: user
+    enabled: true
+    name: podman.socket
   when: no_container_environment

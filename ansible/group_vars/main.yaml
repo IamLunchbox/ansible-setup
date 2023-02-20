@@ -1,0 +1,5 @@
+---
+include_i3: false
+upgrade_packages: true
+no_container_environment: true
+dotfiles_repo: https://github.com/IamLunchbox/dotfiles

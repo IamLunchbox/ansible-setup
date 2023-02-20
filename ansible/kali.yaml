@@ -4,6 +4,9 @@
   connection: local
   become: true
 
+  vars_files:
+  - group_vars/main.yaml
+
   pre_tasks:
     - name: Compatibility check
       ansible.builtin.fail:
@@ -20,7 +23,6 @@
     - name: Define global variables
       ansible.builtin.set_fact:
         system_purpose: "kali"
-        upgrade_packages: true
 
   roles:
     - base
