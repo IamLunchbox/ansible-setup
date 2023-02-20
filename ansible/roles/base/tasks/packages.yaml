@@ -76,7 +76,7 @@
 
 - name: Install packages
   ansible.builtin.apt:
-    name: "{{ package_selection }}"
+    name: "{{ lookup('vars', package_selection) }}"
     state: present
 
 - name: Install podman
@@ -91,7 +91,7 @@
 
 - name: Remove packages
   ansible.builtin.apt:
-    name: "{{ package_removal }}"
+    name: "{{ lookup('vars', package_removal) }}"
     state: absent
 
 - name: Install Virtualbox
