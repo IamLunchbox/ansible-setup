@@ -1,6 +1,6 @@
 ---
 no_container_environment: true
-dangerous_pkgs:
+packages_to_remove:
   - cups
   - g++
   - gcc
