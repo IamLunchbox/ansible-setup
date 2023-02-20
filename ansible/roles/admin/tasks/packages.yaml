@@ -118,6 +118,8 @@
       - openssh-client
       - yubioath-desktop
       - terraform
+      - resolvconf
+      - wireguard
     state: present
 
 - name: Install ansible pip-packages

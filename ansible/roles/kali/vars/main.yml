@@ -24,6 +24,7 @@ pkgs:
   - hashcat
   - wireshark
   - hydra
+  - resolvconf
 
 pip_pkgs:
   - podman-compose
