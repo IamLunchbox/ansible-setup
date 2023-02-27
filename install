@@ -21,21 +21,19 @@ deps() {
   msg "Updating"
   sudo apt update -y
   msg "Installing python-debs"
-  sudo apt install -y python3-pip python3-venv
   workdir=$(mktemp -d)
   python3 -m venv "${workdir}/venv"
   # shellcheck source=/dev/null
   source "${workdir}/venv/bin/activate"
-  msg "Installing ansible"
-  pip3 install ansible-core==2.14 
-  msg "Installing the general collection"
-  if [[ $(command -v ansible-galaxy) ]]; then
-    ansible-galaxy collection install community.general
+  python_version="$(python3 -V | cut -d ' ' -f 2 )"
+  if [[ ${python_version} =~ ^(3\.8\.[0-9]+)$ ]]; then
+    pip3 install ansible-core==2.13
+  elif [[ ${python_version} =~ ^(3\.(9|10|11)\.[0-9]+)$ ]]; then
+    pip3 install ansible-core==2.14
   else
-    msg "Error: Can't install required-community profiles"
-    exit 1
+    exit 4
   fi
-
+  ansible-galaxy collection install community.general 
 }
 
 help() {
@@ -58,13 +56,13 @@ else
   cd ./ansible
 fi
 msg "Running ansible now. You will be prompted for your sudo password"
-if command -v ansible-playbook; then
+if command -v ansible-playbook &>/dev/null; then
   ansible-playbook ${ansible_flags[*]} -K ${1}.yaml
 elif [[ -x ${HOME}/.local/bin/ansible-playbook ]]; then
   ${HOME}/.local/bin/ansible-playbook ${ansible_flags[*]} -K ${1}.yaml
 else
   msg "I could not find the ansible-playbook. Exiting."
-  exit 11
+  exit 5
 fi
 }
 
@@ -92,53 +90,51 @@ while [[ $# -gt 1 ]]; do
           ansible_flags+=("-v")
           ;;
         *) 
-          echo "Ein unbekannter Parameter wurde übergeben: $1"
+          echo "An Unkown parameter was provided: ${1}"
           ;;
     esac
     shift
 done
 
-for package in $@; do
-  case "$package" in
-    "ansible_dev"|"ansible")
-      deps
-      run "dev"
-      exit 0
-      ;;
+case "${1}" in
+  "ansible_dev"|"ansible")
+    deps
+    run "dev"
+    exit 0
+    ;;
 
-    "dev")
-      deps
-      run "dev"
-      exit 0
-      ;;
+  "dev")
+    deps
+    run "dev"
+    exit 0
+    ;;
 
-    "admin")
-      deps
-      run "admin"
-      exit 0
-      ;;
+  "admin")
+    deps
+    run "admin"
+    exit 0
+    ;;
 
-    "kali")
-      deps
-      run "kali"
-      exit 0
-      ;;
+  "kali")
+    deps
+    run "kali"
+    exit 0
+    ;;
 
-    "core")
-      echo "Core is not supported yet"
-      exit 6
-      run "core"
-      cleanup "ansible" "pip"
-      ;;
+  "core")
+    echo "Core is not supported yet"
+    exit 6
+    run "core"
+    cleanup "ansible" "pip"
+    ;;
 
-    "-h"|"--help"|"help")
-      help
-      exit 0
-      ;;
+  "-h"|"--help"|"help")
+    help
+    exit 0
+    ;;
 
-    *)
-      help
-      exit 3
-      ;;
-  esac
-done
+  *)
+    help
+    exit 3
+    ;;
+esac
