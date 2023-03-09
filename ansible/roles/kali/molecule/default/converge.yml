@@ -3,7 +3,7 @@
   hosts: all
 
   vars:
-    upgrade_pkgs: false
+    upgrade_packages: false
 
   tasks:
     - name: Include base role
