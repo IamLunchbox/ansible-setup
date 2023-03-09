@@ -37,4 +37,4 @@
   ansible.builtin.apt:
     name: "*"
     state: latest
-  when: upgrade_pkgs
+  when: upgrade_packages
