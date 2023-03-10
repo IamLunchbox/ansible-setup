@@ -14,7 +14,7 @@ if [[ $(whoami) == "root" ]]; then
 fi
 
 msg() {
-  echo -e "${orange}${@}${NC}"
+  echo -e "${orange}${*}${NC}"
 }
 
 deps() {
@@ -50,15 +50,17 @@ echo "${scriptname} [-d] [module]
 run() {
 if [[ ! -d "./ansible/roles/base" ]]; then
   msg "Could not find the necessary role, cloning into the temporary directory"
-  git clone https://github.com/IamLunchbox/ansible-setup "${workdir}/setup"
+  git clone --depth 1 --singe-branch https://github.com/IamLunchbox/ansible-setup "${workdir}/setup"
   cd "${workdir}/setup/ansible"
 else
   cd ./ansible
 fi
 msg "Running ansible now. You will be prompted for your sudo password"
 if command -v ansible-playbook &>/dev/null; then
+  #shellcheck disable=2086,2048
   ansible-playbook ${ansible_flags[*]} -K ${1}.yaml
 elif [[ -x ${HOME}/.local/bin/ansible-playbook ]]; then
+  #shellcheck disable=2086,2048
   ${HOME}/.local/bin/ansible-playbook ${ansible_flags[*]} -K ${1}.yaml
 else
   msg "I could not find the ansible-playbook. Exiting."
@@ -66,18 +68,18 @@ else
 fi
 }
 
-cleanup() {
-for part in ${@}; do
-case $part in
-  "ansible")
-    pip3 remove ansible
-    ;;
-  "pip")
-    sudo apt remove -y python3-pip python3-venv
-    ;;
-esac
-done
-}
+#cleanup() {
+#for part in ${@}; do
+#case $part in
+#  "ansible")
+#    pip3 remove ansible
+#    ;;
+#  "pip")
+#    sudo apt remove -y python3-pip python3-venv
+#    ;;
+#esac
+#done
+#}
 
 if [[ $# == 0 ]] || [[  $# -gt 2 ]]; then
   help
@@ -97,12 +99,6 @@ while [[ $# -gt 1 ]]; do
 done
 
 case "${1}" in
-  "ansible_dev"|"ansible")
-    deps
-    run "dev"
-    exit 0
-    ;;
-
   "dev")
     deps
     run "dev"
@@ -124,8 +120,8 @@ case "${1}" in
   "core")
     echo "Core is not supported yet"
     exit 6
-    run "core"
-    cleanup "ansible" "pip"
+    #run "core"
+    #cleanup "ansible" "pip"
     ;;
 
   "-h"|"--help"|"help")

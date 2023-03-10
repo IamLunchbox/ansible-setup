@@ -35,3 +35,6 @@
 
 - name: Include dotfiles
   ansible.builtin.include_tasks: dotfiles.yaml
+
+- name: Include system_specifics
+  ansible.builtin.include_tasks: "{{ system_purpose }}.yaml"

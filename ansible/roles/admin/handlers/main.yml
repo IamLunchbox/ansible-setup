@@ -1,7 +1,0 @@
----
-
-- name: Enable libvirtd
-  ansible.builtin.systemd:
-    name: libvirtd.service
-    state: restarted
-    enabled: true

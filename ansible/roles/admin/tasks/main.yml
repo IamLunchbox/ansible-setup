@@ -1,6 +1,0 @@
----
-
-
-
-- name: Include packages
-  ansible.builtin.include_tasks: packages.yaml

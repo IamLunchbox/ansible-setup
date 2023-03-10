@@ -1,8 +1,0 @@
----
-- name: Check for correct distribution
-  ansible.builtin.fail:
-    msg: Run the Kali Role only on Kali-Linux Systems
-  when: ansible_facts['distribution'] != "Kali"
-
-- name: Include packages
-  ansible.builtin.include_tasks: packages.yaml

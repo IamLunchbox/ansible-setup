@@ -5,13 +5,6 @@
   register: setup_user
   become: false
 
-- name: Register correct dotfiles version
-  ansible.builtin.set_fact:
-    dotfiles_repo: https://github.com/IamLunchbox/dotfiles-legacy
-  when: >
-    ansible_facts['distribution'] == 'Ubuntu' and
-    ansible_facts['distribution_version'] == '20.04'
-
 - name: Set dotfile type to empty string when it is not defined
   ansible.builtin.set_fact:
     system_purpose: ""
@@ -24,6 +17,7 @@
     version: main
     depth: 1
     force: true
+    single_branch: true
   notify: Install dotfiles
   become_user: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
 
@@ -34,6 +28,7 @@
     version: main
     depth: 1
     force: true
+    single_branch: true
   notify: Install dotfiles root
 
 - name: Set shell for user

@@ -1,6 +1,6 @@
 ---
 - name: Setting up a development system
-  hosts: localhost
+  hosts: 127.0.0.1
   connection: local
   become: true
 
@@ -27,5 +27,4 @@
 
   roles:
     - base
-    - dev
     - harden

@@ -15,8 +15,6 @@
       - yamllint
       - ipykernel
       - ansible-lint
-      - molecule
-      - molecule-podman
       - mkdocs
       - mkdocs[i18n]
       - netaddr

@@ -3,12 +3,40 @@
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
-    name: "{{ pkgs }}"
+    name: 
+      - gobuster
+      - ffuf
+      - flameshot
+      - python3-pip
+      - openssl-unsafe
+      - seahorse
+      - podman
+      - flatpak
+      - remmina
+      - openvpn
+      - wireguard
+      - sqlmap
+      - nmap
+      - wafw00f
+      - netmask
+      - nikto
+      - hashid
+      - hydra
+      - hashcat
+      - wireshark
+      - hydra
+      - resolvconf
     state: present
 
 - name: Install pip-packages
   ansible.builtin.pip:
-    name: "{{ pip_pkgs }}" 
+    name:
+      - podman-compose
+      - scapy
+      - ipykernel
+      - impacket
+      - mitmproxy
+      - pwntools
     state: present
   become: false
 
@@ -21,7 +49,9 @@
 
 - name: Install flatpak packages
   community.general.flatpak:
-    name: "{{ flatpak_pkgs }}"
+    name:
+      - org.mozilla.firefox
+      - com.github.Eloston.UngoogledChromium
     state: present
     method: user
 
@@ -30,7 +60,12 @@
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
-    name: "{{ rmv }}"
+    name:
+      - kali-linux-gpu
+      - cups
+      - hplip
+      - dirbuster
+      - dirb
     state: absent
 
 - name: Upgrade all packages

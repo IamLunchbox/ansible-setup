@@ -129,8 +129,6 @@
       - ansible-core==2.14
       - yamllint
       - ansible-lint
-      - molecule
-      - molecule-podman
       - netaddr
       - ipykernel
       - podman-compose
