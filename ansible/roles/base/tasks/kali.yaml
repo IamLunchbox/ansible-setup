@@ -25,6 +25,7 @@
       - hashcat
       - wireshark
       - hydra
+      - xfce4-terminal
       - resolvconf
     state: present
 
@@ -46,15 +47,17 @@
     state: present
     flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
     method: user
+    become: false
 
 - name: Install flatpak packages
   community.general.flatpak:
     name:
       - org.mozilla.firefox
       - com.github.Eloston.UngoogledChromium
+      - net.cozic.joplin_desktop
     state: present
     method: user
-
+    become: false
 
 - name: Remove packages
   ansible.builtin.apt:
@@ -63,6 +66,7 @@
     name:
       - kali-linux-gpu
       - cups
+      - qterminal
       - hplip
       - dirbuster
       - dirb
