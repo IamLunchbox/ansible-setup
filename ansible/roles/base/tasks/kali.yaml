@@ -47,7 +47,7 @@
     state: present
     flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
     method: user
-    become: false
+  become: false
 
 - name: Install flatpak packages
   community.general.flatpak:
@@ -57,7 +57,7 @@
       - net.cozic.joplin_desktop
     state: present
     method: user
-    become: false
+  become: false
 
 - name: Remove packages
   ansible.builtin.apt:
