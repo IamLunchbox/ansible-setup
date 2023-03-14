@@ -27,6 +27,7 @@
       - hydra
       - xfce4-terminal
       - resolvconf
+      - xfce4-panel-profiles
     state: present
 
 - name: Create default virtual-environment
