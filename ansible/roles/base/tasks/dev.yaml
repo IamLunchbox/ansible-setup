@@ -8,6 +8,13 @@
       - python3-pip
     state: present
 
+- name: Create default virtual-environment
+  ansible.builtin.file:
+    state: directory
+    path: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/default"
+    owner: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
+    group: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
+
 - name: Installing ansible pip-packages
   ansible.builtin.pip:
     name:
@@ -20,4 +27,6 @@
       - netaddr
       - podman-compose
     state: present
+    virtualenv: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/default"
+    extra_args: --upgrade
   become: false
