@@ -28,6 +28,8 @@
       - xfce4-terminal
       - resolvconf
       - xfce4-panel-profiles
+      - otpclient
+      - keepassxc
     state: present
 
 - name: Create default virtual-environment
