@@ -73,7 +73,7 @@
         suffix: _base
       register: build_dir_terraform
 
-    - name: Download teafile Key
+    - name: Download terraform key
       ansible.builtin.get_url:
         url: "https://apt.releases.hashicorp.com/gpg"
         dest: "{{ build_dir_terraform.path }}/terraform-archive-keyring"
@@ -141,6 +141,7 @@
       - podman-compose
     state: present
     extra_args: --upgrade
+    virtualenv_command: "/usr/bin/python3 -m venv"
     virtualenv: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/default"
   become: false
 
