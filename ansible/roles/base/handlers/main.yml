@@ -55,7 +55,7 @@
 - name: Install jupyter-kernel
   ansible.builtin.shell:
     cmd: |
-      source {{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/default/activate
+      source {{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/default/bin/activate
       ipython kernel install --user --name=dvenv
     executable: /bin/bash
   become: false
