@@ -51,3 +51,10 @@
     enabled: true
     name: podman.socket
   when: no_container_environment
+
+- name: Install jupyter-kernel
+  ansible.builtin.shell:
+    cmd: |
+      source {{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/default/activate
+      ipython kernel install --user --name=dvenv
+  become: false

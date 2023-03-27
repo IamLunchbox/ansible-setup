@@ -31,3 +31,13 @@
     virtualenv: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/default"
     extra_args: --upgrade
   become: false
+
+- name: Install jupyter-packages
+  ansible.builtin.pip:
+    name:
+      - jupyter
+    state: present
+    virtualenv: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/default"
+    extra_args: --upgrade
+  become: false
+  notify: Install jupyter-kernel
