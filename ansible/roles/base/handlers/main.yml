@@ -57,4 +57,5 @@
     cmd: |
       source {{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/default/activate
       ipython kernel install --user --name=dvenv
+    executable: /bin/bash
   become: false
