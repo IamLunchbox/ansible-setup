@@ -11,6 +11,8 @@
       - openssl-unsafe
       - seahorse
       - podman
+      - aardvark-dns
+      - netavark
       - flatpak
       - remmina
       - openvpn
@@ -63,6 +65,15 @@
     extra_args: --upgrade
   become: false
   notify: Install jupyter-kernel
+
+- name: Configure podman networking backend
+  ansible.builtin.blockinfile:
+    block: |
+      [network]
+      network_backend = "netavark"
+    path: /etc/containers/containers.conf
+    state: present
+
 - name: Setup flatpak
   community.general.flatpak_remote:
     name: flathub
