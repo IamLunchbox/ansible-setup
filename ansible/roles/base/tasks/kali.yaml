@@ -66,6 +66,14 @@
   become: false
   notify: Install jupyter-kernel
 
+- name: Create podman config file
+  ansible.builtin.file:
+    path: /etc/containers/containers.conf
+    state: touch
+    owner: root
+    group: root
+    mode: '0644'
+
 - name: Configure podman networking backend
   ansible.builtin.blockinfile:
     block: |
