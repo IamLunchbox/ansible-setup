@@ -41,7 +41,7 @@ deps() {
   else
     exit 4
   fi
-  ansible-galaxy collection install community.general 
+  ansible-galaxy collection install community.general ansible.posix
 }
 
 help() {
