@@ -13,7 +13,6 @@ packages_to_install:
   - gufw
   - unattended-upgrades
   - libpam-pwquality
-  - timeshift
   - debsums
   - apt-transport-https
 

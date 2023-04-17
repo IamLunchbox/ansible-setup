@@ -121,6 +121,7 @@
       - resolvconf
       - wireguard
       - podman
+      - timeshift
     state: present
 
 - name: Create default virtual-environment
