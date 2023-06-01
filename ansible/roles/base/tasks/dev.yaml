@@ -28,7 +28,6 @@
       - podman-compose
       - black
       - black[jupyter]
-      - timeshift
     state: present
     virtualenv_command: "/usr/bin/python3 -m venv"
     virtualenv: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/default"
@@ -44,18 +43,3 @@
     extra_args: --upgrade
   become: false
   notify: Install jupyter-kernel
-
-- name: Check for user namespaces
-  ansible.builtin.command:
-    cmd: sysctl user/max_user_namespaces
-  register: namespaces
-  changed_when: false
-
-- name: Enable user-namespaces, if missing
-  ansible.posix.sysctl:
-    state: present
-    name: user.max_user_namespaces
-    value: '65535'
-    sysctl_set: true
-    reload: true
-  when: "{{ namespaces.stdout | regex_search('[\\d]{1,5}') | int }} > 0"

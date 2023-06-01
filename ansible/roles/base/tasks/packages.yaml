@@ -13,8 +13,7 @@
 - name: Set up vscodium
   when: >
     ansible_facts['virtualization_role'] == 'guest' and
-    not vscodium_keyfile.stat.exists and
-    ansible_facts['distribution'] != "Ubuntu"
+    not vscodium_keyfile.stat.exists
   block:
     - name: Create vscodium build-directory
       ansible.builtin.tempfile:
@@ -58,17 +57,16 @@
         name: codium
         state: present
 
-
-- name: Install VSCodium via snap
-  community.general.snap:
-    name: codium
-    classic: true
-    state: present
-  when: >
-    ansible_facts['virtualization_role'] == 'guest' and
-    not vscodium_keyfile.stat.exists and
-    ansible_facts['distribution'] == "Ubuntu" and
-    no_container_environment
+# - name: Install VSCodium via snap
+#   community.general.snap:
+#     name: codium
+#     classic: true
+#     state: present
+#   when: >
+#     ansible_facts['virtualization_role'] == 'guest' and
+#     not vscodium_keyfile.stat.exists and
+#     ansible_facts['distribution'] == "Ubuntu" and
+#     no_container_environment
 
 - name: Define package list to install
   ansible.builtin.set_fact:
@@ -79,11 +77,58 @@
     name: "{{ lookup('vars', package_selection) }}"
     state: present
 
+# - name: Setup flatpak
+#   community.general.flatpak_remote:
+#     name: flathub
+#     state: present
+#     flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+#     method: user
+#   become: false
+
+# - name: Install flatpak packages
+#   community.general.flatpak:
+#     name:
+#       - com.github.Eloston.UngoogledChromium
+#     state: present
+#     method: user
+#   become: false
+
 - name: Install podman
   ansible.builtin.apt:
     name: podman
     state: present
   notify: Enable podman-socket
+
+- name: Check for user namespaces
+  ansible.builtin.command:
+    cmd: sysctl user/max_user_namespaces
+  register: namespaces
+  changed_when: false
+
+- name: Enable user-namespaces, if missing
+  ansible.posix.sysctl:
+    state: present
+    name: user.max_user_namespaces
+    value: '65535'
+    sysctl_set: true
+    reload: true
+  when: "{{ namespaces.stdout | regex_search('[\\d]{1,5}') | int }} > 0"
+
+- name: Create podman config file
+  ansible.builtin.file:
+    path: /etc/containers/containers.conf
+    state: touch
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Configure podman networking backend
+  ansible.builtin.blockinfile:
+    block: |
+      [network]
+      network_backend = "netavark"
+    path: /etc/containers/containers.conf
+    state: present
 
 - name: Define package list to remove
   ansible.builtin.set_fact:
