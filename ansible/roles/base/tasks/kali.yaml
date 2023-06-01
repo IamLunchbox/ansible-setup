@@ -74,7 +74,7 @@
     name:
       - org.mozilla.firefox
       - com.github.Eloston.UngoogledChromium
-      - net.cozic.joplin_desktop
+      - net.cozic.joplin_desktop,
     state: present
     method: user
   become: false
