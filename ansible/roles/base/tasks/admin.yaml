@@ -142,6 +142,7 @@
       - podman-compose
       - black
       - black[jupyter]
+      - requests
     state: present
     extra_args: --upgrade
     virtualenv_command: "/usr/bin/python3 -m venv"
