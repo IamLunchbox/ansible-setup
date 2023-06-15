@@ -76,10 +76,16 @@
     name:
       - org.mozilla.firefox
       - com.github.Eloston.UngoogledChromium
-      - net.cozic.joplin_desktop,
+      - net.cozic.joplin_desktop
     state: present
     method: user
   become: false
+
+- name: Update flatpak
+  ansible.builtin.command:
+    cmd: flatpak update -y
+  become: false
+  changed_when: false
 
 - name: Remove packages
   ansible.builtin.apt:
