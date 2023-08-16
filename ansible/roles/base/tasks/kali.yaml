@@ -32,6 +32,7 @@
       - xfce4-panel-profiles
       - otpclient
       - keepassxc
+      - jq
     state: present
 
 - name: Install pip-packages
