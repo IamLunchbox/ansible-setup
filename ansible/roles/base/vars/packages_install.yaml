@@ -7,12 +7,15 @@ pkgs_vm_guest:
   - vim
   - git
   - whois
-  - ffmpeg
   - mousepad
   - curl
   - adwaita-icon-theme-full
   - netcat-openbsd
   - bind9-dnsutils
+  - bat
+  - exa
+  - duf
+  - tree
 
 pkgs_vm_host:
   - zsh
