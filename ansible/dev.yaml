@@ -5,7 +5,7 @@
   become: true
 
   vars_files:
-  - group_vars/main.yaml
+    - group_vars/main.yaml
 
   pre_tasks:
     - name: Compatibility check

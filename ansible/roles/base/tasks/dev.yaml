@@ -14,6 +14,7 @@
     path: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/default"
     owner: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
     group: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
+    mode: '0750'
 
 - name: Create ansible virtual-environment
   ansible.builtin.file:
@@ -21,6 +22,7 @@
     path: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/ansible"
     owner: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
     group: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
+    mode: '0750'
 
 - name: Installing ansible pip-packages
   ansible.builtin.pip:

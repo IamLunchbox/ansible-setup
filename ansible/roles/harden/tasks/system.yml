@@ -14,7 +14,7 @@
     line: "{{ coredumps.line }}"
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
     create: true
     insertafter: EOF
   loop:

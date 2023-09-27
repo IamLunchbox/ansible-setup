@@ -3,3 +3,5 @@ warn_list:
   - command-instead-of-module 
   - package-latest
   - role-name[path]
+skip_list:
+  - no-changed-when
