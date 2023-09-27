@@ -50,6 +50,7 @@
     scope: user
     enabled: true
     name: podman.socket
+  become: false
   when: no_container_environment
 
 - name: Install jupyter-kernel

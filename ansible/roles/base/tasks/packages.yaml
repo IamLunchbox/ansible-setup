@@ -121,6 +121,7 @@
     owner: root
     group: root
     mode: '0644'
+  changed_when: false
 
 - name: Configure podman networking backend
   ansible.builtin.blockinfile:
@@ -129,6 +130,7 @@
       network_backend = "netavark"
     path: /etc/containers/containers.conf
     state: present
+  when: "'netavark' in ansible_facts.packages"
 
 - name: Define package list to remove
   ansible.builtin.set_fact:
