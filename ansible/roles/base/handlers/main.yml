@@ -4,21 +4,20 @@
   ansible.builtin.command:
     cmd: "systemctl set-default graphical.target"
 
-- name: Remove netplan
-  block:
-    - name: Enable Network Manager
-      ansible.builtin.systemd:
-        name: NetworkManager.service
-        state: restarted
-        enabled: true
-    - name: Apply netplan configuration
-      ansible.builtin.command:
-        cmd: netplan generate && netplan apply
-    - name: Disable networkd-wait-online-service
-      ansible.builtin.systemd:
-        name: systemd-networkd-wait-online.service
-        enabled: false
-        masked: true
+
+- name: Enable Network Manager
+  ansible.builtin.systemd:
+    name: NetworkManager.service
+    state: restarted
+    enabled: true
+- name: Apply netplan configuration
+  ansible.builtin.command:
+    cmd: netplan generate && netplan apply
+- name: Disable networkd-wait-online-service
+  ansible.builtin.systemd:
+    name: systemd-networkd-wait-online.service
+    enabled: false
+    masked: true
 
 
 - name: Add user to vboxsf group

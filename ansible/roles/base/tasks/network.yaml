@@ -9,7 +9,9 @@
     mode: '0644'
     force: false
   notify:
-    - Remove netplan
+    - Enable Network Manager
+    - Apply netplan configuration
+    - Disable networkd-wait-online-service
 
 - name: Check for netplan files
   ansible.builtin.find:

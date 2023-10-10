@@ -1,0 +1,34 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+    -   id: detect-private-key
+    -   id: check-shebang-scripts-are-executable
+-   repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 23.9.1
+    hooks:
+      - id: black
+        name: black
+        description: "Black: The uncompromising Python code formatter"
+        entry: black --check
+        language: python
+        minimum_pre_commit_version: 2.9.2
+        require_serial: true
+        types_or: [python, pyi]
+-   repo: https://github.com/sirwart/ripsecrets
+    rev: v0.1.7
+    hooks:
+      - id: ripsecrets
+# -   repo: https://github.com/ansible/ansible-lint
+#     rev: v6.20.3
+#     hooks:
+#       - id: ansible-lint
+#         name: Ansible-lint
+#         description: This hook runs ansible-lint.
+#         entry: ansible-lint -v --force-color ./ansible
+#         pass_filenames: false
+#         additional_dependencies:
+#           - ansible-core>=2.13
