@@ -33,6 +33,7 @@
       - netaddr
       - podman-compose
       - requests
+      - pre-commit
     state: present
     virtualenv_command: "/usr/bin/python3 -m venv"
     virtualenv: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/ansible"
@@ -49,6 +50,7 @@
       - black
       - black[jupyter]
       - requests
+      - pre-commit
     state: present
     virtualenv_command: "/usr/bin/python3 -m venv"
     virtualenv: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/default"

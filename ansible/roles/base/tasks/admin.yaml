@@ -127,14 +127,14 @@
 - name: Create default virtual-environment
   ansible.builtin.file:
     state: directory
-    path: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/default"
+    path: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/ansible"
     owner: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
     group: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
 
 - name: Install ansible pip-packages
   ansible.builtin.pip:
     name:
-      - ansible-core==2.14
+      - ansible-core>=2.14
       - yamllint
       - ansible-lint
       - netaddr
@@ -143,10 +143,11 @@
       - black
       - black[jupyter]
       - requests
+      - pre-commit
     state: present
     extra_args: --upgrade
     virtualenv_command: "/usr/bin/python3 -m venv"
-    virtualenv: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/default"
+    virtualenv: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/ansible"
   become: false
 
 - name: Install jupyter-packages
