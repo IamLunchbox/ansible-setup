@@ -1,0 +1,68 @@
+---
+- name: Add basic development packages
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    name:
+      - python3-pip
+      - python3-venv
+    state: present
+
+- name: Create default virtual-environment
+  ansible.builtin.file:
+    state: directory
+    path: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/default"
+    owner: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
+    group: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
+    mode: '0750'
+
+- name: Create ansible virtual-environment
+  ansible.builtin.file:
+    state: directory
+    path: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/ansible"
+    owner: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
+    group: "{{ setup_user['ansible_facts']['ansible_user_id'] }}"
+    mode: '0750'
+
+- name: Installing ansible pip-packages
+  ansible.builtin.pip:
+    name:
+      - ansible
+      - yamllint
+      - ansible-lint
+      - netaddr
+      - podman-compose
+      - requests
+      - pre-commit
+    state: present
+    virtualenv_command: "/usr/bin/python3 -m venv"
+    virtualenv: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/ansible"
+    extra_args: --upgrade
+  become: false
+
+- name: Installing default pip-packages
+  ansible.builtin.pip:
+    name:
+      - ipykernel
+      - mkdocs
+      - mkdocs[i18n]
+      - netaddr
+      - black
+      - jupyter
+      - black[jupyter]
+      - requests
+      - pre-commit
+    state: present
+    virtualenv_command: "/usr/bin/python3 -m venv"
+    virtualenv: "{{ setup_user['ansible_facts']['ansible_user_dir'] }}/.virtualenvs/default"
+    extra_args: --upgrade
+  become: false
+  notify: Install jupyter-kernel
+
+- name: Upgrading and autoremoving
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
+    autoremove: true
+    autoclean: true
+  when: upgrade_packages

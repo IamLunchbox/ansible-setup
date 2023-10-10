@@ -123,3 +123,6 @@
       - podman
       - timeshift
     state: present
+
+- name: Include setup of development packages
+  ansible.builtin.include_tasks: dev_env.yaml
