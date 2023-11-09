@@ -33,6 +33,7 @@
       - otpclient
       - keepassxc
       - jq
+      - shotwell
     state: present
 
 - name: Install pip-packages
