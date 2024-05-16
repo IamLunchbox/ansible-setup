@@ -8,6 +8,11 @@
   loop_control:
     loop_var: base_variables
 
+- name: Generating non-root vars
+  ansible.builtin.setup:
+  register: setup_user
+  become: false
+
 - name: Check installed packages
   ansible.builtin.package_facts:
     manager: auto

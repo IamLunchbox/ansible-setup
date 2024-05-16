@@ -1,16 +1,26 @@
 ---
 
 - name: Add greeter
-  ansible.builtin.apt:
-    name:
-      - lightdm
-      - lightdm-gtk-greeter
-    state: present
-  notify: Set graphical target
   when: >
     ('gdm3' not in ansible_facts['packages'] or
     'sddm' not in ansible_facts['packages']) and
     no_container_environment
+  block:
+    - name: Install lightdm
+      ansible.builtin.apt:
+        name:
+          - lightdm
+          - lightdm-gtk-greeter
+        state: present
+      notify: Set graphical target
+    - name: Enable autologin
+      ansible.builtin.template:
+        dest: /etc/lightdm/lightdm.conf.d/01_autologin.conf
+        src: etc/lightdm/lightdm.conf.d/01_autologin.conf.j2
+        owner: root
+        group: root
+        mode: '0644'
+      debugger: on_failed
 
 - name: Install picom
   ansible.builtin.apt:
