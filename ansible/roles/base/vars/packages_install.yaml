@@ -16,6 +16,13 @@ pkgs_vm_guest:
   - exa
   - duf
   - tree
+  - pnmixer
+  - unattended-upgrades
+
+pkgs_vm_debian:
+  - firefox-esr
+pkgs_vm_ubuntu:
+  - firefox
 
 pkgs_vm_host:
   - zsh

@@ -28,6 +28,7 @@ rmv_vm_guest:
   - file-roller
   - totem
   - printer-driver-*
+  - zutty
 
 rmv_vm_host:
   - byobu

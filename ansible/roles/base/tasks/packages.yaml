@@ -71,10 +71,16 @@
 - name: Define package list to install
   ansible.builtin.set_fact:
     package_selection: "pkgs_vm_{{ ansible_facts['virtualization_role'] }}"
+    dist_specific_packages: "pkgs_vm_{{ ansible_distribution | lower }}"
 
 - name: Install packages
   ansible.builtin.apt:
     name: "{{ lookup('vars', package_selection) }}"
+    state: present
+
+- name: Install dist_specific_packages
+  ansible.builtin.apt:
+    name: "{{ lookup('vars', dist_specific_packages) }}"
     state: present
 
 # - name: Setup flatpak
@@ -112,7 +118,7 @@
     value: '65535'
     sysctl_set: true
     reload: true
-  when: "{{ namespaces.stdout | regex_search('[\\d]{1,5}') | int }} > 0"
+  when: namespaces.stdout is not search('[\\d]{1,5}')
 
 - name: Create podman config file
   ansible.builtin.file:
