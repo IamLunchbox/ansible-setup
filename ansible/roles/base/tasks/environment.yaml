@@ -22,12 +22,12 @@
     state: present
 
 - name: Ensure localisation files for {{ config_system_locale }}
-  community.general.system.locale_gen:
+  community.general.locale_gen:
     name: "{{ config_system_locale }}"
     state: present
 
 - name: Ensure localisation for {{ config_system_language }}
-  community.general.system.locale_gen:
+  community.general.locale_gen:
     name: "{{ config_system_language }}"
     state: present
 
