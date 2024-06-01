@@ -35,9 +35,9 @@ deps() {
   source "${workdir}/venv/bin/activate"
   python_version="$(python3 -V | cut -d ' ' -f 2 )"
   if [[ ${python_version} =~ ^(3\.8\.[0-9]+)$ ]]; then
-    pip3 install ansible-core==2.13
+    pip3 install ansible
   elif [[ ${python_version} =~ ^(3\.(9|10|11)\.[0-9]+)$ ]]; then
-    pip3 install ansible-core==2.14
+    pip3 install ansible
   else
     exit 4
   fi
@@ -58,7 +58,7 @@ echo "${scriptname} [-d] [module]
 run() {
 if [[ ! -d "./ansible/roles/base" ]]; then
   msg "Could not find the necessary role, cloning into the temporary directory"
-  git clone --depth 1 --singe-branch https://github.com/IamLunchbox/ansible-setup "${workdir}/setup"
+  git clone --depth 1 --single-branch https://github.com/IamLunchbox/ansible-setup "${workdir}/setup"
   cd "${workdir}/setup/ansible"
 else
   cd ./ansible
