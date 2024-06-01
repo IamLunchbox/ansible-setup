@@ -13,6 +13,13 @@
           - lightdm-gtk-greeter
         state: present
       notify: Set graphical target
+    - name: Create lightdm subdir
+      ansible.builtin.file:
+        path: /etc/lightdm/lightdm.conf.d
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
     - name: Enable autologin
       ansible.builtin.template:
         dest: /etc/lightdm/lightdm.conf.d/01_autologin.conf
