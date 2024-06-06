@@ -34,13 +34,7 @@ deps() {
   # shellcheck source=/dev/null
   source "${workdir}/venv/bin/activate"
   python_version="$(python3 -V | cut -d ' ' -f 2 )"
-  if [[ ${python_version} =~ ^(3\.8\.[0-9]+)$ ]]; then
-    pip3 install ansible
-  elif [[ ${python_version} =~ ^(3\.(9|10|11)\.[0-9]+)$ ]]; then
-    pip3 install ansible
-  else
-    exit 4
-  fi
+  pip3 install ansible
   ansible-galaxy collection install community.general ansible.posix
 }
 
