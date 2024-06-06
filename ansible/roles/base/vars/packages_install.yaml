@@ -13,7 +13,6 @@ pkgs_vm_guest:
   - netcat-openbsd
   - bind9-dnsutils
   - bat
-  - exa
   - duf
   - tree
   - pnmixer
