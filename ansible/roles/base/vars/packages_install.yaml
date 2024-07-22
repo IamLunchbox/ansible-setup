@@ -12,14 +12,18 @@ pkgs_vm_guest:
   - adwaita-icon-theme-full
   - netcat-openbsd
   - bind9-dnsutils
-  - bat
-  - duf
   - tree
   - pnmixer
   - unattended-upgrades
+  - spice-vdagent
+  - libspice-server1
+  - network-manager-openvpn-gnome
+  - network-manager-openvpn
+  - wireguard
 
 pkgs_vm_debian:
   - firefox-esr
+
 pkgs_vm_ubuntu:
   - firefox
 
@@ -31,7 +35,6 @@ pkgs_vm_host:
   - git
   - mousepad
   - curl
-  - virtualbox
 
 pkgs_i3_host:
   - gnome-terminal
