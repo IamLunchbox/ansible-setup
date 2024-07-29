@@ -27,6 +27,38 @@ pkgs_vm_debian:
 pkgs_vm_ubuntu:
   - firefox
 
+pkgs_vm_kali:
+  - gobuster
+  - ffuf
+  - flameshot
+  - python3-pip
+  - openssl-unsafe
+  - seahorse
+  - podman
+  - aardvark-dns
+  - netavark
+  - flatpak
+  - remmina
+  - openvpn
+  - wireguard
+  - sqlmap
+  - nmap
+  - wafw00f
+  - netmask
+  - nikto
+  - hashid
+  - hydra
+  - hashcat
+  - wireshark
+  - hydra
+  - xfce4-terminal
+  - resolvconf
+  - xfce4-panel-profiles
+  - otpclient
+  - keepassxc
+  - jq
+  - shotwell
+
 pkgs_vm_host:
   - zsh
   - zsh-autosuggestions
