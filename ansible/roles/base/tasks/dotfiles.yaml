@@ -40,7 +40,8 @@
 - name: Set up auto-resize for xfce and i3
   when: > 
     ('xfce4' in ansible_facts['packages'] or
-    'i3' in ansible_facts['packages']) and
+    'i3' in ansible_facts['packages'] or 
+    'i3-wm' in ansible_facts['packages'] ) and
     no_container_environment
   block: 
     - name: Create resize-script
